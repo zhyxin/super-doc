@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <!-- DataTables CSS -->
+  <!-- <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css"> -->
+  <!-- jQuery -->
+  <!-- <script type="text/javascript" charset="utf8" src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script> -->
+  <!-- DataTables -->
+  <!-- <script type="text/javascript" charset="utf8"
+    src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script> -->
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="editorjs"></div>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+  <script>
+    window.__MD_VUE_OPTIONS__ = {
+      registry: 'http://10.8.4.126:8081',
+      _requireStaticMap: {
+        __md_vue_vue__: 'http://10.8.4.126:8081/repository/raw-host/vueall/vue-all.js'
+      },
+      staticSource: {
+        js: [
+          { isRegistry: false, link: 'http://10.8.4.126:8081/repository/raw-host/eleuijs/eleui.js' }
+        ],
+        css: [{ isRegistry: false, link: 'http://10.8.4.126:8081/repository/raw-host/eleuicss/eleui.css' }]
+      },
+      staticMap: {
+        // 'element-ui': '',
+      }
+    }
+
+
+    // const timer = setInterval(() => {
+    //   console.log('1');
+    //   if ($ && document.querySelector('#table_id_example')) {
+    //     $(document).ready(function () {
+    //       $('#table_id_example').DataTable();
+    //     });
+    //     clearInterval(timer);
+    //   }
+    // }, 200)
+  </script>
+  
+</html>

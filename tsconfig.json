@@ -1,0 +1,20 @@
+{
+    "compilerOptions" : {
+      "sourceMap": true,
+      "target": "es2015",
+      "declaration": false,
+      "moduleResolution": "node", // This resolution strategy attempts to mimic the Node.js module resolution mechanism at runtime
+      "esModuleInterop":true,
+      "lib": ["dom", "es2017", "es2018", "es2019"],
+  
+      // allows to import .json files for i18n
+      "resolveJsonModule": true,
+  
+      // allows to omit export default in .json files
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      // "allowJs": true,
+      // "checkJs": false,
+    }
+  }
+  

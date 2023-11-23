@@ -1,0 +1,39 @@
+{
+  "name": "example",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "buildOptions": {
+    "enter": "src/main.js",
+    "name": "SuperDocComp",
+    "formats": [
+      "umd"
+    ]
+  },
+  "dependencies": {
+    "@ai/chatsdk": "1.0.25",
+    "@auae/au-components": "^0.1.4",
+    "@auae/core": "^1.2.11",
+    "axios": "^1.5.1",
+    "editMixin.js": "link:@auae/core/nodes/editMixin.js",
+    "element-ui": "^2.15.14",
+    "utils": "link:uaeengine/src/utils",
+    "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "~5.0.0",
+    "less": "^4.2.0",
+    "less-loader": "^11.1.3",
+    "stylus": "^0.55.0",
+    "stylus-loader": "^6.1.0",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

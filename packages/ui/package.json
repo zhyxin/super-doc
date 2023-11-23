@@ -1,0 +1,26 @@
+{
+  "name": "@super-doc/ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index",
+  "buildOptions": {
+    "enter": "src/index.ts",
+    "name": "supperDocUi",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global"
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@super-doc/share": "workspace:^1.0.0",
+    "@super-doc/types": "workspace:^1.0.0",
+    "@super-doc/typing": "workspace:^1.0.0"
+  }
+}
