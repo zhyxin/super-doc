@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import superDoc from "/Users/yixin/Desktop/自己的项目/supperDoc/packages/core/dist/core.esm-bundler.js";
+import superDoc from "/Users/yixin/Desktop/自己的项目/super-doc/packages/core/dist/core.esm-bundler.js";
 export default {
   name: "HelloWorld",
   props: {

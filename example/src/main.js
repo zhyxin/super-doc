@@ -19,5 +19,5 @@ new Vue({
 // import './superDocPlugins/tools/index.js';
 // import './superDocPlugins/layout/index.js';
 // import './superDocPlugins/block/index.js';
-// import SuperComp from '/Users/yixin/Desktop/自己的项目/supperDoc/packages/vue-project/src/components/HelloWorld.vue';
+// import SuperComp from '/Users/yixin/Desktop/自己的项目/super-doc/packages/vue-project/src/components/HelloWorld.vue';
 // export default SuperComp;

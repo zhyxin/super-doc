@@ -1,4 +1,4 @@
-import { Plugin } from '/Users/yixin/Desktop/自己的项目/supperDoc/packages/api/dist/api.esm-bundler.js';
+import { Plugin } from '/Users/yixin/Desktop/自己的项目/super-doc/packages/api/dist/api.esm-bundler.js';
 window.ToolLayoutBase = Plugin.ToolLayoutBase;
 
 class DeleteTool extends Plugin.ToolLayoutBase {

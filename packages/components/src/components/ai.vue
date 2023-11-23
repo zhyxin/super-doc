@@ -80,14 +80,14 @@ export default {
         default: {
           session_id: "20231026",
           content:
-            "我是一名研发，需要清晰明了、具有可读性的年终总结工作报告，内容包括我的工作成绩、所面临的挑战和解决方案、未来的发展方向等内容。",
+            "",
           prompt:
             "你现在扮演一个文档内容生成AI，根据用户需求直接返回用户所需的内容，不需要额外的描述信息。用户需求：${{user_input}}",
         },
         expand: {
           session_id: "20231026111",
           content:
-            "我是一名研发，需要清晰明了、具有可读性的年终总结工作报告，内容包括我的工作成绩、所面临的挑战和解决方案、未来的发展方向等内容。",
+            "",
           prompt: (content) =>
             `你现在扮演一个文本提示词扩写领域的专家，从专业的角度，您认为用户输入的内容是否有需要扩写的地方？把扩写后的内容插入到用户的文本中，最后只需要把全文返回给用户，不需要额外的描述。\n\n用户全文内容是${content}：\n\n 需要扩写的内容是：\${{user_input}}`,
         },
@@ -146,7 +146,6 @@ export default {
           .filter((content) => !!content)
           .join("\n")
       );
-      debugger
       this.$replaceCurrentBlock(blocks, this.$superConfig.blockId);
     },
     generateAiContent(event) {
