@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@super-doc/api": "workspace:^1.0.0",
     "@super-doc/block-manager": "workspace:^1.0.0",
     "@super-doc/event": "workspace:^1.0.0",
     "@super-doc/share": "workspace:^1.0.0",

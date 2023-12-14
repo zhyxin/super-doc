@@ -23,7 +23,6 @@ export default {
         console.log('删除====', agrs);
       });
       window.superDoc.on('update', (...agrs) => {
-        console.log('更新====', agrs);
       });
       // window.superDoc = doc;
     },

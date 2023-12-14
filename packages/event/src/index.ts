@@ -26,7 +26,6 @@ export default class Event extends Module {
 
   public documentMousemove() {
     document.addEventListener('mousemove', (event) => {
-
         this.mouseX = event.pageX;
         this.mouseY = event.pageY;
     });
@@ -36,7 +35,7 @@ export default class Event extends Module {
     blocks.forEach((block) => {
       block.element.addEventListener("click", this.mouseClick.bind(this));
       block.element.addEventListener("input", this.inputEvent.bind(this));
-      block.element.addEventListener("mouseout", this.onmouseout.bind(this));
+      // block.element.addEventListener("mouseout", this.onmouseout.bind(this));
       block.element.addEventListener(
         "mouseover",
         this.onmouseover.bind(this),
@@ -69,6 +68,7 @@ export default class Event extends Module {
           if (element.childNodes.length === 0) {
             BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
             event.preventDefault();
+          } else if (element.childNodes.length > 0) {
           }
           break;
       }
@@ -89,11 +89,6 @@ export default class Event extends Module {
   }
 
   public onmouseout(event: any) {
-    // console.log(event.target);
-    // if(event.target.classList.value.indexOf(this.Editor.UI.CSS.wrapper) > -1) {
-    // const toolbar = this.Editor.UI.nodes.toolbarWrapper;
-    // toolbar.classList.remove(this.Editor.UI.CSS.superDocToolbarOpen);
-    // }
   }
 
   public onmouseover(event: any) {
@@ -110,13 +105,17 @@ export default class Event extends Module {
       debugger
       return;
     }
-    if(this.Editor.UI.command.visible) return;
+    if(this.Editor.UI.command.visible || this.Editor.UI.layout.visible) return;
     if (blockId) {
-      const { left:x, top:y } = getElementCoordinates(target);
-      console.log(x, y);
+      let { left:x, top:y, rect } = getElementCoordinates(target);
       toolbar.style = !!toolbar.style ? toolbar.style : {};
       toolbar.style.left = (x - 50)+ "px";
-      toolbar.style.top = (y + 5) + "px";
+      if(rect.height <= 45) {
+        toolbar.style.top = (y + ((rect.height - 24)/2)) + 'px';
+      } else {
+        toolbar.style.top = (y + 3) + 'px';
+      }
+      
       event.stopPropagation();
       toolbar.classList.add(this.Editor.UI.CSS.superDocToolbarOpen);
       this.Editor.BlockManager.currentHoverBlockId = blockId;
@@ -136,7 +135,15 @@ export default class Event extends Module {
 
   public addShowCommandListEvent(element: HTMLElement) {
     element.addEventListener("click", () => {
+      this.Editor.UI.layout.visible = false;
       this.Editor.UI.command.visible = true;
+    });
+  }
+
+  public addShowLayoutToolListEvent(element: HTMLElement) {
+    element.addEventListener("click", () => {
+      this.Editor.UI.command.visible = false;
+      this.Editor.UI.layout.visible = true;
     });
   }
 

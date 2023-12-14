@@ -19,10 +19,11 @@ import {
     blockTypeTrans(block: Block): HTMLElement {
       if (block.class) {
         const _class = window[block.class] ?? interComponents.blocks[block.class];
-        return new _class({
+        const blockInstance = new _class({
           config: block,
           "block-id": block.id,
-        })._render();
+        });
+        return blockInstance._render();
       } else {
         throw "不存在block对应的class";
       }

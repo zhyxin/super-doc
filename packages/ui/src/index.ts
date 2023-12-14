@@ -2,6 +2,7 @@ import { EditorConfig } from "@super-doc/types";
 import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
 import styles from "./styles/main.css";
 import Command from "./components/command";
+import Layout from "./components/layout";
 interface ModuleConfig {
   config: EditorConfig;
 }
@@ -25,8 +26,8 @@ export default class Ui extends Module {
     superDocToolbarItem: string;
   } {
     return {
-      commonShow: 'super-doc-common-show',
-      commonHidden: 'supper-doc-common-hidden',
+      commonShow: "super-doc-common-show",
+      commonHidden: "supper-doc-common-hidden",
       wrapper: "super-doc-block",
       content: "ce-block__content",
       editorWrapper: "super-doc-editor",
@@ -43,21 +44,24 @@ export default class Ui extends Module {
     };
   }
   public command: Command;
+  public layout: Layout;
 
-  constructor({config: EditorConfig}) {
-    super({config: EditorConfig});
+  constructor({ config: EditorConfig }) {
+    super({ config: EditorConfig });
   }
   public async prepare(): Promise<void> {
     this.setCommandList();
-    
+    this.setLayoutList();
     this.make();
 
     this.loadStyles();
-
   }
 
   public setCommandList(): void {
     this.command = new Command(this);
+  }
+  public setLayoutList(): void {
+    this.layout = new Layout(this);
   }
 
   private make(): void {
@@ -74,19 +78,20 @@ export default class Ui extends Module {
     this.nodes.wrapper.appendChild(this.nodes.redactor);
     this.nodes.holder.appendChild(this.nodes.wrapper);
     this.nodes.pluginContainer = this.makePluginContainer();
-    this.Editor.Event.addShowCommandListEvent(this.nodes.pluginContainer.element);
+    this.nodes.layoutContainer = this.makeLayoutContainer();
+    this.Editor.Event.addShowCommandListEvent(
+      this.nodes.pluginContainer.element
+    );
+    this.Editor.Event.addShowLayoutToolListEvent(
+      this.nodes.layoutContainer.element
+    );
     // this.nodes.pluginContainer.element.addEventListener()
     const toolbarWrapper = this.makeToolbarContainer()
       .appendChild(
-        this.nodes.pluginContainer.appendChild(
-          this.command.element
-        ).element
+        this.nodes.pluginContainer.appendChild(this.command.element).element
       )
       .appendChild(
-        this.makeLayoutContainer().appendChild(
-          this.makePopover().appendChild(this.makePopoverLayoutItem().element)
-            .element
-        ).element
+        this.nodes.layoutContainer.appendChild(this.layout.element).element
       );
     this.nodes.toolbarWrapper = toolbarWrapper.element;
     this.nodes.wrapper.appendChild(this.nodes.toolbarWrapper);
@@ -109,7 +114,7 @@ export default class Ui extends Module {
     wrapperDiv.appendChild(contentDiv);
     return wrapperDiv;
   }
-  
+
   public makeToolbarContainer() {
     const div = $.make("div", [this.CSS.superDocToolbarWrapper], ...[]);
     const handler = {
@@ -214,7 +219,9 @@ export default class Ui extends Module {
       );
       popoverItem.textContent = plugin.text;
       popoverItem.addEventListener("click", () => {
-        this.Editor.BlockManager.replaceBlockForBlockId({ ...plugin.blockData });
+        this.Editor.BlockManager.replaceBlockForBlockId({
+          ...plugin.blockData,
+        });
       });
       elements.push(popoverItem);
     });
@@ -234,8 +241,9 @@ export default class Ui extends Module {
         ...[]
       );
       popoverItem.textContent = layout.text;
-      popoverItem.addEventListener("click", () => {
+      popoverItem.addEventListener("click", (event) => {
         layout.action({ Editor: this.Editor });
+        event.stopPropagation();
       });
       elements.push(popoverItem);
     });
@@ -247,10 +255,18 @@ export default class Ui extends Module {
 
   public toolbarFollowFocusBlock() {
     // TODO: 这里有bug 临时处理
-    const focusBlockElement = this.Editor.BlockManager?.curentFocusBlock?.currentElement;
-    if(!focusBlockElement) return;
-    const { left:x, top:y } = getElementCoordinates(focusBlockElement);
-    this.nodes.toolbarWrapper.style.left = (x - 50)+ "px";
-    this.nodes.toolbarWrapper.style.top = (y + 5) + "px";
+    const focusBlockElement =
+      this.Editor.BlockManager?.curentFocusBlock?.currentElement;
+    if (!focusBlockElement) return;
+    let { left: x, top: y, rect } = getElementCoordinates(focusBlockElement);
+    this.nodes.toolbarWrapper.style = !!this.nodes.toolbarWrapper.style
+      ? this.nodes.toolbarWrapper.style
+      : {};
+    this.nodes.toolbarWrapper.style.left = x - 50 + "px";
+    if (rect.height <= 45) {
+      this.nodes.toolbarWrapper.style.top = (y + ((rect.height - 24)/2)) + 'px';
+    } else {
+      this.nodes.toolbarWrapper.style.top = (y + 3) + 'px';
+    }
   }
 }

@@ -1,13 +1,6 @@
 <template>
-  <p
-    id="superdoc-inter-p"
-    ref="paragraph"
-    class="super-block"
-    contenteditable
-    placeholder='"/"插入内容，或"command + /"唤起文档AI'
-    @input="contentChange"
-    style="padding: 8px 0;margin: 0;"
-  >{{content}}</p>
+  <p id="superdoc-inter-p" ref="paragraph" class="super-block" contenteditable placeholder='"/"插入内容'
+    @input="contentChange" style="padding: 8px 0;margin: 0;line-height: 21px;">{{ content }}</p>
 </template>
 
 <script>
@@ -21,18 +14,16 @@ import { showCommand, addListener } from '@super-doc/api';
 // this.config.Editor.UI.command.visible = true;
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   props: ["$superConfig"],
   methods: {
     contentChange(event) {
       const content = event.target.innerText;
-      if(content === '/') {
+      if (content === '/') {
         showCommand();
       }
-      this.$superDocUpdateBlockData(this.$superConfig.blockId, {
-        text: content,
-      });
     },
   },
   computed: {
@@ -47,12 +38,13 @@ export default {
     },
   },
   mounted() {
-    // TODO: 这里要改
-    addListener("update", (blocks) => {
-      const block = blocks.find(
-        (block) => block.id === this.$superConfig.blockId
-      );
-      block && (this.content = block.data.text);
+    if (!this.$refs["paragraph"].innerHTML) {
+      this.$refs["paragraph"].innerHTML = '';
+    }
+    addListener("update", (block) => {
+      if (block && this.$superConfig.blockId === block.id) {
+        this.content = block.data.text;
+      }
     });
   },
 };
@@ -66,6 +58,7 @@ export default {
   color: #c4c4c4;
   font-weight: 400;
 }
+
 #superdoc-inter-p {
   min-height: 22px;
 }

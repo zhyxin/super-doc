@@ -159,7 +159,7 @@ export default {
       this.aiOutput = "";
       const result = await axios({
         method: "POST",
-        url: "http://10.8.6.30:9994/ai_service/exec_instruction/",
+        url: "/arm/super_doc_ai",
         data: {
           user_input: this.aiInput.default.content,
           session_id: this.aiInput.default.session_id,
@@ -172,8 +172,12 @@ export default {
           },
         },
       }).then((res) => {
-        if (res.status === 200) {
-          return res?.data?.results?.instruction_result.raw_result;
+        try {
+          if (res.status === 200) {
+            return res?.data?.results?.instruction_result.raw_result;
+          }  
+        } catch (error) {
+          alert('AI服务暂时无法使用');
         }
       });
       this.aiOutput = result;
@@ -208,7 +212,7 @@ export default {
       this.loading = true;
       const result = await axios({
         method: "POST",
-        url: "http://10.8.6.30:9994/ai_service/exec_instruction/",
+        url: "http://10.8.6.30:9994",
         data: {
           session_id: this.aiInput.perfect.session_id,
           user_input: this.selectText,
@@ -263,11 +267,10 @@ export default {
       }
     });
     // TODO: 这里要改
-    addListener("update", (blocks) => {
-      const block = blocks.find(
-        (block) => block.id === this.$superConfig.blockId
-      );
-      block && (this.content = block.data.text);
+    addListener("update", (block) => {
+      if(block && this.$superConfig.blockId === block.id) {
+        this.content = block.data.text;
+      }
     });
   },
 };

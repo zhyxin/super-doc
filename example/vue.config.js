@@ -2,8 +2,10 @@ module.exports = {
     devServer: {
       proxy: {
         '/arm': {
-          target: 'https://arm2.awebide.com/',
-          changeOrigin: true
+          target: 'http://10.8.4.126:7009',
+          changeOrigin: true,
+          pathRewrite: {
+          },
         },
       }
     }

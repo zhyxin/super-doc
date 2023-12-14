@@ -96,5 +96,6 @@ export function getElementCoordinates(element) {
     top: docY,
     right: docX + rect.width,
     bottom: docY + rect.height,
+    rect
   };
 }

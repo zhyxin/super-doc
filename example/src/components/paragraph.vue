@@ -1,5 +1,5 @@
 <template>
-  <p ref="paragraph" class="super-block" contenteditable placeholder='"/"插入内容，或"command + /"唤起文档AI' @input="contentChange">{{ content }}</p>
+  <p ref="paragraph" class="super-block" contenteditable placeholder='"/"插入内容' @input="contentChange">{{ content }}</p>
 </template>
 
 <script>

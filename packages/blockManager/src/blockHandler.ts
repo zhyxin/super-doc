@@ -31,6 +31,7 @@ export const replaceBlockForBlockId = function (
   block: Block,
   blockId: BlockId = this.currentBlockId
 ): void {
+
   const { target } = this.findBlockInstanceForId(blockId);
   try {
     block.data.text = target.state.data.text;

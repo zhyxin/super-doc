@@ -18,19 +18,10 @@ export class BlockBase {
   }
 
   _injectionForVue() {
-    // if(!window["Vue"].prototype['$blocks']) {
       window["Vue"].prototype['$blocks'] = () => this._config.Editor.UI.Editor.BlockManager.blocks;
-    // }
-    // if(!window["Vue"].prototype['$replaceCurrentBlock']) {
       window["Vue"].prototype['$replaceCurrentBlock'] = (...args) => this._config.Editor.API.replaceCurrentBlock(...args);
-    // }
-    // if(!window["Vue"].prototype['$superDocUpdateBlockData']) {
       window["Vue"].prototype['$superDocUpdateBlockData'] = (...args) => this._config.Editor.API.superDocUpdateBlockData(...args);
-    // }
-
-    // if(!window["Vue"].prototype['$superDocListen']) {
       window["Vue"].prototype['$superDocListen'] = (...args) => this._config.Editor.API.superDocListen(...args);
-    // }
   }
 
   // 子类生产的dom进行最后的包装

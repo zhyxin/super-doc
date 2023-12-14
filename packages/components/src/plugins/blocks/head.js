@@ -1,4 +1,4 @@
-import { Plugin } from "@super-doc/api";
+import { Plugin, addListener } from "@super-doc/api";
 
 export default class Head extends Plugin.BlockBase {
   config = null;
@@ -10,6 +10,7 @@ export default class Head extends Plugin.BlockBase {
     'h5': '14px',
     'h6': '12px',
   };
+
   constructor(options) {
     super(options);
     const { config, ...other } = options;
@@ -27,14 +28,18 @@ export default class Head extends Plugin.BlockBase {
     el.style.margin = 0;
     el.style['font-weight'] = 'bold';
     el.style['font-size'] = this.fontSize[this.config.data.level];
+    el.style['line-height'] = '1.45';
 
-    this.bind(el);
+    this.bindUpdateEvent(el);
     return el;
   }
 
-  bind(el) {
-    el.addEventListener("change", function (event) {
-        console.log(event);
-    })
+  bindUpdateEvent(el) {
+    addListener("update", (block) => {
+      if(block &&  this.config.id === block.id) {
+        el.textContent = block.data.text;
+      }
+    });
   }
+
 }

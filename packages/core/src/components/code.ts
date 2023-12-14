@@ -107,12 +107,6 @@ export default class Core {
             };
         }
 
-        
-        // if (this.config.holderId && !this.config.holder) {
-        //     this.config.holder = this.config.holderId;
-        //     this.config.holderId = null;
-        // }
-
         if (this.config.holder == null) {
             this.config.holder = 'editorjs';
         }
@@ -141,20 +135,19 @@ export default class Core {
         }
 
 
-        const innerTools = Object.keys(interComponents.tools).map(name => {
-                return interComponents.tools[name]
-        })
+        
         if(!this.config?.tools) {
             
             this.config.tools = {
                 toolbar: {
-                    plugins: innerTools,
-                    layout: []
+                    plugins: interComponents.tools.plugins,
+                    layout: interComponents.tools.layout
                 },
                 inline: []
             };
         } else {
-            this.config.tools.toolbar.plugins.unshift(...innerTools)
+            this.config.tools.toolbar.plugins.unshift(...interComponents.tools.plugins);
+            this.config.tools.toolbar.layout.unshift(...interComponents.tools.layout);
         }
 
     }

@@ -8,6 +8,7 @@ import {
   BlockId,
 } from "@super-doc/types";
 import Blocks from "./components/blocks";
+import { generateParagraphData } from "@super-doc/api"
 import { Block } from "./components/block";
 import {
   batchInsertBlock,
@@ -79,6 +80,7 @@ export default class BlockManager extends Module {
     this._currentBlockId = value;
     this.Editor.UI.toolbarFollowFocusBlock();
     this.Editor.UI.command.visible = false;
+    this.Editor.UI.layout.visible = false;
     setTimeout(() => {
       $.querySelector(`[block-id="${this._currentBlockId}"]`)?.focus();
     }, 20);
@@ -140,7 +142,7 @@ export default class BlockManager extends Module {
           });
           this.Editor.Renderer.reredner();
           blockInstances.forEach((item) => this.syncRendered(item));
-          this.Editor.Event.addListeners.forEach(callback => callback(this.blocks, blocks));
+          this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
         },
         update: (block: OutputBlockData, key: string, value: any) => {
           
@@ -153,7 +155,7 @@ export default class BlockManager extends Module {
           const target = this.blocks.find(_block => {
             return _block.data === block
           });
-          this.Editor.Event.updateListeners.forEach(callback => callback(this.blocks, target));
+          this.Editor.Event.updateListeners.forEach(callback => callback(target, this.blocks));
         },
         delete: (blocks: OutputBlockData[]) => {
           const { id } = blocks[0];
@@ -168,7 +170,7 @@ export default class BlockManager extends Module {
           this.currentHoverBlockId = preId || id;
           this.currentBlockId = preId || id;
           this.Editor.Renderer.reredner();
-          this.Editor.Event.deleteListeners.forEach(callback => callback(this.blocks, blocks));
+          this.Editor.Event.deleteListeners.forEach(callback => callback(blocks, this.blocks));
         },
       },
     }).target;
@@ -224,17 +226,21 @@ export default class BlockManager extends Module {
       this.toolInstances.toolbar.plugins.push(plugin);
     });
     layout?.forEach((Plugin) => {
-      const plugin = new Plugin({ Editor: this.Editor });
-      this.toolInstances.toolbar.layout.push(plugin);
+      const layout = new Plugin({ Editor: this.Editor });
+      this.toolInstances.toolbar.layout.push(layout);
     });
   }
 
   public removeBlock(blockId: BlockId) {
     // 同步config blocks
     this.blocks.some((block, index, target) => {
-      if (block.id === blockId && index !== 0) {
-        target.splice(index, 1);
-        return true;
+      if (block.id === blockId) {
+        if(index !== 0) {
+          target.splice(index, 1);
+          return true;
+        } else {
+          target.splice(index, 1, generateParagraphData());
+        }
       }
     });
   }
@@ -277,6 +283,7 @@ export default class BlockManager extends Module {
       );
     }
     this.Editor.Renderer.reredner();
+    this.Editor.UI.layout.visible = false;
   }
   public moveUp(blockId: BlockId) {
     this.move(blockId, "UP");
