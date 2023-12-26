@@ -1,4 +1,4 @@
-import { Module, generateBlockId } from "@super-doc/share";
+import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom } from "@super-doc/share";
 import { BlockId, OutputBlockData } from "@super-doc/types";
 
 /**
@@ -110,6 +110,51 @@ export const generateParagraphData = () => {
     class: "Paragraph",
   };
 };
+
+export const dom2json = _dom2json;
+export const json2dom = _json2dom;
+
+function insertAfter(originElement, newElement) {
+  var parent = originElement.parentNode;
+  if (parent.lastChild == originElement) {
+      // 如果最后的节点是目标元素，则直接添加。因为默认是最后
+      parent.appendChild(newElement);
+  } else {
+      //如果不是，则插入在目标元素的下一个兄弟节点 的前面。也就是目标元素的后面
+      parent.insertBefore(newElement, originElement.nextSibling);
+  }
+}
+
+export function syncDom(targetDom:HTMLElement, newDom: HTMLElement) {
+  if(targetDom.innerHTML === newDom.innerHTML) return;
+  const nodes = Array.from(targetDom.childNodes);
+  const newNodes = Array.from(newDom.childNodes);
+  newNodes.forEach((nNode, index) => {
+    const oNode = nodes[index] as HTMLElement;
+    if (!oNode) {
+      let i = index -1
+      while(!nodes[i] && i >= 0) {
+        i -= 1;
+      }
+      insertAfter(nodes[i], nNode);
+    } else if(nNode.nodeType === oNode.nodeType) {
+      if(nNode.nodeType === 3 && nNode.textContent !== oNode.textContent) {
+        oNode.textContent = nNode.textContent;
+      } else if (nNode.nodeName !== oNode.nodeName) {
+        insertAfter(oNode, nNode);
+      } else if(nNode.nodeName === oNode.nodeName) {
+        syncDom(oNode, nNode as HTMLElement);
+      } else {
+        throw '有问题：' + nNode.nodeName + '---' + oNode.nodeName;
+      }
+    } else if(nNode) {
+      oNode.replaceWith(nNode);
+    }
+  });
+  nodes.slice(newNodes.length).forEach(el => el.remove())
+}
+
+
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */

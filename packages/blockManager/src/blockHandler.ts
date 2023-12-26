@@ -1,4 +1,4 @@
-import { OutputBlockData, BlockId } from "@super-doc/types";
+import { OutputBlockData, BlockId, BlockToolData } from "@super-doc/types";
 import { generateBlockId } from "@super-doc/share";
 import { Block } from ".";
 
@@ -75,4 +75,10 @@ export const replaceCurrentBlock = function (blockDatas: OutputBlockData[], id: 
   blockDatas.forEach(block => block.class = block.class);
   const currentBlockIndex = this.blocks.findIndex(block => block.id === (id ? id : this.currentBlockId));
   this.blocks.splice(currentBlockIndex, 1, ...blockDatas);
+}
+
+export const updateBlockData = function (id: BlockId, data: BlockToolData) {
+  if(!id || !data) return;
+  const blockData = this.blocks.find(block => block.id === id);
+  blockData.data = data;
 }

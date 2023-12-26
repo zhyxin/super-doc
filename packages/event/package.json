@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@super-doc/api": "workspace:^1.0.0",
-    "@super-doc/share": "workspace:^1.0.0"
+    "@super-doc/share": "workspace:^1.0.0",
+    "@super-doc/types": "workspace:^1.0.0"
   }
 }

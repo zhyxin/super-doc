@@ -1,18 +1,20 @@
-import { EditorConfig } from '@super-doc/types';
+import { EditorConfig, ModuleConfig } from '@super-doc/types';
 import BlockManager from '@super-doc/block-manager';
 import UI from '@super-doc/ui';
 import Renderer from '@super-doc/renderer';
-import { EditorModules } from '@super-doc/typing';
+import { EditorModules } from '@super-doc/types';
 import * as _ from '@super-doc/share';
 import Event from '@super-doc/event';
 import { API } from '@super-doc/api';
 import interComponents from '@super-doc/components';
+import Menu from '@super-doc/menu';
 
 const Modules = {
     BlockManager,
     Renderer,
     API,
     UI,
+    Menu,
     Event
 };
 export default class Core {
@@ -52,6 +54,7 @@ export default class Core {
     public async start(): Promise<void> {
         const modulesToPrepare = [
             'BlockManager',
+            'Menu',
             'UI',
             'Event',
         ];
@@ -143,7 +146,9 @@ export default class Core {
                     plugins: interComponents.tools.plugins,
                     layout: interComponents.tools.layout
                 },
-                inline: []
+                menu: [
+                    ...interComponents.menu
+                ]
             };
         } else {
             this.config.tools.toolbar.plugins.unshift(...interComponents.tools.plugins);

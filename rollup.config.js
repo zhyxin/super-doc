@@ -59,6 +59,7 @@ function createConfig(format, output) {
     return {
         input: resolve(options.enter),
         output,
+        external: ['lodash-es'],
         // 插件一定要按配置
         plugins: [
             // uglify(),

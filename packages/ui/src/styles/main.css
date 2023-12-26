@@ -1489,7 +1489,8 @@
   position: absolute;
   left: -10px;
   top: 20px;
-  display: none;
+  visibility: hidden;
+  opacity: 0;
   width: 200px;
   background: white;
   box-sizing: border-box;
@@ -1498,7 +1499,7 @@
   padding: 5px 10px;
   border-radius: 6px;
   z-index: 99999;
-  transition: all .3s;
+  transition: opacity .5s;
 }
 
 .super-doc-toolbar--popover .super-doc-toolbar--item {
@@ -1533,11 +1534,13 @@ h6 {
 
 /* common */
 .super-doc-common-show {
-  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .super-doc-common-hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
 }
 /* common */
 
@@ -1550,3 +1553,37 @@ h6 {
   font-weight: 400;
 }
 /* ----------- */
+
+
+/* -----------------------菜单部分------------------------ */
+.super-doc-menu {
+  position: absolute;
+
+  border-radius: 90px;
+  box-shadow: 0 10px 30px #0000001a;
+  padding: 5px 11px;
+  box-sizing: border-box;
+  background-color: #fff;
+  display: flex;
+}
+
+/* boldMenu: "super-doc-menu--bold",
+italicMenu: "super-doc-menu--italic",
+highlightMenu: "super-doc-menu--highlightMenu" */
+
+.super-doc-menu > div > span {
+  margin: 0 5px;
+  cursor: pointer;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  transition: all .3s;
+  border-radius: 4px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.super-doc-menu > div > span:hover {
+  background-color: #e7e6e6;
+}
+/* ------------------------------------------------------ */

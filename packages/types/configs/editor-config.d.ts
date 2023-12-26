@@ -1,7 +1,5 @@
-import { Tools } from '../tools';
+import { Tools } from './tools';
 import { OutputData} from '../index';
-import {SanitizerConfig} from './sanitizer-config';
-
 export interface EditorConfig {
   isReadOnly?: boolean;
 
@@ -16,11 +14,9 @@ export interface EditorConfig {
 
   placeholder?: string|false;
 
-  sanitizer?: SanitizerConfig;
-
   hideToolbar?: boolean;
 
-  tools?: Tools<any>;
+  tools?: Tools;
 
   data?: OutputData;
 

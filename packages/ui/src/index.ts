@@ -3,6 +3,7 @@ import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
 import styles from "./styles/main.css";
 import Command from "./components/command";
 import Layout from "./components/layout";
+import Menu from "./components/menu";
 interface ModuleConfig {
   config: EditorConfig;
 }
@@ -24,10 +25,16 @@ export default class Ui extends Module {
     superDocToolbarPlus: string;
     superDocToolbarPopover: string;
     superDocToolbarItem: string;
+    superDocMenu: string;
+    superDocMenuItemContainer: string;
+    boldMenu: string;
+    italicMenu: string;
+    highlightMenu: string;
+
   } {
     return {
       commonShow: "super-doc-common-show",
-      commonHidden: "supper-doc-common-hidden",
+      commonHidden: "super-doc-common-hidden",
       wrapper: "super-doc-block",
       content: "ce-block__content",
       editorWrapper: "super-doc-editor",
@@ -41,10 +48,16 @@ export default class Ui extends Module {
       superDocToolbarPlus: "super-doc-toolbar--plus",
       superDocToolbarPopover: "super-doc-toolbar--popover",
       superDocToolbarItem: "super-doc-toolbar--item",
+      superDocMenu: "super-doc-menu",
+      superDocMenuItemContainer: "super-doc-menu-item-container",
+      boldMenu: "super-doc-menu--bold",
+      italicMenu: "super-doc-menu--italic",
+      highlightMenu: "super-doc-menu--highlightMenu"
     };
   }
   public command: Command;
   public layout: Layout;
+  public menu: Menu;
 
   constructor({ config: EditorConfig }) {
     super({ config: EditorConfig });
@@ -53,8 +66,8 @@ export default class Ui extends Module {
     this.setCommandList();
     this.setLayoutList();
     this.make();
-
     this.loadStyles();
+    this.setMenuList();
   }
 
   public setCommandList(): void {
@@ -62,6 +75,9 @@ export default class Ui extends Module {
   }
   public setLayoutList(): void {
     this.layout = new Layout(this);
+  }
+  public setMenuList(): void {
+    this.menu = new Menu(this);
   }
 
   private make(): void {

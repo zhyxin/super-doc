@@ -1,5 +1,5 @@
 import { BlockToolData, BlockTuneData } from "@super-doc/types";
-import { EditorModules } from "@super-doc/typing";
+import { EditorModules } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import BlockManager from "..";
 /**

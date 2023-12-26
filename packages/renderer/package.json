@@ -23,7 +23,6 @@
     "@super-doc/components": "workspace:^1.0.0",
     "@super-doc/share": "workspace:^1.0.0",
     "@super-doc/types": "workspace:^1.0.0",
-    "@super-doc/typing": "workspace:^1.0.0",
     "@super-doc/ui": "workspace:^1.0.0"
   }
 }

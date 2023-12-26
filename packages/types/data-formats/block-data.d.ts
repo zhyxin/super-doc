@@ -1,4 +1,4 @@
-import {BlockToolData} from '../tools';
+import { BlockToolData } from '../tools';
 import { BlockId } from './block-id';
 
 /**

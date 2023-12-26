@@ -49,7 +49,7 @@ export class BlockBase {
               },
               props: {
                 '$superConfig': {
-                  blockData: this._config.data,
+                  blockData: this._config,
                   blockId:  this._blockId
                 }
               }

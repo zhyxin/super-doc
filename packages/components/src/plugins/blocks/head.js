@@ -37,7 +37,7 @@ export default class Head extends Plugin.BlockBase {
   bindUpdateEvent(el) {
     addListener("update", (block) => {
       if(block &&  this.config.id === block.id) {
-        el.textContent = block.data.text;
+        el.innerHTML = block.data.text;
       }
     });
   }

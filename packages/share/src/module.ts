@@ -1,9 +1,4 @@
-import { EditorModules } from "@super-doc/typing"
-import { EditorConfig } from '@super-doc/types';
-
-interface ModuleConfig {
-    config: EditorConfig
-}
+import { EditorModules, EditorConfig, ModuleConfig } from "@super-doc/types"
 export class Module {
     protected Editor: EditorModules;
     protected config: EditorConfig;

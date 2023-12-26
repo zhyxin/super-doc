@@ -16,11 +16,10 @@ import {
   insertBlockForBlockId,
   replaceBlockForBlockId,
   replaceCurrentBlock,
+  updateBlockData,
 } from "./blockHandler";
 export * from "./components/block";
-interface ModuleConfig {
-  config: EditorConfig;
-}
+
 export default class BlockManager extends Module {
   // 事件存储
   public listeners: WeakMap<OutputBlockData, Set<Function>> = new WeakMap();
@@ -144,16 +143,13 @@ export default class BlockManager extends Module {
           blockInstances.forEach((item) => this.syncRendered(item));
           this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
         },
-        update: (block: OutputBlockData, key: string, value: any) => {
-          
-          // TODO：更新这部分逻辑待补充
-          this.listeners
-            .get(block)
-            ?.forEach((callback) => callback(this.blocks, block, key, value));
+        update: (proxy: any, key: string, value: any) => {
+          console.log('访问路径：', proxy.OBJECT_PATH);
+          const blockIndex = Number(proxy.OBJECT_PATH.split('.')[0].replace('[', '').replace(']', ''));
+          const block = this.blocks[blockIndex];
           this.Editor.Renderer.reredner();
-          if(key !== 'text') return;
           const target = this.blocks.find(_block => {
-            return _block.data === block
+            return _block === block
           });
           this.Editor.Event.updateListeners.forEach(callback => callback(target, this.blocks));
         },
@@ -203,7 +199,8 @@ export default class BlockManager extends Module {
   public insertBlockForBlockId = insertBlockForBlockId;
   public batchInsertBlock = batchInsertBlock;
   public replaceCurrentBlock = replaceCurrentBlock;
-
+  public updateBlockData = updateBlockData;
+  
   public findBlockConfigForId(blockId: BlockId): OutputBlockData {
     return this.blocks.find(
       (block) => block.id === blockId
@@ -219,7 +216,7 @@ export default class BlockManager extends Module {
   }
 
   public loadTools() {
-    const { toolbar, inline } = this.config.tools;
+    const { toolbar } = this.config.tools;
     const { plugins, layout } = toolbar;
     plugins.forEach((Plugin) => {
       const plugin = new Plugin();

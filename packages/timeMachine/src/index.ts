@@ -7,8 +7,6 @@ import {
 } from "./typing";
 import { isArrayAttribute, isArrayDelete, isProxy } from "./utils";
 
-// import { createProxy } from './proxy';
-
 interface Option {
   // specificKey: {
   //     deep: number;
@@ -40,64 +38,69 @@ export default class TimeMachine {
       return;
     }
     this.option = option;
-    this.target = this.createProxy(target);
+    this.target = this.createProxy(target, '');
     window["TimeMachine"] = this;
   }
 
-  public get = (target: any, key: string) => {
-    // 是否被代理
-    if (key === "IS_PROXY") {
-      return true;
-    }
-    // 返回代理元对象
-    if (key === "PROXY_TARGET") {
-      return target;
-    }
+  public get = (parentPath: string) => {
+    return (target: any, key: string) => {
+      // 是否被代理
+      if (key === "IS_PROXY") {
+        return true;
+      }
+      // 返回代理元对象parentKey
+      if (key === "PROXY_TARGET") {
+        return target;
+      }
+      if(key === "OBJECT_PATH") {
+        return parentPath;
+      }
+      // 重构splice
+      if (key === "splice" && typeof target[key] === "function") {
+        return this._splice;
+      }
+      const value = target[key];
+      if (target.hasOwnProperty(key) && (isObject(value) || isArray(value))) {
+        const path = isObject(target) ? `.${key}` : `[${key}]`;
+        return this.createProxy(value, `${parentPath}${path}`);
+      } else if (
+        typeof target[key] === "function" &&
+        ["pop", "push", "shift", "unshift", "reverse", "sort"].includes(key)
+      ) {
+        const _that = this;
+        return function (...args) {
+          // 在拦截过程中直接模拟原地操作
+          const pTarget = _that.proxyMap.get(target);
 
-    // 重构splice
-    if (key === "splice" && typeof target[key] === "function") {
-      return this._splice;
-    }
-    const value = target[key];
-    if (target.hasOwnProperty(key) && (isObject(value) || isArray(value))) {
-      return this.createProxy(value);
-    } else if (
-      typeof target[key] === "function" &&
-      ["pop", "push", "shift", "unshift", "reverse", "sort"].includes(key)
-    ) {
-      const _that = this;
-      return function (...args) {
-        // 在拦截过程中直接模拟原地操作
-        const pTarget = _that.proxyMap.get(target);
-        
-        switch (key) {
-          case "pop":
-            return pTarget.splice(target.length - 1, 1)[0];
-          case "push":
-            pTarget.splice(target.length, 0, ...args);
-            return target.length;
-          case "shift":
-            return pTarget.splice(0, 1)[0];
-          case "unshift":
-            pTarget.splice(0, 0, ...args);
-            return target.length;
-          case "reverse":
-            pTarget.splice(0, target.length, ...target.slice().reverse());
-            return target;
-          case "sort":
-            pTarget.splice(0, target.length, ...target.slice().sort(...args));
-            return target;
-          default:
-            break;
-        }
-      };
-    } else {
-      return value;
+          switch (key) {
+            case "pop":
+              return pTarget.splice(target.length - 1, 1)[0];
+            case "push":
+              pTarget.splice(target.length, 0, ...args);
+              return target.length;
+            case "shift":
+              return pTarget.splice(0, 1)[0];
+            case "unshift":
+              pTarget.splice(0, 0, ...args);
+              return target.length;
+            case "reverse":
+              pTarget.splice(0, target.length, ...target.slice().reverse());
+              return target;
+            case "sort":
+              pTarget.splice(0, target.length, ...target.slice().sort(...args));
+              return target;
+            default:
+              break;
+          }
+        };
+      } else {
+        return value;
+      }
     }
   };
 
   public set = (target, key: string, value: any): boolean => {
-    const IS_PROXY = value.IS_PROXY;
+    const IS_PROXY = value?.IS_PROXY;
     // TODO: 排除数组的默认方法和已经代理过的方法
     if (IS_PROXY) {
       //   value = value.PROXY_TARGET;
@@ -149,11 +152,11 @@ export default class TimeMachine {
     return true;
   };
 
-  public createProxy(target: any) {
+  public createProxy(target: any, parentPath: string) {
     let proxy = this.findProxy(target);
     if (!proxy) {
       proxy = new Proxy(target, {
-        get: this.get,
+        get: this.get(parentPath),
         set: this.set,
       });
     }

@@ -17,5 +17,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@super-doc/api": "workspace:^1.0.0",
+    "@super-doc/block-manager": "workspace:^1.0.0",
+    "@super-doc/event": "workspace:^1.0.0",
+    "@super-doc/menu": "workspace:^1.0.0",
+    "@super-doc/renderer": "workspace:^1.0.0",
+    "@super-doc/ui": "workspace:^1.0.0"
+  }
 }
