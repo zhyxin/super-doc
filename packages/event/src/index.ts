@@ -195,7 +195,7 @@ export default class Event extends Module {
     }
     if (this.Editor.UI.command.visible || this.Editor.UI.layout.visible) return;
     if (blockId) {
-      let { left: x, top: y, rect } = getElementCoordinates(target);
+      let { left: x, top: y, rect } = getElementCoordinates(target.getBoundingClientRect());
       toolbar.style = !!toolbar.style ? toolbar.style : {};
       toolbar.style.left = x - 50 + "px";
       if (rect.height <= 45) {

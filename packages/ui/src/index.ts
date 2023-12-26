@@ -274,7 +274,7 @@ export default class Ui extends Module {
     const focusBlockElement =
       this.Editor.BlockManager?.curentFocusBlock?.currentElement;
     if (!focusBlockElement) return;
-    let { left: x, top: y, rect } = getElementCoordinates(focusBlockElement);
+    let { left: x, top: y, rect } = getElementCoordinates(focusBlockElement.getBoundingClientRect());
     this.nodes.toolbarWrapper.style = !!this.nodes.toolbarWrapper.style
       ? this.nodes.toolbarWrapper.style
       : {};

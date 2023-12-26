@@ -82,8 +82,7 @@ export const keyCodes = {
 };
 
 
-export function getElementCoordinates(element) {
-  const rect = element.getBoundingClientRect();
+export function getElementCoordinates(rect) {
 
   const scrollX = window.scrollX || window.pageXOffset;
   const scrollY = window.scrollY || window.pageYOffset;
