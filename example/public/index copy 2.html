@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delayed Selection Event</title>
+</head>
+<body>
+
+  <p id="myParagraph">Select text in this paragraph to see the event.</p>
+
+  <script>
+    let delayedSelectionTimer;
+
+    const myParagraph = document.getElementById('myParagraph');
+
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('selectionchange', handleSelectionChange);
+
+    function handleMouseUp() {
+      // 清除之前的定时器
+      clearTimeout(delayedSelectionTimer);
+
+      // 创建新的定时器
+      delayedSelectionTimer = setTimeout(function() {
+        const selection = window.getSelection();
+        console.log('Text selected:', selection.toString());
+        // 在这里执行你希望触发的操作
+      }, 300); // 设置延迟时间，单位是毫秒
+    }
+
+    function handleSelectionChange() {
+      // 在 selectionchange 事件中清除定时器，确保用户选择变化时不触发事件
+      clearTimeout(delayedSelectionTimer);
+    }
+  </script>
+
+</body>
+</html>

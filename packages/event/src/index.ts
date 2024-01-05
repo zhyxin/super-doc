@@ -8,6 +8,8 @@ import { Dom as $ } from "@super-doc/share";
 import { generateParagraphData } from "@super-doc/api";
 import { BlockInstance } from "@super-doc/types";
 
+import KeyDown from "./modules/keyDown";
+
 export default class Event extends Module {
   public addListeners: Set<Function> = new Set();
   public deleteListeners: Set<Function> = new Set();
@@ -17,7 +19,10 @@ export default class Event extends Module {
   public mouseY: number;
 
   private SELECT_TIME: number = 0;
-  public Selection:any= {};
+  public Selection: any = {};
+
+  public keyDownInstance: KeyDown = null;
+
   public prepare(): void {
     this.registerGlobalEvent();
     this.registerBlankAreaEvent();
@@ -32,6 +37,13 @@ export default class Event extends Module {
     this.registerGlobalMouseUpEvent();
     this.registerGlobalMouseDownEvent();
     this.registerGlobalDocumentMousemove();
+  }
+
+  /**
+   * 注册光标方向的事件
+   */
+  public bindKeydownEvent(blockInstance: BlockInstance[], Event: Event) {
+    this.keyDownInstance = new KeyDown(blockInstance, Event);
   }
 
   private registerGlobalSelectionEvent() {
@@ -72,27 +84,11 @@ export default class Event extends Module {
 
   private sectionHandler(event) {
     const selection = window.getSelection();
-    if(selection.type !== "Range") return;
-    // [
-    //   'collapsed',
-    //   'commonAncestorContainer',
-    //   'endContainer',
-    //   'endOffset',
-    //   'startContainer',
-    //   'startOffset'
-    // ].forEach((key) => {
-    //   this.Selection[key] = selection.getRangeAt(0)[key];
-    // });
+    if (selection.type !== "Range") return;
     this.Selection = window.getSelection().getRangeAt(0);
-    this.Selection['content'] = selection.toString();
+    this.Selection["content"] = selection.toString();
 
     clearTimeout(this.SELECT_TIME);
-  }
-
-  public bindKeydownEvent(blocks): void {
-    blocks.forEach((block) => {
-      block.element.addEventListener("keydown", this.keydownEvent.bind(this));
-    });
   }
 
   public registerGlobalDocumentMousemove() {
@@ -102,7 +98,7 @@ export default class Event extends Module {
     });
   }
 
-    public mouseEvent(blocks) {
+  public mouseEvent(blocks) {
     blocks.forEach((block) => {
       block.element.addEventListener("click", this.mouseClick.bind(this));
       block.element.addEventListener("input", this.inputEvent.bind(this));
@@ -123,47 +119,7 @@ export default class Event extends Module {
     const blockId = deepFindBlockIdElement(el);
     if (!blockId) return;
     const block = this.Editor.BlockManager.findBlockConfigForId(blockId);
-    // block.data.text = el.textContent;
-    /**
-     * 光标处理，解决innerHTML后光标重置到开头的问题
-    */
-    // let selection = window.getSelection();
-    // let range = selection.getRangeAt(0);
-    // let caretPosition = range ? range.startOffset : 0;
-    /**
-     * 同步数据到block
-    */
     block.data.text = el.innerHTML;
-    console.log('内置');
-    /**
-     * 光标处理，解决innerHTML后光标重置到开头的问题
-    */
-    // selection.removeAllRanges()
-    // range?.setStart(el.firstChild, caretPosition);
-    // selection.addRange(range);
-  }
-
-  public keydownEvent(event: any): void {
-    try {
-      switch (event.keyCode) {
-        case keyCodes.ENTER:
-          this.Editor.BlockManager.insertBlockForBlockId();
-          event.preventDefault();
-          break;
-        case keyCodes.BACKSPACE:
-          const { BlockManager } = this.Editor;
-          const element =
-            BlockManager.curentFocusBlock.element.querySelector(`[block-id]`);
-          if (element.childNodes.length === 0) {
-            BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
-            event.preventDefault();
-          } else if (element.childNodes.length > 0) {
-          }
-          break;
-      }
-    } catch (e) {
-      console.error(e);
-    }
   }
 
   public mouseClick(event: any) {
@@ -172,9 +128,9 @@ export default class Event extends Module {
       el = event.currentTarget.querySelector("[block-id]");
     }
     if (!el) return;
-    let blockId = el.getAttribute("block-id");
-    this.Editor.BlockManager.currentBlockId = blockId;
-    // this.Editor.BlockManager.findBlockForId(blockId);
+    let id = el.getAttribute("block-id");
+    this.Editor.BlockManager.changeCurrentBlockId(id);
+    // this.Editor.BlockManager.findBlockForId(id);
   }
 
   public onmouseout(event: any) {}
@@ -195,13 +151,17 @@ export default class Event extends Module {
     }
     if (this.Editor.UI.command.visible || this.Editor.UI.layout.visible) return;
     if (blockId) {
-      let { left: x, top: y, rect } = getElementCoordinates(target.getBoundingClientRect());
+      let {
+        left: x,
+        top: y,
+        rect,
+      } = getElementCoordinates(target.getBoundingClientRect());
       toolbar.style = !!toolbar.style ? toolbar.style : {};
       toolbar.style.left = x - 50 + "px";
       if (rect.height <= 45) {
-        toolbar.style.top = y + (rect.height - 24) / 2 + "px";
+        toolbar.style.top = rect.y + (rect.height - 24) / 2 + "px";
       } else {
-        toolbar.style.top = y + 3 + "px";
+        toolbar.style.top = rect.y + 3 + "px";
       }
 
       event.stopPropagation();
@@ -212,27 +172,6 @@ export default class Event extends Module {
 
   public enter(event: KeyboardEvent): void {
     event.preventDefault();
-  }
-
-  // clickEditorEvent() {
-  //     const blockInstances = this.Editor.BlockManager.blockInstances;
-  //     blockInstances.forEach(block => {
-  //         block.element
-  //     })
-  // }
-
-  public addShowCommandListEvent(element: HTMLElement) {
-    element.addEventListener("click", () => {
-      this.Editor.UI.layout.visible = false;
-      this.Editor.UI.command.visible = true;
-    });
-  }
-
-  public addShowLayoutToolListEvent(element: HTMLElement) {
-    element.addEventListener("click", () => {
-      this.Editor.UI.command.visible = false;
-      this.Editor.UI.layout.visible = true;
-    });
   }
 
   public on(type: string, callback: Function) {
@@ -246,9 +185,12 @@ export default class Event extends Module {
   }
 
   public registerBlankAreaEvent() {
-    $.querySelector(`.${this.Editor.UI.CSS.editorZone}`).addEventListener(
+    const editorZoneElement = $.querySelector(`.${this.Editor.UI.CSS.editorZone}`);
+    editorZoneElement.addEventListener(
       "click",
-      () => {
+      (event) => {
+        if(event.target !== editorZoneElement) return;
+        console.log('新增空格');
         const lastBlock = this.Editor.BlockManager.blocks.slice(-1);
         if (
           lastBlock &&
@@ -257,10 +199,10 @@ export default class Event extends Module {
         ) {
           this.Editor.BlockManager.blocks.push(generateParagraphData());
         } else {
-          this.Editor.BlockManager.currentBlockId =
-            this.Editor.BlockManager.blocks.slice(-1)[0].id;
-          this.Editor.BlockManager.currentHoverBlockId =
-            this.Editor.BlockManager.blocks.slice(-1)[0].id;
+          console.log(this.Editor.BlockManager.blocks.slice(-1)[0].id);
+          this.Editor.BlockManager.changeCurrentBlockId(
+            this.Editor.BlockManager.blocks.slice(-1)[0].id
+          );
         }
       },
       true

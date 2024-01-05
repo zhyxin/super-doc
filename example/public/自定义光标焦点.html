@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Cursor Demo</title>
+    <style>
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        #custom-input {
+            position: relative;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #cursor {
+            position: absolute;
+            top: 10px; /* Adjust based on padding */
+            left: 5px; /* Initial position */
+            width: 2px;
+            height: 1em;
+            background: black;
+            animation: blink 1s step-start 0s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="custom-input" contenteditable="true">
+        <span id="text"></span>
+        <div id="cursor"></div>
+    </div>
+
+    <script>
+        const input = document.getElementById('custom-input');
+        const text = document.getElementById('text');
+        const cursor = document.getElementById('cursor');
+
+        input.addEventListener('input', function() {
+            text.textContent = input.textContent;
+
+            // Update cursor position
+            const textWidth = text.offsetWidth;
+            cursor.style.left = textWidth + 'px';
+        });
+
+        input.addEventListener('click', function(e) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.setStart(text, 0);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            input.focus();
+        });
+
+        input.addEventListener('blur', function() {
+            cursor.style.display = 'none';
+        });
+
+        input.addEventListener('focus', function() {
+            cursor.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

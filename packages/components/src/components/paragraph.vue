@@ -17,7 +17,7 @@
  * API提供更新json的方法，插件调用该方法去更新指定blockID的数据
  *
  */
-import { showCommand, addListener, syncDom } from "@super-doc/api";
+import { showCommand, addListener, syncDom, markdownSyntaxTransform } from "@super-doc/api";
 // this.config.Editor.UI.command.visible = true;
 export default {
   props: ["$superConfig"],
@@ -37,29 +37,36 @@ export default {
           select.removeAllRanges();
 
           const _template = document.createElement("div");
-          _template.innerHTML = block.data.text;
+          _template.innerHTML = markdownSyntaxTransform(block.data.text);
 
           syncDom(dom, _template);
-          // dom.innerHTML = block.data.text;
           select.addRange(preRange);
         }
       });
     },
     contentChange(event) {
       if (!event.target.childNodes) return;
+      this.quickTransform(event);
+      /**
+       * 更新data后续改成sdk提供的方法
+       */
+      const block = superDoc
+        .getBlocks()
+        .find((block) => block.id === this.$superConfig.blockId);
+      block.data.text = markdownSyntaxTransform(event.target.innerHTML);
+      // block.data.text = event.target.innerHTML;
+    },
+    /**
+     * 各种类型的快捷转换
+     * 目前统一在段落实现
+     * 后续换成各个模块负责
+    */
+    quickTransform(event) {
       const content = event.target.innerText;
       if (content === "/") {
         showCommand();
-      } else {
-        /**
-         * 更新data后续改成sdk提供的方法
-         */
-        const block = superDoc
-          .getBlocks()
-          .find((block) => block.id === this.$superConfig.blockId);
-        block.data.text = event.target.innerHTML;
       }
-    },
+    }
   },
   mounted() {
     this.docUpdateEvent();

@@ -1,4 +1,4 @@
-import { OutputBlockData, BlockId, BlockToolData } from "@super-doc/types";
+import { OutputBlockData, BlockId, BlockToolData, BlockInstance } from "@super-doc/types";
 import { generateBlockId } from "@super-doc/share";
 import { Block } from ".";
 
@@ -29,12 +29,12 @@ export const findBlockInstanceForId = function (blockId: BlockId): {
 
 export const replaceBlockForBlockId = function (
   block: Block,
-  blockId: BlockId = this.currentBlockId
+  blockId: BlockId = this.currentBlockId,
 ): void {
 
   const { target } = this.findBlockInstanceForId(blockId);
   try {
-    block.data.text = target.state.data.text;
+    block.data.text = !!block.data.text ? block.data.text : target.state.data.text;
   } catch (error) {
     console.error(error);
   }

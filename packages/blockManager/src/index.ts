@@ -1,4 +1,4 @@
-import { Module, generateBlockId, Dom as $ } from "@super-doc/share";
+import { Module, generateBlockId, Dom as $, setCursorForEnd } from "@super-doc/share";
 import TimeMachine from "@super-doc/time-machine";
 import {
   EditorConfig,
@@ -80,9 +80,10 @@ export default class BlockManager extends Module {
     this.Editor.UI.toolbarFollowFocusBlock();
     this.Editor.UI.command.visible = false;
     this.Editor.UI.layout.visible = false;
-    setTimeout(() => {
-      $.querySelector(`[block-id="${this._currentBlockId}"]`)?.focus();
-    }, 20);
+    if(document.activeElement !== $.querySelector(`[block-id="${this._currentBlockId}"]`)) {
+      const blockElement = $.querySelector(`[block-id="${this._currentBlockId}"]`);
+      setCursorForEnd(blockElement);
+    }
   }
 
   public get curentFocusBlock(): Block {
@@ -106,27 +107,11 @@ export default class BlockManager extends Module {
 
   public prepare(): void {
     this.proxyBlocks();
-    this.blocks.forEach((block, index) => {
-      console.log(block.class);
-      try {
-        this.blockInstanceMap.set(
-          block,
-          new Block({
-            index,
-            id: block.id,
-            type: block.type,
-            data: block.data,
-            Editor: this.Editor,
-            class: block.class,
-          })
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    this.instanceBlocks();
     this.loadTools();
+    this.Editor.UI.makeMounted();
+    this.Editor.Renderer.reredner();
     if(!this.config.isReadOnly) this.bindEvent();
-    this.changeIsBindStatus(this.blockInstances);
   }
 
   proxyBlocks() {
@@ -140,7 +125,10 @@ export default class BlockManager extends Module {
             blockInstances.push(blockInstance);
           });
           this.Editor.Renderer.reredner();
-          blockInstances.forEach((item) => this.syncRendered(item));
+          blockInstances.forEach((item) => {
+            this.syncRendered(item)
+            this.changeCurrentBlockId(item.id);
+          });
           this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
         },
         update: (proxy: any, key: string, value: any) => {
@@ -170,28 +158,39 @@ export default class BlockManager extends Module {
         },
       },
     }).target;
-    console.log(this.config, "---");
   }
-
+  private instanceBlocks() {
+    this.blocks.forEach((block, index) => {
+      try {
+        this.blockInstanceMap.set(
+          block,
+          new Block({
+            index,
+            id: block.id,
+            type: block.type,
+            data: block.data,
+            Editor: this.Editor,
+            class: block.class,
+          })
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
   syncRendered(blockInstance: Block) {
     // 绑定事件
     this.bindEvent([blockInstance]);
-    // 改变绑定状态
-    this.changeIsBindStatus([blockInstance]);
-    // 改变当前焦点
-    this.currentBlockId = blockInstance.id;
-    this.currentHoverBlockId = blockInstance.id;
+  }
+  public changeCurrentBlockId(id: BlockId) {
+    this.currentBlockId = id;
+    this.currentHoverBlockId = id;
   }
 
   bindEvent(blocks: Block[] = this.blockInstances) {
     const _blocks = blocks.filter((block) => !block.isBindEvent);
     if (!_blocks.length) return console.warn("不可重复绑定事件");
     this.Editor.Event.mouseEvent(_blocks);
-    this.Editor.Event.bindKeydownEvent(_blocks);
-  }
-
-  public changeIsBindStatus(blockInstances: Block[] = this.blockInstances) {
-    blockInstances.forEach((block) => (block.isBindEvent = true));
   }
 
   public replaceBlockForBlockId = replaceBlockForBlockId;

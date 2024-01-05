@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delayed Selection Event</title>
+</head>
+<body>
+
+  <p id="p">Example: <i>italic</i> and <b>bold</b></p>
+
+
+  <script>
+  let range = new Range();
+  range.setStart(p.firstChild, 0);
+  range.setEnd(p.firstChild, 3);
+  // 范围的 toString 以文本形式返回其内容，不带标签
+  console.log(range); // Example: italic
+  // 将此范围应用于文档选择，后文有解释
+  document.getSelection().addRange(range);
+  </script>
+
+</body>
+</html>

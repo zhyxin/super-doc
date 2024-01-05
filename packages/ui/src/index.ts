@@ -63,24 +63,31 @@ export default class Ui extends Module {
     super({ config: EditorConfig });
   }
   public async prepare(): Promise<void> {
-    this.setCommandList();
-    this.setLayoutList();
-    this.make();
-    this.loadStyles();
-    this.setMenuList();
+    this.makeInitContainer();
+    // this.makeToolbarContainer()
+    // this.makeCommandList();
+    // this.makeLayoutList();
+    // this.makeMenuList();
+    // this.makeLoadStyles();
   }
-
-  public setCommandList(): void {
+  public makeMounted() {
+    this.makeCommandList();
+    this.makeLayoutList();
+    this.makeMenuList();
+    this.makeToolbar()
+    this.makeLoadStyles();
+  }
+  public makeCommandList(): void {
     this.command = new Command(this);
   }
-  public setLayoutList(): void {
+  public makeLayoutList(): void {
     this.layout = new Layout(this);
   }
-  public setMenuList(): void {
+  public makeMenuList(): void {
     this.menu = new Menu(this);
   }
 
-  private make(): void {
+  private makeInitContainer(): void {
     this.nodes.holder =
       typeof this.config.holder === "string"
         ? document.getElementById(this.config.holder)
@@ -95,13 +102,30 @@ export default class Ui extends Module {
     this.nodes.holder.appendChild(this.nodes.wrapper);
     this.nodes.pluginContainer = this.makePluginContainer();
     this.nodes.layoutContainer = this.makeLayoutContainer();
-    this.Editor.Event.addShowCommandListEvent(
-      this.nodes.pluginContainer.element
-    );
-    this.Editor.Event.addShowLayoutToolListEvent(
-      this.nodes.layoutContainer.element
-    );
+
+    this.nodes.pluginContainer.element.addEventListener("click", () => {
+      this.layout.visible = false;
+      this.command.visible = true;
+    });
+    this.nodes.layoutContainer.element.addEventListener("click", () => {
+      this.command.visible = false;
+      this.layout.visible = true;
+    });
+    // this.Editor.Event.addShowCommandListEvent(
+    //   this.nodes.pluginContainer.element
+    // );
+    // this.Editor.Event.addShowLayoutToolListEvent(
+    //   this.nodes.layoutContainer.element
+    // );
     // this.nodes.pluginContainer.element.addEventListener()
+    
+  }
+
+  /**
+   * 渲染插件和布局工具栏
+  */
+
+  public makeToolbar(this) {
     const toolbarWrapper = this.makeToolbarContainer()
       .appendChild(
         this.nodes.pluginContainer.appendChild(this.command.element).element
@@ -113,7 +137,7 @@ export default class Ui extends Module {
     this.nodes.wrapper.appendChild(this.nodes.toolbarWrapper);
   }
 
-  private loadStyles(): void {
+  private makeLoadStyles(): void {
     let blob = new Blob([styles as any], { type: "text/css" });
     const cssLink = $.make("link", null, {
       rel: "stylesheet",
@@ -280,9 +304,9 @@ export default class Ui extends Module {
       : {};
     this.nodes.toolbarWrapper.style.left = x - 50 + "px";
     if (rect.height <= 45) {
-      this.nodes.toolbarWrapper.style.top = (y + ((rect.height - 24)/2)) + 'px';
+      this.nodes.toolbarWrapper.style.top = (rect.y + ((rect.height - 24)/2)) + 'px';
     } else {
-      this.nodes.toolbarWrapper.style.top = (y + 3) + 'px';
+      this.nodes.toolbarWrapper.style.top = (rect.y + 3) + 'px';
     }
   }
 }

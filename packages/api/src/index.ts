@@ -111,6 +111,18 @@ export const generateParagraphData = () => {
   };
 };
 
+export const generateHeadData = (level) => {
+  return {
+    id: generateBlockId(),
+    type: "Head",
+    data: {
+      text: "",
+      level,
+    },
+    class: "Head",
+  };
+};
+
 export const dom2json = _dom2json;
 export const json2dom = _json2dom;
 
@@ -127,9 +139,9 @@ function insertAfter(originElement, newElement) {
 
 export function syncDom(targetDom:HTMLElement, newDom: HTMLElement) {
   if(targetDom.innerHTML === newDom.innerHTML) return;
-  const nodes = Array.from(targetDom.childNodes);
   const newNodes = Array.from(newDom.childNodes);
   newNodes.forEach((nNode, index) => {
+    const nodes = Array.from(targetDom.childNodes);
     const oNode = nodes[index] as HTMLElement;
     if (!oNode) {
       let i = index -1
@@ -151,10 +163,71 @@ export function syncDom(targetDom:HTMLElement, newDom: HTMLElement) {
       oNode.replaceWith(nNode);
     }
   });
+  const nodes = Array.from(targetDom.childNodes);
   nodes.slice(newNodes.length).forEach(el => el.remove())
 }
 
+export function markdownSyntaxTransform(content: string, id: BlockId) {
+  if(/`([^`]+)`\s/.test(content)) {
+    content = content.replace(/`([^`]+)`\s/g, '<code class="super-doc-code">$1</code>&nbsp;<span>&#xFEFF;</span>');
+  }
+  if(/`([^`]+)`&nbsp;/.test(content)) {
+    content = content.replace(/`([^`]+)`&nbsp;/g, '<code class="super-doc-code">$1</code>&nbsp;<span>&#xFEFF;</span>');
+  }
+  
 
+  if(content.indexOf('# ') === 0) {
+    const headData = generateHeadData('h1');
+    content = content.replace('# ', '');
+    headData.data = {
+      text: content,
+      level: 'h1'
+    };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+  } else if(content.indexOf('## ') === 0) {
+    const headData = generateHeadData('h2');
+    content = content.replace('## ', '');
+    console.log('更新后的content', content);
+    headData.data = {
+      text: content,
+      level: 'h2'
+    };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+  } else if(content.indexOf('### ') === 0) {
+    const headData = generateHeadData('h3');
+    content = content.replace('### ', '');
+    headData.data = {
+      text: content,
+      level: 'h3'
+    };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+  } else if(content.indexOf('#### ') === 0) {
+    const headData = generateHeadData('h4');
+    content = content.replace('#### ', '');
+    headData.data = {
+      text: content,
+      level: 'h4'
+    };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+  } else if(content.indexOf('##### ') === 0) {
+    const headData = generateHeadData('h5');
+    content = content.replace('##### ', '');
+    headData.data = {
+      text: content,
+      level: 'h5'
+    };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+  } else if(content.indexOf('+ ') === 0 || content.indexOf('- ') === 0) {
+
+  } else {
+
+  }
+  return content;
+}
+
+export function findBlockDataForId(id: BlockId): OutputBlockData {
+  return window["__SUPERDOC__"].BlockManager.findBlockConfigForId(id).data
+}
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */

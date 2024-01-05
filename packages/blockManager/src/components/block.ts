@@ -1,5 +1,5 @@
 import { BlockToolData, BlockTuneData } from "@super-doc/types";
-import { EditorModules } from "@super-doc/types";
+import { EditorModules, MountedCallback } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import BlockManager from "..";
 /**
@@ -26,6 +26,7 @@ export class Block {
   public index: number;
   public class: any;
   public isBindEvent: boolean = false;
+  public mountedCallback: MountedCallback = null;
   private _Editor: EditorModules;
 
   public _isEditable: boolean = false;
@@ -69,11 +70,23 @@ export class Block {
     this.Editor = Editor;
     this.class = _class;
     this.block2html();
+    this.bindEvent();
+
   }
 
   public call(methodName: string, params?: object): void {}
 
   block2html() {
-    this.element = this.Editor.Renderer.block2html([this]);
+    const [element, callback] = this.Editor.Renderer.block2html(this);
+    this.element = element;
+    this.mountedCallback = callback;
+  }
+
+  /**
+   * 事件绑定
+  */
+  private bindEvent() {
+    this.Editor.Event.mouseEvent([this]);
+    this.Editor.Event.bindKeydownEvent([this], this.Editor.Event);
   }
 }

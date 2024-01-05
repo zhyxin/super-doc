@@ -53,9 +53,9 @@ export default class Core {
     // 运行所有module的prepare方法
     public async start(): Promise<void> {
         const modulesToPrepare = [
-            'BlockManager',
-            'Menu',
             'UI',
+            'Menu',
+            'BlockManager',
             'Event',
         ];
         return modulesToPrepare.reduce(

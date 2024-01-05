@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Div Switch Cursor Position Demo</title>
+    <style>
+        #div1, #div2 {
+            width: 300px;
+            height: 100px;
+            border: 1px solid black;
+            margin: 10px;
+            padding: 5px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- 定义两个可编辑的div元素，它们可以像文本框一样编辑 -->
+    <div id="div1" contenteditable="true">Some editable text here...</div>
+    <div id="div2" contenteditable="true">Some more editable text here...</div>
+
+    <script>
+        // 为第一个div元素添加键盘事件监听
+        document.getElementById('div1').addEventListener('keydown', function(event) {
+            console.log(event);
+            // 检查是否按下了向下箭头键
+            if (event.key === 'ArrowDown') {
+                // 阻止箭头键的默认行为，避免光标在当前div内移动
+                event.preventDefault();
+
+                // 获取当前光标所在的范围对象，这是获取光标位置的标准方法
+                const range = window.getSelection().getRangeAt(0);
+                // 获取当前光标位置的矩形框，以便确定其水平位置
+                const rect = range.getBoundingClientRect();
+
+                // 获取第二个div元素并使其获得焦点，准备接收光标
+                const div2 = document.getElementById('div2');
+                div2.focus();
+
+                // 创建一个新的Range对象，用于设置第二个div中的光标位置
+                const newRange = document.createRange();
+                // 获取当前的Selection对象，用于操作光标
+                const newSelection = window.getSelection();
+
+                // 初始化变量以保存在第二个div中找到的最接近的光标位置
+                let closestNode = null;
+                let closestOffset = 0;
+                let minDistance = Number.MAX_VALUE;
+
+                // 定义一个函数来遍历第二个div的所有子节点
+                const walkNodes = (node) => {
+                    const nodeRange = document.createRange();
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        const child = node.childNodes[i];
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            // 遍历文本节点中的每个字符位置
+                            for (let j = 0; j < child.length; j++) {
+                                // 为每个字符位置设置一个Range，以获取其屏幕坐标
+                                nodeRange.setStart(child, j);
+                                nodeRange.setEnd(child, j);
+                                // 获取当前字符的位置矩形框
+                                const childRect = nodeRange.getBoundingClientRect();
+                                // 计算当前位置与第一个div中光标位置的水平距离
+                                const distance = Math.abs(rect.left - childRect.left);
+
+                                // 更新最接近位置的信息
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    closestNode = child;
+                                    closestOffset = j;
+                                }
+                            }
+                        } else if (child.nodeType === Node.ELEMENT_NODE) {
+                            // 如果是元素节点，则递归地遍历其子节点
+                            walkNodes(child);
+                        }
+                    }
+                };
+
+                // 对第二个div的所有子节点执行遍历
+                walkNodes(div2);
+
+                // 如果在第二个div中找到了最接近的位置，则设置光标
+                if (closestNode) {
+                    newRange.setStart(closestNode, closestOffset);
+                    newRange.collapse(true); // 折叠Range至起点，实际设置光标位置
+                    newSelection.removeAllRanges(); // 清除当前所有光标位置
+                    newSelection.addRange(newRange); // 设置新的光标位置
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -13,10 +13,9 @@ export default class Menu {
   set visible(v: boolean) {
     // TODO: 这里可以抽
     try {
-      const rangeBound = window
-        .getSelection()
-        .getRangeAt(0)
-        .getBoundingClientRect();
+      const selection = window.getSelection();
+      if(selection.type === 'None') return;
+      const rangeBound = selection.getRangeAt(0).getBoundingClientRect();
       const coord = getElementCoordinates(rangeBound);
       if (!!v) {
         this.element.style.left = `${coord.left + coord.rect.width / 4}px`;

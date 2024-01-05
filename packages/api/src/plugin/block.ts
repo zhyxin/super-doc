@@ -25,39 +25,39 @@ export class BlockBase {
   }
 
   // 子类生产的dom进行最后的包装
-  _pack = function (dom) {
+  _pack = function (_dom) {
+    let dom = _dom;
     if (this.platform === "native" && dom instanceof HTMLElement) {
       dom.setAttribute("contentEditable", "true");
       dom.setAttribute("block-id", this._blockId);
-      return dom;
+      return [ dom, () => {} ];
     } else if (this.platform.toLowerCase() === "vue") {
       // 设置原型
       this._injectionForVue();
-      const contaienr = document.createElement("div");
-      // TODO: 模拟插入到页面后执行
-      setTimeout(() => {
-        const instance = new window["Vue"]({
-          el: contaienr,
+      dom = document.createElement("div");
+      const _that = this;
+      return [ dom, function () {
+        new window["Vue"]({
+          el: dom,
           components: {
-            comp: dom,
+            comp: _dom,
           },
 
           render: (h) => {
             return  h("comp", {
               attrs: {
-                "block-id": this._blockId,
+                "block-id": _that._blockId,
               },
               props: {
                 '$superConfig': {
-                  blockData: this._config,
-                  blockId:  this._blockId
+                  blockData: _that._config,
+                  blockId:  _that._blockId
                 }
-              }
+              },
             })
           ;},
         });
-      }, 0);
-      return contaienr;
+      }];
     }
   }
 }

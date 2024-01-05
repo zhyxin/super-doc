@@ -1,22 +1,15 @@
-import {
-    OutputBlockData,
-    BlockToolData,
-    BlockId,
-    // StubData,
-  } from "@super-doc/types";
   import { Block } from "@super-doc/block-manager";
   import { Module, Dom as $, isString, isDOM } from "@super-doc/share";
   import interComponents from "@super-doc/components";
+import { MountedCallback } from "@super-doc/types";
   export default class Renderer extends Module {
-    public block2html(blocks: Block[]): HTMLElement {
-      const blockEls = blocks.map((block) => {
-        return this.blockTypeTrans(block);
-      });
-  
-      return this.assembleBlockEl(blockEls);
+    public block2html(block: Block): [HTMLElement, MountedCallback] {
+      const [dom, callback] = this.blockTypeTrans(block);
+      const element = this.assembleBlockEl(dom);
+      return [element, callback];
     }
   
-    blockTypeTrans(block: Block): HTMLElement {
+    blockTypeTrans(block: Block): [HTMLElement, MountedCallback] {
       if (block.class) {
         const _class = window[block.class] ?? interComponents.blocks[block.class];
         const blockInstance = new _class({
@@ -29,11 +22,9 @@ import {
       }
     }
   
-    public assembleBlockEl(elements: HTMLElement[]): HTMLElement {
+    public assembleBlockEl(el: HTMLElement): HTMLElement {
       const blockContainerDiv = this.Editor.UI.generateBlockContainerDiv();
-      elements.forEach((el) => {
-        blockContainerDiv.firstChild.appendChild(el);
-      });
+      blockContainerDiv.firstChild.appendChild(el)
       return blockContainerDiv;
     }
   
@@ -91,8 +82,6 @@ import {
         blocksContainer.querySelectorAll(`.${wrapper}`)
       );
   
-      
-  
       // 添加
       blockInstances.forEach((block, index) => {
         if(!blockDocEls.includes(block.element)) {
@@ -101,6 +90,7 @@ import {
           } else {
             blocksContainer.insertBefore(block.element, blockDocEls[index]);
           }
+          block.mountedCallback();
         }
       })
   

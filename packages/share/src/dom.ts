@@ -98,3 +98,24 @@ export function getElementCoordinates(rect) {
     rect
   };
 }
+
+export function setCursorForEnd (element: HTMLElement) {
+  const range = document.createRange();
+  const selection = document.getSelection();
+  const child = Array.from(element.childNodes);
+  if(child.length) {
+    const lastChild = child.slice(child.length - 1)[0];
+    if(lastChild.nodeType === Node.TEXT_NODE) {
+      range.setStart(lastChild, (lastChild as Text).length);
+      range.setEnd(lastChild, (lastChild as Text).length);
+    } else if (lastChild.nodeType === Node.ELEMENT_NODE) {
+      range.setStart(lastChild, 1);
+      range.setEnd(lastChild, 1);
+    }
+  } else {
+    range.setStart(element, 0);
+    range.setEnd(element, 0);
+  }
+  selection.removeAllRanges();
+  selection.addRange(range);
+}

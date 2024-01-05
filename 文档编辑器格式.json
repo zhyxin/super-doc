@@ -1,0 +1,37 @@
+[
+  {
+      "type": "Head",
+      "data": {
+          "text": "标题i",
+          "level": "h1"
+      },
+      "class": "Head"
+  },
+  {
+      "type": "Paragraph",
+      "data": {
+          "text": "段落"
+      },
+      "class": "Paragraph"
+  },
+  {
+      "type": "TableDoc",
+      "data": {
+          ...表格数据
+      },
+      "class": "TableDoc"
+  },
+  {
+      "type": "ImageDoc",
+      "data": {
+          "url": "图片url或base64"
+      },
+      "class": "ImageDoc"
+  },
+  {
+    "type": "list",
+    "data": {
+      "type": ""
+    }
+  }
+]

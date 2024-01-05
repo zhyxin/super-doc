@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selection Event Example</title>
+  <style>
+    /* 添加一些样式，使选中的文本更易于识别 */
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+
+  <p id="myParagraph" contenteditable>Select text in this paragraph to see the event.</p>
+
+  <script>
+    // 获取需要监听的元素
+    const myParagraph = document.getElementById('myParagraph');
+
+    // 监听 selectionchange 事件
+    document.addEventListener('selectionchange', handleSelectionChange);
+
+    // 处理选区变化的函数
+    function handleSelectionChange() {
+      // 获取当前选区
+      const selection = window.getSelection();
+
+      // 检查选区是否在我们感兴趣的元素中
+      if (isSelectionInElement(selection, myParagraph)) {
+        // 在这里执行你希望触发的操作
+        console.log('Text selected!');
+        // 例如，可以为选中的文本添加样式
+        highlightSelectedText();
+      }
+    }
+
+    // 检查选区是否在指定的元素中
+    function isSelectionInElement(selection, element) {
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        return element.contains(range.startContainer) || element.contains(range.endContainer);
+      }
+      return false;
+    }
+
+    // 为选中的文本添加样式
+    function highlightSelectedText() {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
+        span.className = 'highlight';
+        range.surroundContents(span);
+      }
+    }
+  </script>
+
+</body>
+</html>

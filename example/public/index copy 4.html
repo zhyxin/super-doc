@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #box {
+            width: 100%;
+            height: 200px;
+            border: 1px red solid;
+        }
+    </style>
+</head>
+<body>
+<div id="box" contenteditable="true"></div>
+<button>插入指定内容</button>
+<button>移动光标到最后</button>
+</body>
+</html>
+<script>
+    function insertHtmlAtCaret(html) {
+        let sel, range;
+        if (window.getSelection) {
+            // IE9 and non-IE
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+                let el = document.createElement("div");
+                el.innerHTML = html;
+                let frag = document.createDocumentFragment(), node, lastNode;
+                while ((node = el.firstChild)) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+ 
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        } else if (document.selection && document.selection.type != "Control") {
+            // IE < 9
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
+ 
+    var btn1 = document.getElementsByTagName('button')[0];
+    var btn2 = document.getElementsByTagName('button')[1];
+    btn1.onclick = function () {
+        insertHtmlAtCaret('这是在光标处插入的内容！')
+    }
+    btn2.onclick = function () {
+        // 将获得焦点的光标移动到最后的输入位置
+        let range = document.createRange();
+        range.selectNodeContents(document.getElementById('box'));
+        range.collapse(false);
+        let sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+</script>
