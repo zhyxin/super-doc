@@ -118,18 +118,22 @@ export default class BlockManager extends Module {
     this.config.data.blocks = new TimeMachine(this.config.data.blocks, {
       events: {
         add: (blocks: OutputBlockData[]) => {
-          const blockInstances = [];
-          blocks.forEach((block) => {
-            const blockInstance = new Block({ ...block, Editor: this.Editor });
-            this.blockInstanceMap.set(block, blockInstance);
-            blockInstances.push(blockInstance);
-          });
-          this.Editor.Renderer.reredner();
-          blockInstances.forEach((item) => {
-            this.syncRendered(item)
-            this.changeCurrentBlockId(item.id);
-          });
-          this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
+          try {
+            const blockInstances = [];
+            blocks.forEach((block) => {
+              const blockInstance = new Block({ ...block, Editor: this.Editor });
+              this.blockInstanceMap.set(block, blockInstance);
+              blockInstances.push(blockInstance);
+            });
+            this.Editor.Renderer.reredner();
+            blockInstances.forEach((item) => {
+              this.syncRendered(item)
+              this.changeCurrentBlockId(item.id);
+            });
+            this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
+          } catch (error) {
+            console.log('添加不是block类型数据', blocks);
+          }
         },
         update: (proxy: any, key: string, value: any) => {
           console.log('访问路径：', proxy.OBJECT_PATH);
@@ -142,19 +146,23 @@ export default class BlockManager extends Module {
           this.Editor.Event.updateListeners.forEach(callback => callback(target, this.blocks));
         },
         delete: (blocks: OutputBlockData[]) => {
-          const { id } = blocks[0];
-          // TODO 这里需要优化 不能从页面获取上一个block-id
-          const preId = document
-            .querySelector(`[block-id="${id}"]`)
-            .parentNode.parentNode["previousElementSibling"]?.querySelector(
-              "[block-id]"
-            )
-            ?.getAttribute("block-id");
-  
-          this.currentHoverBlockId = preId || id;
-          this.currentBlockId = preId || id;
-          this.Editor.Renderer.reredner();
-          this.Editor.Event.deleteListeners.forEach(callback => callback(blocks, this.blocks));
+          try {
+            const { id } = blocks[0];
+            // TODO 这里需要优化 不能从页面获取上一个block-id
+            const preId = document
+              .querySelector(`[block-id="${id}"]`)
+              .parentNode.parentNode["previousElementSibling"]?.querySelector(
+                "[block-id]"
+              )
+              ?.getAttribute("block-id");
+    
+            this.currentHoverBlockId = preId || id;
+            this.currentBlockId = preId || id;
+            this.Editor.Renderer.reredner();
+            this.Editor.Event.deleteListeners.forEach(callback => callback(blocks, this.blocks));
+          } catch (error) {
+            console.log('删除不是block类型数据', blocks);
+          }
         },
       },
     }).target;

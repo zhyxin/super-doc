@@ -109,8 +109,8 @@ export function setCursorForEnd (element: HTMLElement) {
       range.setStart(lastChild, (lastChild as Text).length);
       range.setEnd(lastChild, (lastChild as Text).length);
     } else if (lastChild.nodeType === Node.ELEMENT_NODE) {
-      range.setStart(lastChild, 1);
-      range.setEnd(lastChild, 1);
+      range.setStart(lastChild, 0);
+      range.setEnd(lastChild, 0);
     }
   } else {
     range.setStart(element, 0);

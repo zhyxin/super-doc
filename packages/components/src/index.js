@@ -6,6 +6,7 @@ import AI from "./plugins/blocks/ai.js";
 import Head from "./plugins/blocks/head.js";
 import ImageDoc from "./plugins/blocks/image.js";
 import TableDoc from "./plugins/blocks/table.js";
+import ListDoc from "./plugins/blocks/list.js";
 
 /**
  * tools plugins
@@ -20,6 +21,7 @@ import {
 } from "./plugins/tools/head.js";
 import ImageTool from "./plugins/tools/image.js";
 import TableTool from "./plugins/tools/table.js";
+import ListTool from "./plugins/tools/list.js";
 
 /**
  * tools layout
@@ -40,7 +42,8 @@ export default {
     AI,
     Head,
     ImageDoc,
-    TableDoc
+    TableDoc,
+    ListDoc
   },
   tools: {
     plugins: [
@@ -51,7 +54,8 @@ export default {
       HeadTool3,
       HeadTool4,
       ImageTool,
-      TableTool
+      TableTool,
+      ListTool,
 
     ],
     layout: [moveUpTool, deleteTool, moveDownTool],

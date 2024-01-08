@@ -75,7 +75,6 @@ export default {
 </script>
 
 <style scoped>
-/* TODO：后续看看是否需要改成js实现    block 占位符 */
 .super-block:focus:empty::before {
   content: attr(placeholder);
   display: block;

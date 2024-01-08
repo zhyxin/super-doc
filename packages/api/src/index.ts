@@ -123,6 +123,30 @@ export const generateHeadData = (level) => {
   };
 };
 
+export const generateListData = (type) => {
+  if(type === 'ul') {
+    return {
+      id: generateBlockId(),
+      type: "ListDoc",
+      data: {
+        type: 'ul',
+        list: []
+      },
+      class: "ListDoc",
+    }
+  } if (type === 'ol') {
+    return {
+      id: generateBlockId(),
+      type: "ListDoc",
+      data: {
+        type: 'ol',
+        list: []
+      },
+      class: "ListDoc",
+    }
+  }
+}
+
 export const dom2json = _dom2json;
 export const json2dom = _json2dom;
 
@@ -148,7 +172,11 @@ export function syncDom(targetDom:HTMLElement, newDom: HTMLElement) {
       while(!nodes[i] && i >= 0) {
         i -= 1;
       }
-      insertAfter(nodes[i], nNode);
+      if(i === -1) {
+        targetDom.appendChild(nNode);
+      } else {
+        insertAfter(nodes[i], nNode);
+      }
     } else if(nNode.nodeType === oNode.nodeType) {
       if(nNode.nodeType === 3 && nNode.textContent !== oNode.textContent) {
         oNode.textContent = nNode.textContent;
@@ -217,16 +245,26 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       level: 'h5'
     };
     window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
-  } else if(content.indexOf('+ ') === 0 || content.indexOf('- ') === 0) {
-
-  } else {
-
+  } else if(content.indexOf('- ') === 0) {
+    let blockData = generateListData('ul');
+    content = content.replace('- ', '');
+    blockData.data.list[0] = { text: content ? content : '', id: generateBlockId() };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
+  } else if(content.indexOf('+ ') === 0) {
+    let blockData = generateListData('ol');
+    content = content.replace('+ ', '');
+    blockData.data.list[0] = { text: content ? content : '', id: generateBlockId() };
+    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
   }
   return content;
 }
 
 export function findBlockDataForId(id: BlockId): OutputBlockData {
   return window["__SUPERDOC__"].BlockManager.findBlockConfigForId(id).data
+}
+
+export function generateId() :BlockId{
+  return generateBlockId();
 }
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -1587,3 +1587,15 @@ highlightMenu: "super-doc-menu--highlightMenu" */
   background-color: #e7e6e6;
 }
 /* ------------------------------------------------------ */
+
+/* ----------------------markdown start----------------------- */
+.super-doc-code {
+  padding: 3px 8px;
+  margin: 0px 5px;
+  border: 1px solid rgb(229, 229, 229);
+  border-radius: 3px;
+  font-family: monospace;
+  word-break: break-all;
+  background-color: rgb(247, 247, 247);
+}
+/* ----------------------markdown e n d----------------------- */

@@ -54,7 +54,7 @@ const options = pkg.buildOptions;
 function createConfig(format, output) {
     // 进行打包
     output.name = options.name,
-    output.sourcemap = true;
+    output.sourcemap = false;
     // 生成rollup配置
     return {
         input: resolve(options.enter),

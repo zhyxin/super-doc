@@ -30,6 +30,7 @@ export class BlockBase {
     if (this.platform === "native" && dom instanceof HTMLElement) {
       dom.setAttribute("contentEditable", "true");
       dom.setAttribute("block-id", this._blockId);
+      dom.setAttribute("native", "true");
       return [ dom, () => {} ];
     } else if (this.platform.toLowerCase() === "vue") {
       // 设置原型

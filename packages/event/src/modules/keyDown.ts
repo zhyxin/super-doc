@@ -44,8 +44,10 @@ export default class KeyDown {
     const isDOWN = event.key === "ArrowDown";
     const element = event.target as Element;
     if (!isUP && !isDOWN) return;
-    event.preventDefault();
     const id: BlockId = element.getAttribute("block-id");
+    // TODO: 此处有问题 就是当是非block根元素按下上下箭头时会报错
+    if(!id) return;
+    event.preventDefault();
     const { pre, next } =
       this.Event["Editor"].BlockManager.findBlockInstanceForId(id);
     const selection = window.getSelection();

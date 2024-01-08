@@ -10,6 +10,7 @@
       @keydown="keydownHandler"
       @input.stop.self="contentChange"
     ></div>
+    {{ lineData.id }}
   </div>
 </template>
 
@@ -34,7 +35,9 @@ export default {
       this.$emit('contentChange', { id: this.lineData.id, text: event.target.innerHTML });
     },
     init() {
-      this.$refs['superdoc-list-content'].innerHTML = '';
+      const _temp = document.createElement('div');
+      _temp.innerHTML = this.lineData.text;
+      syncDom(this.$refs['superdoc-list-content'], _temp);
       this.$nextTick(() => {
         if(this.isFocus) {
           this.$refs['superdoc-list-content'].focus();
@@ -44,14 +47,14 @@ export default {
   },
   mounted() {
     this.init();
+    console.log('新增的：', this.lineData);
+    console.log('vue：', this);
   },
   watch: {
     'lineData.text': function (n) {
-      console.log(n);
-      const _temp = document.createElement('div');
-      _temp.innerHTML = n;
-      console.log(this);
-      syncDom(this.$refs['superdoc-list-content'], _temp);
+      // const _temp = document.createElement('div');
+      // _temp.innerHTML = n;
+      // syncDom(this.$refs['superdoc-list-content'], _temp);
     }
   }
 };

@@ -114,10 +114,14 @@ export default class Event extends Module {
   public menuEvent(blocks: BlockInstance[]) {}
 
   public inputEvent(event: any): void {
-    const el = event.target;
+    let el = event.currentTarget.getAttribute("[block-id]");
+    if (!el) {
+      el = event.currentTarget.querySelector("[block-id]");
+    }
     if (!el) return;
-    const blockId = deepFindBlockIdElement(el);
-    if (!blockId) return;
+    const isNative = el.getAttribute('native');
+    if(!isNative) return;
+    let blockId = el.getAttribute("block-id");
     const block = this.Editor.BlockManager.findBlockConfigForId(blockId);
     block.data.text = el.innerHTML;
   }
@@ -128,9 +132,10 @@ export default class Event extends Module {
       el = event.currentTarget.querySelector("[block-id]");
     }
     if (!el) return;
+    const isNative = el.getAttribute('native');
+    if(!isNative) return;
     let id = el.getAttribute("block-id");
     this.Editor.BlockManager.changeCurrentBlockId(id);
-    // this.Editor.BlockManager.findBlockForId(id);
   }
 
   public onmouseout(event: any) {}

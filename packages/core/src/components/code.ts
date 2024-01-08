@@ -119,7 +119,7 @@ export default class Core {
 
         const defaultBlockData = {
             id: _.generateBlockId(),
-            type: 'paragraph',
+            type: 'Paragraph',
             data: {
                 text: '',
             },

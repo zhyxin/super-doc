@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Markdown Editor</title>
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="https://unpkg.com/marked@0.3.6"></script>
+    <script src="https://unpkg.com/lodash@4.16.0"></script>
+  </head>
+  <body>
+    <div id="editor">
+      <div
+        style="width: 100%; min-height: 22px"
+        v-for="item in list"
+        contenteditable
+        :id="item.id"
+        :key="item.id"
+        @keydown="keydownHandler($event, item.id)"
+      ></div>
+      123
+    </div>
+
+    <script>
+      new Vue({
+        el: "#editor",
+        data: {
+          list: [{ text: "1", id: "1" }],
+        },
+        methods: {
+          keydownHandler(event, id) {
+            if (event.keyCode === 13) {
+              this.list.some((item, i) => {
+                if(item.id === id) {
+                  this.list.splice(i+1, 0, { text: "", id: new Date().getTime() });
+                  event.preventDefault();
+                  event.stopPropagation();
+                  return true;
+                }
+              })
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -3,7 +3,8 @@ export {
 } from './configs';
 
 export {
-  BlockInstance
+  BlockInstance,
+  BlockType
 } from './block/'
 export {
   BlockToolData,

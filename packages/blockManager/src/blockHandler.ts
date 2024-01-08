@@ -1,5 +1,5 @@
-import { OutputBlockData, BlockId, BlockToolData, BlockInstance } from "@super-doc/types";
-import { generateBlockId } from "@super-doc/share";
+import { OutputBlockData, BlockId, BlockToolData } from "@super-doc/types";
+import { generateBlockId, BlockType } from "@super-doc/share";
 import { Block } from ".";
 
 export const findBlockInstanceForId = function (blockId: BlockId): {
@@ -32,13 +32,22 @@ export const replaceBlockForBlockId = function (
   blockId: BlockId = this.currentBlockId,
 ): void {
 
-  const { target } = this.findBlockInstanceForId(blockId);
+  const { target: oldBlock } = this.findBlockInstanceForId(blockId);
+  /**
+   * 保留数据
+  */
   try {
-    block.data.text = !!block.data.text ? block.data.text : target.state.data.text;
+    if(block.type === BlockType.PARAGRAPH || block.type === BlockType.HEAD) {
+      block.data.text = !!block.data.text ? block.data.text : oldBlock.state.data.text;
+    } else if(block.type === BlockType.LIST_DOC) {
+      if((oldBlock.state.type === BlockType.PARAGRAPH || oldBlock.type === BlockType.HEAD) && oldBlock.state.data.text) {
+        block.data.list[0].text = oldBlock.state.data.text;
+      }
+    }
   } catch (error) {
     console.error(error);
   }
-  this.blocks.splice(target.index, 1, { ...block, id: generateBlockId() });
+  this.blocks.splice(oldBlock.index, 1, { ...block, id: generateBlockId() });
 };
 
 export const insertBlockForBlockId = function (
@@ -57,6 +66,7 @@ export const insertBlockForBlockId = function (
     target.id = generateBlockId();
   }
 
+  console.log('在哪里新增一个block：', this.currentBlockId);
   this.blocks.some((blockData, index, _target) => {
     if (blockData.id === this.currentBlockId) {
       _target.splice(index + 1, 0, target);
