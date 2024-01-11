@@ -1,5 +1,5 @@
 import { Plugin } from "@super-doc/api";
-import _Table from "../../components/table/index.vue";
+import _TodoList from "../../components/todoList/index.vue";
 
 export default class TableDoc extends Plugin.BlockBase {
   config = null;
@@ -14,6 +14,6 @@ export default class TableDoc extends Plugin.BlockBase {
   }
 
   render() {
-    return _Table;
+    return _TodoList;
   }
 }

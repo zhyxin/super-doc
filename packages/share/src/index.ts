@@ -5,3 +5,4 @@ export * from './compile';
 export * from './dom2json';
 export * from './json2dom';
 export * from './block';
+export * from './reg';

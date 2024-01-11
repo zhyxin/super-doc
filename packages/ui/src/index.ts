@@ -30,7 +30,6 @@ export default class Ui extends Module {
     boldMenu: string;
     italicMenu: string;
     highlightMenu: string;
-
   } {
     return {
       commonShow: "super-doc-common-show",
@@ -52,7 +51,7 @@ export default class Ui extends Module {
       superDocMenuItemContainer: "super-doc-menu-item-container",
       boldMenu: "super-doc-menu--bold",
       italicMenu: "super-doc-menu--italic",
-      highlightMenu: "super-doc-menu--highlightMenu"
+      highlightMenu: "super-doc-menu--highlightMenu",
     };
   }
   public command: Command;
@@ -74,7 +73,7 @@ export default class Ui extends Module {
     this.makeCommandList();
     this.makeLayoutList();
     this.makeMenuList();
-    this.makeToolbar()
+    this.makeToolbar();
     this.makeLoadStyles();
   }
   public makeCommandList(): void {
@@ -118,12 +117,11 @@ export default class Ui extends Module {
     //   this.nodes.layoutContainer.element
     // );
     // this.nodes.pluginContainer.element.addEventListener()
-    
   }
 
   /**
    * 渲染插件和布局工具栏
-  */
+   */
 
   public makeToolbar(this) {
     const toolbarWrapper = this.makeToolbarContainer()
@@ -259,9 +257,9 @@ export default class Ui extends Module {
       );
       popoverItem.textContent = plugin.text;
       popoverItem.addEventListener("click", () => {
-        this.Editor.BlockManager.replaceBlockForBlockId({
-          ...plugin.blockData,
-        });
+        this.Editor.BlockManager.replaceBlockForBlockId(
+          JSON.parse(JSON.stringify(plugin.blockData))
+        );
       });
       elements.push(popoverItem);
     });
@@ -298,15 +296,20 @@ export default class Ui extends Module {
     const focusBlockElement =
       this.Editor.BlockManager?.curentFocusBlock?.currentElement;
     if (!focusBlockElement) return;
-    let { left: x, top: y, rect } = getElementCoordinates(focusBlockElement.getBoundingClientRect());
+    let {
+      left: x,
+      top: y,
+      rect,
+    } = getElementCoordinates(focusBlockElement.getBoundingClientRect());
     this.nodes.toolbarWrapper.style = !!this.nodes.toolbarWrapper.style
       ? this.nodes.toolbarWrapper.style
       : {};
     this.nodes.toolbarWrapper.style.left = x - 50 + "px";
     if (rect.height <= 45) {
-      this.nodes.toolbarWrapper.style.top = (rect.y + ((rect.height - 24)/2)) + 'px';
+      this.nodes.toolbarWrapper.style.top =
+        rect.y + (rect.height - 24) / 2 + "px";
     } else {
-      this.nodes.toolbarWrapper.style.top = (rect.y + 3) + 'px';
+      this.nodes.toolbarWrapper.style.top = rect.y + 3 + "px";
     }
   }
 }

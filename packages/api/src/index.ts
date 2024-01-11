@@ -1,4 +1,4 @@
-import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom } from "@super-doc/share";
+import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom, IMAGE_MD_REGEX, getMDImage } from "@super-doc/share";
 import { BlockId, OutputBlockData } from "@super-doc/types";
 
 /**
@@ -147,6 +147,18 @@ export const generateListData = (type) => {
   }
 }
 
+export const generateImageData = ({desc, url}) => {
+  return {
+    id: generateBlockId(),
+    type: 'ImageDoc',
+    data: {
+      desc,
+      url
+    },
+    class: 'ImageDoc',
+  }
+}
+
 export const dom2json = _dom2json;
 export const json2dom = _json2dom;
 
@@ -197,10 +209,10 @@ export function syncDom(targetDom:HTMLElement, newDom: HTMLElement) {
 
 export function markdownSyntaxTransform(content: string, id: BlockId) {
   if(/`([^`]+)`\s/.test(content)) {
-    content = content.replace(/`([^`]+)`\s/g, '<code class="super-doc-code">$1</code>&nbsp;<span>&#xFEFF;</span>');
+    content = content.replace(/`([^`]+)`\s/g, '&nbsp;<code class="super-doc-code">$1</code>&nbsp;');
   }
   if(/`([^`]+)`&nbsp;/.test(content)) {
-    content = content.replace(/`([^`]+)`&nbsp;/g, '<code class="super-doc-code">$1</code>&nbsp;<span>&#xFEFF;</span>');
+    content = content.replace(/`([^`]+)`&nbsp;/g, '&nbsp;<code class="super-doc-code">$1</code>&nbsp;');
   }
   
 
@@ -255,6 +267,9 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     content = content.replace('+ ', '');
     blockData.data.list[0] = { text: content ? content : '', id: generateBlockId() };
     window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
+  } else if(IMAGE_MD_REGEX.test(content)) {
+    const blockData = generateImageData(getMDImage(content));
+    if(blockData.data.url) window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
   }
   return content;
 }

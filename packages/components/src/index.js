@@ -7,6 +7,7 @@ import Head from "./plugins/blocks/head.js";
 import ImageDoc from "./plugins/blocks/image.js";
 import TableDoc from "./plugins/blocks/table.js";
 import ListDoc from "./plugins/blocks/list.js";
+import TodoList from "./plugins/blocks/todoList.js";
 
 /**
  * tools plugins
@@ -22,6 +23,7 @@ import {
 import ImageTool from "./plugins/tools/image.js";
 import TableTool from "./plugins/tools/table.js";
 import ListTool from "./plugins/tools/list.js";
+import TodoListTool from './plugins/tools/todoList.js';
 
 /**
  * tools layout
@@ -43,7 +45,8 @@ export default {
     Head,
     ImageDoc,
     TableDoc,
-    ListDoc
+    ListDoc,
+    TodoList
   },
   tools: {
     plugins: [
@@ -56,7 +59,7 @@ export default {
       ImageTool,
       TableTool,
       ListTool,
-
+      TodoListTool
     ],
     layout: [moveUpTool, deleteTool, moveDownTool],
   },

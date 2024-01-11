@@ -57,7 +57,7 @@ export default {
         url: "/arm/create/img",
         headers: {
           "content-type": "multipart/form-data",
-          authorization: `Bearer MIng/j8jDRquRW+Md/TExwS698c=`,
+          authorization: `Bearer rELUYyv2+yrUiuW4Bea2n78GH18=`,
         },
         data: fd,
       });
@@ -70,10 +70,10 @@ export default {
   computed: {
     imagePath: {
       get() {
-        return this.blockData.data.text;
+        return this.blockData.data.url;
       },
       set(val) {
-        this.blockData.data.text = val;
+        this.blockData.data.url = val;
       },
     },
   },

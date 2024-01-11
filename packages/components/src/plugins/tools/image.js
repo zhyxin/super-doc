@@ -7,7 +7,8 @@ export default class ImageTool extends Plugin.ToolPluginBase {
     blockData = {
       type: this.type,
       data: {
-        text: '',
+        desc: '',
+        url: ''
       },
       class: this.type,
     };

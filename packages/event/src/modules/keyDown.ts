@@ -11,7 +11,7 @@ export default class KeyDown {
     // TODO: 依赖于渲染后才能添加事件，但是该事件绑定是在new Block时注册的，所以采用了setTimeout，后续看看如何去除setTimeout
     setTimeout(() => {
       this.bindBlockKeydownEvents(blockInstances);
-    }, 0)
+    }, 0);
   }
 
   /**
@@ -42,23 +42,47 @@ export default class KeyDown {
   private checkoutBlockEvent(event: KeyboardEvent) {
     const isUP = event.key === "ArrowUp";
     const isDOWN = event.key === "ArrowDown";
-    const element = event.target as Element;
     if (!isUP && !isDOWN) return;
-    const id: BlockId = element.getAttribute("block-id");
-    // TODO: 此处有问题 就是当是非block根元素按下上下箭头时会报错
-    if(!id) return;
     event.preventDefault();
-    const { pre, next } =
-      this.Event["Editor"].BlockManager.findBlockInstanceForId(id);
+    const currentTarget = event.currentTarget as HTMLElement;
+    const target = event.target;
+    const blockId = currentTarget.getAttribute("block-id");
+    const allParagraphs: HTMLElement[] = Array.from(
+      document.querySelectorAll("#superdoc-paragraph")
+    );
+    if ((target as HTMLElement).getAttribute("id") !== "superdoc-paragraph")
+      return;
+    let focusEl = null;
+    allParagraphs.some((el, i, _element) => {
+      if (el === target) {
+        if (i === _element.length - 1) {
+          focusEl = isUP ? _element[i - 1] : el;
+        } else if (i === 0) {
+          focusEl = isDOWN ? _element[i + 1] : el;
+        } else {
+          if (isDOWN) {
+            focusEl = _element[i + 1];
+          } else if (isUP) {
+            focusEl = _element[i - 1];
+          }
+        }
+        return true;
+      }
+    });
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
     const { left: x } = getElementCoordinates(range.getBoundingClientRect());
-    if (isUP && pre.state) {
-      this.setCursorForX(pre.state.currentElement, x);
-      this.Event['Editor'].BlockManager.changeCurrentBlockId(pre.state.id);
-    } else if (isDOWN && next.state) {
-      this.setCursorForX(next.state.currentElement, x);
-      this.Event['Editor'].BlockManager.changeCurrentBlockId(next.state.id);
+    this.setCursorForX(focusEl, x);
+
+    // TODO: 解决多个paragraph属于同一个block下导致焦点切换出错问题
+    if (!currentTarget.contains(focusEl)) {
+      const { pre, next } =
+        this.Event["Editor"].BlockManager.findBlockInstanceForId(blockId);
+      if (isUP && pre.state) {
+        this.Event["Editor"].BlockManager.changeCurrentBlockId(pre.state.id);
+      } else if (isDOWN && next.state) {
+        this.Event["Editor"].BlockManager.changeCurrentBlockId(next.state.id);
+      }
     }
   }
 
@@ -85,6 +109,7 @@ export default class KeyDown {
             range.setEnd(child, j);
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
+            console.log("rang", range);
             isFind = true;
             break;
           }
@@ -94,7 +119,9 @@ export default class KeyDown {
       }
     }
     if (!isFind) {
-      const lastChild = node.childNodes.length ? node.childNodes[node.childNodes.length - 1] : node;
+      const lastChild = node.childNodes.length
+        ? node.childNodes[node.childNodes.length - 1]
+        : node;
       if (lastChild.nodeType === Node.TEXT_NODE) {
         range.setStart(lastChild, (lastChild as Text).length);
         range.setEnd(lastChild, (lastChild as Text).length);
@@ -125,7 +152,7 @@ export default class KeyDown {
     } else if (element.childNodes.length > 0) {
     }
   }
-  
+
   /**
    * 移动一个字符
    */
@@ -133,4 +160,8 @@ export default class KeyDown {
   /**
    * 移动一个字母
    */
+
+  /**
+   * 光标往下
+  */
 }

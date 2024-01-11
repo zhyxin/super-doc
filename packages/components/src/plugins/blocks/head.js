@@ -27,6 +27,7 @@ export default class Head extends Plugin.BlockBase {
     el.style['font-weight'] = 'bold';
     el.style['font-size'] = this.fontSize[this.config.data.level];
     el.style['line-height'] = '1.45';
+    el.setAttribute('id', "superdoc-paragraph");
     const _template = document.createElement("div");
     _template.innerHTML = this.config.data.text;
     el.innerHTML = this.config.data.text;

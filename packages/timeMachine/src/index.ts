@@ -219,12 +219,17 @@ export default class TimeMachine {
       callbackQueue.push(snapshootAdd);
     }
 
-    const result = Array.prototype.splice.call(
-      this.PROXY_TARGET,
-      start,
-      deleteCount,
-      ...items
-    );
+    // const result = Array.prototype.splice.call(
+    //   this.PROXY_TARGET,
+    //   start,
+    //   deleteCount,
+    //   ...items
+    // );
+    /**
+     * 避免使用Array.prototype.splice.call
+     * 因为会导致vue无法进行依赖收集
+    */
+    const result = this.PROXY_TARGET.splice(start, deleteCount, ...items);
 
     // 新增的需要proxy代理一下
     for (let i = 0; i < this.length; i++) this[i];

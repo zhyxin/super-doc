@@ -66,7 +66,6 @@ export const insertBlockForBlockId = function (
     target.id = generateBlockId();
   }
 
-  console.log('在哪里新增一个block：', this.currentBlockId);
   this.blocks.some((blockData, index, _target) => {
     if (blockData.id === this.currentBlockId) {
       _target.splice(index + 1, 0, target);
