@@ -8,6 +8,7 @@ import ImageDoc from "./plugins/blocks/image.js";
 import TableDoc from "./plugins/blocks/table.js";
 import ListDoc from "./plugins/blocks/list.js";
 import TodoList from "./plugins/blocks/todoList.js";
+import Auae from "./plugins/blocks/auae.js";
 
 /**
  * tools plugins
@@ -24,6 +25,7 @@ import ImageTool from "./plugins/tools/image.js";
 import TableTool from "./plugins/tools/table.js";
 import ListTool from "./plugins/tools/list.js";
 import TodoListTool from './plugins/tools/todoList.js';
+import AuaeTool from './plugins/tools/auae.js';
 
 /**
  * tools layout
@@ -46,7 +48,8 @@ export default {
     ImageDoc,
     TableDoc,
     ListDoc,
-    TodoList
+    TodoList,
+    Auae
   },
   tools: {
     plugins: [
@@ -59,7 +62,8 @@ export default {
       ImageTool,
       TableTool,
       ListTool,
-      TodoListTool
+      TodoListTool,
+      AuaeTool
     ],
     layout: [moveUpTool, deleteTool, moveDownTool],
   },
