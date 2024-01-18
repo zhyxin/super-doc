@@ -30,6 +30,19 @@ export default class SupperDoc {
   }
 
   /**
+   * 设置blocks数据
+  */
+  public setData(jsonData: OutputBlockData[]) {
+    const blockJson = _.deepClone(jsonData);
+    this.editor.config.data.blocks.length = 0;
+    blockJson.forEach(item => {
+      item.id = item.id ? item.id : _.generateBlockId();
+      this.editor.config.data.blocks.push(item)
+    })
+    
+  }
+
+  /**
    *  获取文本字符串
    */
   getTextContent() {

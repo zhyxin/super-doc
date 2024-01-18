@@ -29,11 +29,12 @@ export default {
     SuperDocInput,
   },
   methods: {
-    contentChange(content) {
+    contentChange({content, id}) {
       this.content.text = content;
     },
   },
-  mounted() {},
+  mounted() {
+  },
   watch: {
     "content.text"(n) {
       const _temp = document.createElement("div");

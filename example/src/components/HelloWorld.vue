@@ -1,33 +1,111 @@
 <template>
-  <div>
-  </div>
+  <div></div>
 </template>
 
 <script>
+import axios from "/Users/yixin/Desktop/自己的项目/supperDoc/axios.min.js";
 import superDoc from "/Users/yixin/Desktop/自己的项目/super-doc/packages/core/dist/core.esm-bundler.js";
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
   },
-  components: {
-  },
+  components: {},
   methods: {
+    async getData() {
+      const result = await axios({
+        method: "GET",
+        url: "/dddd/doc/template/getData?bcId=38fa2jx2xdw000&projectId=pro-1OYFBwfB",
+        headers: {
+          authorization: "Bearer ZlSNdt6AWsoY1TTiF9T13FJ/Pz4=",
+        },
+      }).then((res) => {
+        try {
+          if (res.status === 200) {
+            return res.data?.obj?.result ?? [];
+          }
+        } catch (error) {
+          alert("请求数据失败");
+        }
+      });
+      const blockData = this.formatData(result);
+      console.log('-=====-', blockData);
+      window.superDoc.setData(blockData);
+    },
+    formatData(data) {
+      return data
+        .filter((item) => {
+          return (
+            item.template.type === "Head" || item.template.type === "Paragraph" || item.template.type === "TableDoc"
+          );
+        })
+        .map((item) => {
+          if (item.template.type === "Head") {
+            return {
+              type: "Head",
+              class: "Head",
+              data: {
+                text: item.datasource
+                  ? this.replaceTemplateStrings(
+                      item.template.data.text,
+                      item.datasource
+                    )
+                  : item.template.data.text,
+                level: item.template.data.level,
+              },
+            };
+          } else if (item.template.type === "Paragraph") {
+            return {
+              type: "Paragraph",
+              class: "Paragraph",
+              data: {
+                text: item.datasource
+                  ? this.replaceTemplateStrings(
+                      item.template.data.text,
+                      item.datasource
+                    )
+                  : item.template.data.text,
+              },
+            };
+          } else if (item.template.type === "TableDoc") {
+            return {
+              type: "TableDoc",
+              class: "TableDoc",
+              data: {
+                table: item.datasource.datas,
+                title: item.template.data.content
+              },
+            };
+          }
+        });
+    },
+    getPropertyValue(obj, path) {
+      return path.split(".").reduce((o, key) => o && o[key], obj);
+    },
+    replaceTemplateStrings(str, values) {
+      console.log('str', str)
+      console.log('values', values)
+      return str.replace(/\$\{(.*?)\}/g, (match, path) => {
+        const replacement = this.getPropertyValue(values, path);
+        return replacement !== undefined ? replacement : match;
+      });
+    },
     initSuperDoc() {
-      window.superDoc = new superDoc({
-      });
-      window.superDoc.on('add', (...agrs) => {
-        console.log('添加===', agrs);
-      });
-      window.superDoc.on('delete', (...agrs) => {
-        console.log('删除====', agrs);
-      });
-      window.superDoc.on('update', (...agrs) => {
-      });
+      window.superDoc = new superDoc({});
+      // window.superDoc.setData();
+      // window.superDoc.on('add', (...agrs) => {
+      //   console.log('添加===', agrs);
+      // });
+      // window.superDoc.on('delete', (...agrs) => {
+      //   console.log('删除====', agrs);
+      // });
+      // window.superDoc.on('update', (...agrs) => {
+      // });
       // window.superDoc = doc;
     },
   },
   mounted() {
+    this.getData();
     this.initSuperDoc();
   },
 };

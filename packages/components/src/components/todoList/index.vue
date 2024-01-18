@@ -56,8 +56,6 @@ export default {
     this.initData();
   },
   mounted() {
-    console.log("待办列表====================：", this.list);
-    alert(this.$attrs["block-id"])
   },
 };
 </script>

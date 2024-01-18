@@ -28,7 +28,7 @@ export default {
         this.$refs['superDocInput'].$refs['super-paragraph'].focus();
       } 
     },
-    contentChange(content) {
+    contentChange({content, id}) {
       /**
        * 更新data后续改成sdk提供的方法
        */

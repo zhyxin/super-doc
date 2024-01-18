@@ -13,11 +13,16 @@
 import { showCommand, syncDom, markdownSyntaxTransform } from "@super-doc/api";
 
 export default {
-  props: ["content", "contenteditable"],
+  props: ["content", "contenteditable", "params"],
   data() {
     return {};
   },
   methods: {
+    init() {
+      const _temp = document.createElement('p');
+      _temp.innerHTML = this.content;
+      this.syncDom(_temp);
+    },
     /**
      * 各种类型的快捷转换
      * 目前统一在段落实现
@@ -32,12 +37,15 @@ export default {
     contentChange(event) {
       if (!event.target.childNodes) return;
       this.quickTransform(event);
-      this.$emit('contentChange', markdownSyntaxTransform(event.target.innerHTML));
+      this.$emit('contentChange', {content: markdownSyntaxTransform(event.target.innerHTML), params: this.params});
     },
     syncDom(newDom) {
       syncDom(this.$refs['super-paragraph'], newDom);
     }
   },
+  mounted() {
+    this.init();
+  }
 };
 </script>
 

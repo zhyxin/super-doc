@@ -67,3 +67,12 @@ export const deepFindBlockIdElement = (el: HTMLElement) => {
         return deepFindBlockIdElement(el.parentElement);
     }
 }
+
+export const deepClone = function (object: Object | []) {
+    try {
+        const clone = JSON.parse(JSON.stringify(object));
+        return clone;
+    } catch (error) {
+        console.error('深度克隆只支持object和array类型');   
+    }
+}
