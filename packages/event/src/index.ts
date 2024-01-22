@@ -18,7 +18,7 @@ export default class Event extends Module {
   public mouseX: number;
   public mouseY: number;
 
-  private SELECT_TIME: number = 0;
+  private SELECT_TIME: NodeJS.Timeout;
   public Selection: any = {};
 
   public keyDownInstance: KeyDown = null;

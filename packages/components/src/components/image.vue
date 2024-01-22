@@ -32,7 +32,7 @@
  * API提供更新json的方法，插件调用该方法去更新指定blockID的数据
  *
  */
-import axios from "/Users/yixin/Desktop/自己的项目/supperDoc/axios.min.js";
+import axios from "../../../../axios.min.js";
 import { getBlockData } from "@super-doc/api";
 export default {
   data() {

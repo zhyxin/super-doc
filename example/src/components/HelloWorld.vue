@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import axios from "/Users/yixin/Desktop/自己的项目/supperDoc/axios.min.js";
-import superDoc from "/Users/yixin/Desktop/自己的项目/super-doc/packages/core/dist/core.esm-bundler.js";
+import axios from "../../../axios.min.js";
+import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
 export default {
   name: "HelloWorld",
   props: {
@@ -12,12 +12,25 @@ export default {
   },
   components: {},
   methods: {
+    getParams(param) {
+      var queryString = window.location.href.split('?')[1];
+      if (queryString) {
+          var params = queryString.split('&');
+          for (var i = 0; i < params.length; i++) {
+              var pair = params[i].split('=');
+              if (decodeURIComponent(pair[0]) === param) {
+                  return decodeURIComponent(pair[1]);
+              }
+          }
+      }
+      return null;
+    },
     async getData() {
       const result = await axios({
         method: "GET",
-        url: "/dddd/doc/template/getData?bcId=38fa2jx2xdw000&projectId=pro-1OYFBwfB",
+        url: "/dddd/doc/mapping/getData?bcId=d59pi7dr2yw00&projectId=pro-1OYFBwfB",
         headers: {
-          authorization: "Bearer ZlSNdt6AWsoY1TTiF9T13FJ/Pz4=",
+          authorization: `Bearer ${this.getParams('token')}=`,
         },
       }).then((res) => {
         try {

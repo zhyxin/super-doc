@@ -1,4 +1,4 @@
-import { Plugin } from '/Users/yixin/Desktop/自己的项目/super-doc/packages/api/dist/api.esm-bundler.js';
+import { Plugin } from '../../../../packages/api/dist/api.esm-bundler.js';
 class ParagraphTool extends Plugin.ToolPluginBase {
   type = "ParagraphVue";
   text = "段落";

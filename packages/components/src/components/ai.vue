@@ -67,7 +67,7 @@
 </template>
 <script>
 
-import axios from "/Users/yixin/Desktop/自己的项目/supperDoc/axios.min.js";
+import axios from "../../../../axios.min.js";
 import { compileParagraph } from "@super-doc/share";
 import { showCommand, addListener } from '@super-doc/api';
 
