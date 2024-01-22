@@ -1457,7 +1457,7 @@
 }
 
 .ce-block__content {
-  /* position: relative; */
+  position: relative;
   max-width: 650px;
   /* max-width: 1200px; */
   margin: 0 auto;
@@ -1565,6 +1565,7 @@ h6 {
   box-sizing: border-box;
   background-color: #fff;
   display: flex;
+  z-index: 1;
 }
 
 /* boldMenu: "super-doc-menu--bold",
@@ -1599,3 +1600,18 @@ highlightMenu: "super-doc-menu--highlightMenu" */
   background-color: rgb(247, 247, 247);
 }
 /* ----------------------markdown e n d----------------------- */
+
+/* ----------------------全选状态样式----------------------- */
+.super-doc-block-selected::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  height: 100%;
+  border-radius: 4px;
+  background: rgba(40,120,255,.3);
+  z-index: 1;
+  text-align: center;
+}

@@ -30,6 +30,10 @@
   import { generateId, getBlockData } from "@super-doc/api";
   import SuperDocInput from '../../common/input.vue';
   import Cell from './cell.vue';
+  import Demo from './demo.vue';
+  
+  
+
   export default {
     data() {
       return {
@@ -83,17 +87,7 @@
     },
     mounted() {
       this.init();
-      console.log(this.tableData);
     },
-    watch: {
-      'tableData.table': {
-        handler(n, o) {
-          // this.uuid = generateId();
-          console.log(this.uuid);
-        },
-        deep: true
-      }
-    }
   };
   </script>
   

@@ -96,8 +96,6 @@ export default {
       return path.split(".").reduce((o, key) => o && o[key], obj);
     },
     replaceTemplateStrings(str, values) {
-      console.log('str', str)
-      console.log('values', values)
       return str.replace(/\$\{(.*?)\}/g, (match, path) => {
         const replacement = this.getPropertyValue(values, path);
         return replacement !== undefined ? replacement : match;

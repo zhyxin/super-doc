@@ -1,4 +1,4 @@
-import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom, IMAGE_MD_REGEX, getMDImage } from "@super-doc/share";
+import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom, IMAGE_MD_REGEX, getMDImage, getModules } from "@super-doc/share";
 import { BlockId, OutputBlockData } from "@super-doc/types";
 
 /**
@@ -70,32 +70,32 @@ export class API extends Module {
  * 对外暴露使用的方法
  */
 export const showCommand = () => {
-  window["__SUPERDOC__"].UI.command.visible = true;
+  getModules().UI.command.visible = true;
 };
 
 export const addListener = (type: string, callback) => {
   if (type === "add") {
-    window["__SUPERDOC__"].Event.addListeners.add(callback);
+    getModules().Event.addListeners.add(callback);
   } else if (type === "delete") {
-    window["__SUPERDOC__"].Event.deleteListeners.add(callback);
+    getModules().Event.deleteListeners.add(callback);
   } else if (type === "update") {
-    window["__SUPERDOC__"].Event.updateListeners.add(callback);
+    getModules().Event.updateListeners.add(callback);
   }
 };
 
 export const removeListener = (type, callback) => {
   if (type === "add") {
-    window["__SUPERDOC__"].Event.addListeners.delete(callback);
+    getModules().Event.addListeners.delete(callback);
   } else if (type === "delete") {
-    window["__SUPERDOC__"].Event.deleteListeners.delete(callback);
+    getModules().Event.deleteListeners.delete(callback);
   } else if (type === "update") {
-    window["__SUPERDOC__"].Event.updateListeners.delete(callback);
+    getModules().Event.updateListeners.delete(callback);
   }
 };
 
 export const getBlockData = (id: BlockId) => {
   if (!id) return {};
-  return window["__SUPERDOC__"].BlockManager.blocks.find(
+  return getModules().BlockManager.blocks.find(
     (block) => block.id === id
   );
 };
@@ -223,7 +223,7 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       text: content,
       level: 'h1'
     };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+    getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('## ') === 0) {
     const headData = generateHeadData('h2');
     content = content.replace('## ', '');
@@ -232,7 +232,7 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       text: content,
       level: 'h2'
     };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+    getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('### ') === 0) {
     const headData = generateHeadData('h3');
     content = content.replace('### ', '');
@@ -240,7 +240,7 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       text: content,
       level: 'h3'
     };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+    getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('#### ') === 0) {
     const headData = generateHeadData('h4');
     content = content.replace('#### ', '');
@@ -248,7 +248,7 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       text: content,
       level: 'h4'
     };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+    getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('##### ') === 0) {
     const headData = generateHeadData('h5');
     content = content.replace('##### ', '');
@@ -256,30 +256,34 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
       text: content,
       level: 'h5'
     };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(headData, id);
+    getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('- ') === 0) {
     let blockData = generateListData('ul');
     content = content.replace('- ', '');
     blockData.data.list[0] = { text: content ? content : '', id: generateBlockId() };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
+    getModules().BlockManager.replaceBlockForBlockId(blockData as any, id);
   } else if(content.indexOf('+ ') === 0) {
     let blockData = generateListData('ol');
     content = content.replace('+ ', '');
     blockData.data.list[0] = { text: content ? content : '', id: generateBlockId() };
-    window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
+    getModules().BlockManager.replaceBlockForBlockId(blockData as any, id);
   } else if(IMAGE_MD_REGEX.test(content)) {
     const blockData = generateImageData(getMDImage(content));
-    if(blockData.data.url) window["__SUPERDOC__"].BlockManager.replaceBlockForBlockId(blockData, id);
+    if(blockData.data.url) getModules().BlockManager.replaceBlockForBlockId(blockData as any, id);
   }
   return content;
 }
 
 export function findBlockDataForId(id: BlockId): OutputBlockData {
-  return window["__SUPERDOC__"].BlockManager.findBlockConfigForId(id).data
+  return getModules().BlockManager.findBlockConfigForId(id).data
 }
 
 export function generateId() :BlockId{
   return generateBlockId();
+}
+
+export function bindMenu(element: Element) {
+  getModules().Event.registerSelectionEvent(element);
 }
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

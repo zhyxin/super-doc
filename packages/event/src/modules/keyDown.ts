@@ -1,5 +1,5 @@
 import { BlockId, BlockInstance } from "@super-doc/types";
-import { getElementCoordinates, keyCodes } from "@super-doc/share";
+import { getElementCoordinates, getModules, isCursorAtFirstOrLastLine, keyCodes } from "@super-doc/share";
 import Event from "../index";
 
 export default class KeyDown {
@@ -11,6 +11,7 @@ export default class KeyDown {
     // TODO: 依赖于渲染后才能添加事件，但是该事件绑定是在new Block时注册的，所以采用了setTimeout，后续看看如何去除setTimeout
     setTimeout(() => {
       this.bindBlockKeydownEvents(blockInstances);
+      this.bindCopyEvent(blockInstances);
     }, 0);
   }
 
@@ -33,6 +34,11 @@ export default class KeyDown {
       this.backspaceEvent(event);
     } else if (event.keyCode === keyCodes.ENTER) {
       this.enterEvent(event);
+    } else if (event.metaKey && event.keyCode === keyCodes.A) {
+      console.log('全选');
+      getModules().BlockManager.blockInstances.forEach(block => {
+        block.checkAll = true;
+      })
     }
   };
 
@@ -43,6 +49,9 @@ export default class KeyDown {
     const isUP = event.key === "ArrowUp";
     const isDOWN = event.key === "ArrowDown";
     if (!isUP && !isDOWN) return;
+    // 判断是否为第一行
+    const { isFirstLine, isLastLine } = isCursorAtFirstOrLastLine(event.currentTarget as Element);
+    if(isUP && !isFirstLine || isDOWN && !isLastLine) return;
     event.preventDefault();
     const currentTarget = event.currentTarget as HTMLElement;
     const target = event.target;
@@ -109,7 +118,6 @@ export default class KeyDown {
             range.setEnd(child, j);
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
-            console.log("rang", range);
             isFind = true;
             break;
           }
@@ -151,6 +159,18 @@ export default class KeyDown {
       event.preventDefault();
     } else if (element.childNodes.length > 0) {
     }
+  }
+
+  /**
+   * 粘贴事件
+  */
+  public bindCopyEvent(blockInstances: BlockInstance[]) {
+    blockInstances.forEach(instance => {
+      instance.element.addEventListener('copy', (event: ClipboardEvent) => {
+        event.clipboardData.setData('text', event.target['getInnerHTML']());
+        event.preventDefault();
+      });
+    })
   }
 
   /**

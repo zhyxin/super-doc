@@ -79,6 +79,7 @@ export const keyCodes = {
   RIGHT: 39,
   DELETE: 46,
   META: 91,
+  A: 65,
 };
 
 
@@ -118,4 +119,17 @@ export function setCursorForEnd (element: HTMLElement) {
   }
   selection.removeAllRanges();
   selection.addRange(range);
+}
+
+export function isCursorAtFirstOrLastLine(element:Element): {isFirstLine: Boolean, isLastLine: Boolean} {
+  const selection = window.getSelection();
+  if (selection.rangeCount === 0) return null; // No selection
+  const range = selection.getRangeAt(0);
+  const rangeRect = range.getBoundingClientRect();
+  const elemRect = element.getBoundingClientRect();
+
+  const isFirstLine = rangeRect.top <= elemRect.top + rangeRect.height;
+  const isLastLine = rangeRect.bottom >= elemRect.bottom - rangeRect.height;
+
+  return { isFirstLine, isLastLine };
 }

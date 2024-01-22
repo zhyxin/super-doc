@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <body>
+    <div class="source" contenteditable="true"><s>adsf</s></div>
+    <div class="target" contenteditable="true">在这里粘贴</div>
+    <script>
+      const target = document.querySelector("div.target");
+
+      target.addEventListener("paste", (event) => {
+        event.preventDefault();
+
+        let paste = (event.clipboardData || window.clipboardData).getData(
+          "text/html"
+        );
+        
+        console.log(paste);
+        paste = paste.toUpperCase();
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        selection.deleteFromDocument();
+        selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+        // selection.collapseToEnd();
+      });
+    </script>
+  </body>
+</html>

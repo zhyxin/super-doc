@@ -10,7 +10,7 @@
   ></p>
 </template>
 <script>
-import { showCommand, syncDom, markdownSyntaxTransform } from "@super-doc/api";
+import { showCommand, syncDom, markdownSyntaxTransform, bindMenu } from "@super-doc/api";
 
 export default {
   props: ["content", "contenteditable", "params"],
@@ -22,6 +22,8 @@ export default {
       const _temp = document.createElement('p');
       _temp.innerHTML = this.content;
       this.syncDom(_temp);
+
+      bindMenu(this.$refs['super-paragraph']);
     },
     /**
      * 各种类型的快捷转换

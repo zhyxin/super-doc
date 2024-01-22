@@ -1,13 +1,9 @@
-import { Module, generateBlockId, Dom as $, setCursorForEnd } from "@super-doc/share";
+import { Module, Dom as $ } from "@super-doc/share";
 import TimeMachine from "@super-doc/time-machine";
 import {
-  EditorConfig,
-  BlockToolData,
-  BlockTuneData,
   OutputBlockData,
   BlockId,
 } from "@super-doc/types";
-import Blocks from "./components/blocks";
 import { generateParagraphData } from "@super-doc/api"
 import { Block } from "./components/block";
 import {
@@ -130,7 +126,7 @@ export default class BlockManager extends Module {
           try {
             const blockInstances = [];
             blocks.forEach((block) => {
-              const blockInstance = new Block({ ...block, Editor: this.Editor });
+              const blockInstance = new Block({ ...block, Editor: this.Editor, BlockManager: this});
               this.blockInstanceMap.set(block, blockInstance);
               blockInstances.push(blockInstance);
             });
@@ -141,7 +137,7 @@ export default class BlockManager extends Module {
             });
             this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
           } catch (error) {
-            console.log('添加不是block类型数据', blocks);
+            // console.log('添加不是block类型数据', blocks);
           }
         },
         update: (proxy: any, key: string, value: any) => {
@@ -188,6 +184,7 @@ export default class BlockManager extends Module {
             data: block.data,
             Editor: this.Editor,
             class: block.class,
+            BlockManager: this,
           })
         );
       } catch (error) {
@@ -304,5 +301,15 @@ export default class BlockManager extends Module {
 
   public moveDown(blockId: BlockId) {
     this.move(blockId, "DOWN");
+  }
+
+  /**
+   * 让block处于全选状态
+   * TODO：待优化 不应使用findBlockInstanceForId方法
+  */
+  public checkAllStatus(status: boolean) {
+    this.blockInstances.forEach((blockInstance) => {
+      blockInstance.checkAll = status;
+    });
   }
 }

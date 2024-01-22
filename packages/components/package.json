@@ -9,6 +9,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "buildOptions": {
+    "enter": "src/index.js",
+    "name": "supperDoc",
+    "formats": [
+      "umd"
+    ]
+  },
   "dependencies": {
     "@super-doc/api": "workspace:^1.0.0",
     "@super-doc/share": "workspace:^1.0.0",

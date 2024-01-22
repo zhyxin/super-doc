@@ -30,6 +30,7 @@ export default class Ui extends Module {
     boldMenu: string;
     italicMenu: string;
     highlightMenu: string;
+    selectedStatus: string;
   } {
     return {
       commonShow: "super-doc-common-show",
@@ -52,6 +53,7 @@ export default class Ui extends Module {
       boldMenu: "super-doc-menu--bold",
       italicMenu: "super-doc-menu--italic",
       highlightMenu: "super-doc-menu--highlightMenu",
+      selectedStatus: "super-doc-block-selected"
     };
   }
   public command: Command;

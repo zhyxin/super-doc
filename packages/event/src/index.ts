@@ -11,14 +11,17 @@ import { BlockInstance } from "@super-doc/types";
 import KeyDown from "./modules/keyDown";
 
 export default class Event extends Module {
+  [x: string]: any;
   public addListeners: Set<Function> = new Set();
   public deleteListeners: Set<Function> = new Set();
   public updateListeners: Set<Function> = new Set();
 
+  public globalClickListenerList: Function[] = [];
+
   public mouseX: number;
   public mouseY: number;
 
-  private SELECT_TIME: NodeJS.Timeout;
+  private SELECT_TIME: number;
   public Selection: any = {};
 
   public keyDownInstance: KeyDown = null;
@@ -27,16 +30,15 @@ export default class Event extends Module {
     this.registerGlobalEvent();
     this.registerBlankAreaEvent();
     this.registerMenuEvent();
+    this.regiterateGlobalClickEvent();
   }
 
   /**
    * 全局事件
    */
   private registerGlobalEvent() {
-    this.registerGlobalSelectionEvent();
-    this.registerGlobalMouseUpEvent();
-    this.registerGlobalMouseDownEvent();
     this.registerGlobalDocumentMousemove();
+    this.registerGlobalClickEvent();
   }
 
   /**
@@ -46,7 +48,8 @@ export default class Event extends Module {
     this.keyDownInstance = new KeyDown(blockInstance, Event);
   }
 
-  private registerGlobalSelectionEvent() {
+  public registerSelectionEvent(element: Element): void {
+
     document.removeEventListener(
       "selectionchange",
       this.sectionHandler.bind(this)
@@ -55,17 +58,15 @@ export default class Event extends Module {
       "selectionchange",
       this.sectionHandler.bind(this)
     );
-  }
-
-  private registerGlobalMouseUpEvent() {
+    
     document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
     document.addEventListener("mouseup", this.mouseUpHandler.bind(this));
-  }
-  private registerGlobalMouseDownEvent() {
+
     document.removeEventListener("mousedown", this.mouseDownHandler.bind(this));
     document.addEventListener("mousedown", this.mouseDownHandler.bind(this));
   }
-  private mouseUpHandler() {
+
+  private mouseUpHandler(event) {
     clearTimeout(this.SELECT_TIME);
     const selection = window.getSelection();
     if (!selection.isCollapsed && selection.rangeCount > 0) {
@@ -81,7 +82,6 @@ export default class Event extends Module {
     this.Editor.UI.menu.visible = false;
     clearTimeout(this.SELECT_TIME);
   }
-
   private sectionHandler(event) {
     const selection = window.getSelection();
     if (selection.type !== "Range") return;
@@ -119,8 +119,8 @@ export default class Event extends Module {
       el = event.currentTarget.querySelector("[block-id]");
     }
     if (!el) return;
-    const isNative = el.getAttribute('native');
-    if(!isNative) return;
+    const isNative = el.getAttribute("native");
+    if (!isNative) return;
     let blockId = el.getAttribute("block-id");
     const block = this.Editor.BlockManager.findBlockConfigForId(blockId);
     block.data.text = el.innerHTML;
@@ -132,8 +132,8 @@ export default class Event extends Module {
       el = event.currentTarget.querySelector("[block-id]");
     }
     if (!el) return;
-    const isNative = el.getAttribute('native');
-    if(!isNative) return;
+    const isNative = el.getAttribute("native");
+    if (!isNative) return;
     let id = el.getAttribute("block-id");
     this.Editor.BlockManager.changeCurrentBlockId(id);
   }
@@ -190,12 +190,13 @@ export default class Event extends Module {
   }
 
   public registerBlankAreaEvent() {
-    const editorZoneElement = $.querySelector(`.${this.Editor.UI.CSS.editorZone}`);
+    const editorZoneElement = $.querySelector(
+      `.${this.Editor.UI.CSS.editorZone}`
+    );
     editorZoneElement.addEventListener(
       "click",
       (event) => {
-        if(event.target !== editorZoneElement) return;
-        console.log('新增空格');
+        if (event.target !== editorZoneElement) return;
         const lastBlock = this.Editor.BlockManager.blocks.slice(-1);
         if (
           lastBlock &&
@@ -214,6 +215,11 @@ export default class Event extends Module {
     );
   }
 
+  public registerGlobalClickEvent() {
+    this.Editor.UI.nodes.wrapper.addEventListener("click", (event) => {
+      this.Editor.BlockManager.checkAllStatus(false);
+    });
+  }
   public registerMenuEvent() {
     const { menuElMap } = this.Editor.UI.menu;
     const { menuInstanceMap } = this.Editor.Menu;
@@ -227,6 +233,12 @@ export default class Event extends Module {
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(this.Selection);
       });
+    });
+  }
+
+  public regiterateGlobalClickEvent() {
+    this.Editor.UI.nodes.holder.addEventListener("click", (event: any) => {
+      this.globalClickListenerList.forEach(fn => fn());
     });
   }
 }
