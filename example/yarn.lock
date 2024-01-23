@@ -39,6 +39,14 @@
     crypto-js "^4.1.1"
     uaeengine "^2.4.35"
 
+"@auae/dddeditor@^1.0.2":
+  version "1.0.2"
+  resolved "https://nexus.awebide.com/repository/npm-group/@auae/dddeditor/-/dddeditor-1.0.2.tgz#fb7d154b44df49efaff03d1d3e7694822cc9821f"
+  integrity sha1-+30VS0TfSe+v8D0dPnaUgizJgh8=
+  dependencies:
+    "@v2-lib/micro.package" "^1.0.20"
+    uaeengine "^2.4.35"
+
 "@babel/code-frame@^7.0.0":
   version "7.23.4"
   resolved "https://nexus.awebide.com/repository/npm-group/@babel/code-frame/-/code-frame-7.23.4.tgz#03ae5af150be94392cb5c7ccd97db5a19a5da6aa"
