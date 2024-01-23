@@ -5,6 +5,8 @@
 <script>
 import axios from "../../../axios.min.js";
 import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
+import { AuaeTool } from '../superDocPlugins/tools/index'
+import '../superDocPlugins/block/index'
 export default {
   name: "HelloWorld",
   props: {
@@ -102,7 +104,15 @@ export default {
       });
     },
     initSuperDoc() {
-      window.superDoc = new superDoc({});
+      window.superDoc = new superDoc({
+
+        tools: {
+          toolbar: {
+            plugins: [ AuaeTool ],
+            layout: []
+          },
+        }
+      });
       // window.superDoc.setData();
       // window.superDoc.on('add', (...agrs) => {
       //   console.log('添加===', agrs);
@@ -116,7 +126,7 @@ export default {
     },
   },
   mounted() {
-    this.getData();
+    // this.getData();
     this.initSuperDoc();
   },
 };

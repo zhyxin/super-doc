@@ -49,7 +49,7 @@ export default {
     TableDoc,
     ListDoc,
     TodoList,
-    Auae
+    // Auae
   },
   tools: {
     plugins: [
@@ -63,7 +63,7 @@ export default {
       TableTool,
       ListTool,
       TodoListTool,
-      AuaeTool
+      // AuaeTool
     ],
     layout: [moveUpTool, deleteTool, moveDownTool],
   },
