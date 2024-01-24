@@ -9,6 +9,13 @@ export default class Head extends Plugin.BlockBase {
     'h5': '14px',
     'h6': '12px',
   };
+  marginTop = {
+    'h1':'26px',
+    'h2':'21px',
+    'h3':'18px',
+    'h4':'16px',
+  }
+  marginBottom = {}
 
   constructor(options) {
     super(options);
@@ -27,12 +34,20 @@ export default class Head extends Plugin.BlockBase {
     el.style['font-weight'] = 'bold';
     el.style['font-size'] = this.fontSize[this.config.data.level];
     el.style['line-height'] = '1.45';
+    this.setStyle(el)
     el.setAttribute('id', "superdoc-paragraph");
     const _template = document.createElement("div");
     _template.innerHTML = this.config.data.text;
     el.innerHTML = this.config.data.text;
     this.bindUpdateEvent(el);
     return el;
+  }
+
+  setStyle(el){
+    let marginTop = this.marginTop[this.config.data.level]
+    marginTop && (el.style["margin-top"] = marginTop)
+    let marginBottom = this.marginBottom[this.config.data.level] || '12px';
+    marginBottom && (el.style["margin-bottom"] = marginBottom)
   }
 
   bindUpdateEvent(el) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="super-doc-todo-option-container" @keydown="enterKeydownHandler">
+  <div class="super-doc-todo-option-container" :class="[foucsFlag?'foucs-style':'']" @keydown="enterKeydownHandler">
     <el-checkbox class="icon" size="small" v-model="todo.finish"></el-checkbox>
     <SuperDocInput
       style="width: calc(650px - 24px);"
@@ -8,6 +8,7 @@
       :contenteditable="!todo.finish"
       :content="todo.task"
       @contentChange="contentChange"
+      @focusChange="focusChange"
     />
   </div>
 </template>
@@ -17,7 +18,9 @@ import SuperDocInput from "../../common/input.vue";
 export default {
   props: ["todo", "focus"],
   data() {
-    return {};
+    return {
+      foucsFlag:false,
+    };
   },
   components: {
     SuperDocInput,
@@ -44,6 +47,9 @@ export default {
         this.$emit("remove", this.todo.id);
       }
     },
+    focusChange(flag){
+      this.foucsFlag = flag
+    }
   },
   mounted() {
     this.init();
@@ -63,11 +69,25 @@ export default {
 .super-doc-todo-option-container {
   display: flex;
   align-items: baseline;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    padding: 2px 2px 2px 0;
+    transform: translateX(-4px);
+    transition: background-color .1s ease-in;
+    width: 100%;
+   
   > .icon {
     margin-right: 10px;
   }
   .finish {
     color: #ccc;
   }
+  &:hover{
+    background-color: var(--we_overlay_light_color, rgba(23, 26, 29, 0.06))
+  }
 }
+// foucs 监听
+  .foucs-style{
+    background-color: var(--we_overlay_light_color, rgba(23, 26, 29, 0.06)) 
+  }
 </style>

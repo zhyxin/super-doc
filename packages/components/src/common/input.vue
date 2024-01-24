@@ -6,6 +6,8 @@
     :contenteditable="contenteditable"
     placeholder='"/"插入内容'
     @input.stop.self="contentChange"
+    @focus.stop.self="$emit('focusChange',true)"
+    @blur.stop.self="$emit('focusChange',false)"
     style="margin: 0;"
   ></p>
 </template>
