@@ -1,20 +1,20 @@
 {
-  "id": "v98TVpcx",
+  "id": "v98TVpcx3",
   "position": "{\"x\":30,\"y\":87,\"width\":100,\"height\":100}",
   "activitys": [
     {
-      "id": "MHK8TJIT",
+      "id": "MHK8TJIT1",
       "description": null,
       "placeholder": "活动",
       "taskList": [
         {
-          "id": "gqfRBrlm",
+          "id": "gqfRBrlm2",
           "description": null,
           "placeholder": "任务"
        
         },
         {
-          "id": "gqfRBrlam",
+          "id": "gqfRBrlam4",
           "description": null,
           "placeholder": "任务2"
          

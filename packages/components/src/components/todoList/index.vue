@@ -7,6 +7,7 @@
       :focus="focusId === todo.id"
       @add="addHandler"
       @remove="removeHandler"
+      style="margin-top: 2.6px; margin-bottom: 2.6px;padding-left: 0px;"
     ></TodoItem>
   </div>
 </template>
@@ -62,5 +63,6 @@ export default {
 
 <style lang="less" scoped>
 .todo-container {
+
 }
 </style>

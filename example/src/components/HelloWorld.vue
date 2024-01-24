@@ -1,17 +1,20 @@
 <template>
-  <div></div>
+  <div>
+  </div>
 </template>
 
 <script>
 import axios from "../../../axios.min.js";
-// import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
+import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
 import { AuaeTool } from '../superDocPlugins/tools/index'
 import '../superDocPlugins/block/index'
-import superDoc from "D:/Company/agree_project/super-doc/packages/core/dist/core.esm-bundler.js";
+// import superDoc from "D:/Company/agree_project/super-doc/packages/core/dist/core.esm-bundler.js";
 import divideJson from "../libs/divide.json";
 import subDomain from "../libs/subDomain.json";
 import uml from "../libs/uml.json";
 import storyData from "../libs/storyData.json";
+import storyData2 from "../libs/storyData2.json";
+import directory from './directory/index.vue'
 const testData =   [{
               type: "Auae",
               class: "Auae",
@@ -34,6 +37,42 @@ const testData =   [{
               data: {
                 title: "uml流程图",
                 mapData: uml,
+              },
+            },
+            // {
+            //   type: "Auae",
+            //   class: "Auae",
+            //   data: {
+            //     title: "故事地图",
+            //     mapData: storyData,
+            //     mapType:"userStory",
+            //   },
+            // },
+            // {
+            //   type: "Auae",
+            //   class: "Auae",
+            //   data: {
+            //     title: "故事地图",
+            //     mapData: storyData,
+            //     mapType:"userStory",
+            //   },
+            // },
+            {
+              type: "Auae",
+              class: "Auae",
+              data: {
+                title: "故事地图",
+                mapData: storyData,
+                mapType:"userStory",
+              },
+            },
+            {
+              type: "Auae",
+              class: "Auae",
+              data: {
+                title: "故事地图",
+                mapData: storyData2,
+                mapType:"userStory",
               },
             },
             {
@@ -84,14 +123,17 @@ export default {
       });
       const blockData = this.formatData(result);
       console.log('-=====-', blockData); 
-      window.superDoc.setData(blockData.slice(0,2));
+      let data = blockData.slice(0);
+      window.superDoc.setData(data.length!==0? data:testData);
+      this.addDirectory()
+
     },
     formatData(data) {
       return data
         .filter((item) => {
           return (
-            item.template.type === "ImageDoc"
-            // item.template.type === "Head" || item.template.type === "Paragraph" || item.template.type === "TableDoc"
+            // item.template.type === "ImageDocFlowChart"
+            item.template.type === "Head" || item.template.type === "Paragraph" || item.template.type === "TableDoc"
           );
         })
         .map((item) => {
@@ -131,7 +173,7 @@ export default {
                 title: item.template.data.content
               },
             };
-          } else if (item.template.type === "ImageDoc") {
+          } else if (item.template.type === "ImageDocFlowChart") {
             let value = this.replaceTemplateStrings(
               item.template.data.text,
               item.datasource
@@ -186,6 +228,7 @@ export default {
     formatUserMapData(data) {
       let userMap = {
         activitys: [],
+         "position": "{\"x\":30,\"y\":87,\"width\":100,\"height\":100}",
       };
       let activitys = [];
       if (Object.prototype.toString.call(data) == "[object Object]") {
@@ -196,14 +239,14 @@ export default {
       activitys.forEach((f) => {
         userMap.activitys.push({
           id: f.id,
-          description: f.name || "未知",
+          description: null,
           placeholder: f.name,
           childActivityList: [],
           taskList:
             f.commandList?.map((c) => {
               return {
                 id: c.id,
-                description: c.name || "未知",
+                description: null,
                 placeholder: c.name || "未知",
               };
             }) || [],
@@ -211,10 +254,69 @@ export default {
       });
       return userMap;
     },
+    // 添加目录
+    addDirectory(){
+      let directoryList = []
+      let includesNode = ['H1','H2','H3','H4','H5'];
+      let classMap ={
+        'H1':'super-directory-h1',
+        'H2':'super-directory-h2',
+        'H3':'super-directory-h3',
+        'H4':'super-directory-h4',
+        'H5':'super-directory-h5',
+      }
+      let directoryString = ``
+      $('.super-doc-editor__redactor .super-doc-block').each(function(index,block){
+        let headData = $(block).children()?.children();
+        if(headData && includesNode.includes(headData[0].nodeName)){
+          let nodeName = headData[0].nodeName;
+          let object = {
+            id:headData.attr('block-id'),
+            nodeName,
+            text:headData.text(),
+            el:headData
+          }
+          directoryString += `<p class="super-directory-item ${classMap[nodeName]}" block-id=${object.id} >${object.text}</p>`
+          directoryList.push(object)
+        }
+      })
+     let superDirectory = $(`<div class="super-directory">目录<div>`)
+      //事件代理
+     $(superDirectory).click((e)=>{
+        if(e.target){
+          let blockId = e.target.getAttribute('block-id')
+          if(blockId){
+            let targetDom = directoryList.find((f=>f.id==blockId))
+            targetDom && targetDom.el[0].scrollIntoView({
+              behavior: "smooth",
+            })
+
+          }
+        }
+      })
+     $(superDirectory).append($(directoryString))
+     $('#editorjs').append(superDirectory)
+     console.log(directoryString,'directoryString')
+    },
+
+    initDirectory(){
+      let directoryComp = Vue.extend(directory)
+      let superDirectory = $(`<div><div>`)
+      let vm = new directoryComp({
+        ref: "superDirectory",
+        propsData: {
+          treeData:[],
+        },
+      });
+     $('#editorjs').append(superDirectory)
+      vm.$mount(superDirectory[0]);
+    }
+
   },
-  mounted() {
-    this.getData();
+   mounted() {
+     this.getData();
     this.initSuperDoc();
+
   },
 };
 </script>
@@ -234,4 +336,61 @@ li
 
 a
   color #42b983
+</style>
+
+<style  lang="less">
+.super-directory{
+    width:250px;
+    z-index: 1000;
+    position:fixed;
+    background: #fff;
+    right:0;
+    top:0;
+    bottom: 0;
+    // height: 100px;
+    max-height: 50vh;
+    margin: auto;
+    overflow: auto;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px #bbbbbb;
+    .super-directory-item{
+      text-align: left;
+      margin: 0;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      font-weight: normal;
+      &:hover{
+        background: rgb(245, 247, 250);
+      }
+    }
+    .super-directory-h1{
+      padding-left: 3px ;
+    }
+    .super-directory-h2{
+      padding-left: 16px;
+    }
+    .super-directory-h3{
+      padding-left: 32px;
+    }
+    .super-directory-h4{
+      padding-left: 48px;
+    }
+    .super-directory-h5{
+      padding-left: 54px;
+      
+    }
+    &::-webkit-scrollbar{
+      width: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #aaa; /* 设置滑块背景色 */
+        border-radius: 4px; /* 设置滑块圆角 */
+    }
+}
 </style>

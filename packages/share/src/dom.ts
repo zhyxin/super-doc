@@ -80,6 +80,7 @@ export const keyCodes = {
   DELETE: 46,
   META: 91,
   A: 65,
+  C:67,
 };
 
 

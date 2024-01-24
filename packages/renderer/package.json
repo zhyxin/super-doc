@@ -14,8 +14,7 @@
     "name": "supperDocRenderer",
     "formats": [
       "esm-bundler",
-      "cjs",
-      "global"
+      "umd"
     ]
   },
   "dependencies": {

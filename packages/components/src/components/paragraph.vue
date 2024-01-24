@@ -4,7 +4,8 @@
     contenteditable="true"
     :content="content.text"
     @contentChange="contentChange"
-    style="padding: 8px 0; margin: 0; line-height: 21px"
+    style="margin: 8px 0;padding:0 0; line-height: 1.7;"
+    class="super-input"
   ></SuperDocInput>
 </template>
 
@@ -51,6 +52,11 @@ export default {
   display: block;
   color: #c4c4c4;
   font-weight: 400;
+}
+.super-input{
+  color: rgb(37, 39, 42);
+  font-size: 11pt;
+    font-family: "zh quote", "Helvetica Neue", -apple-system, "PingFang SC", "Microsoft YaHei", STHeiti, Helvetica, Arial, sans-serif, "Apple Color Emoji";
 }
 
 #superdoc-paragraph {

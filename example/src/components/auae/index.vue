@@ -6,6 +6,8 @@
       :activator="editorActivator"
       :templateData="templateData"
       :storyMapData="storyMapData"
+      @after_changeHistory="changeHistory"
+      @mapChange="storyMapChange"
       style="height: 500px"
       class="ddd-editor-style"
     ></ddd-editor>
@@ -76,7 +78,7 @@ export default {
     };
   },
   computed: {
-    auaeEditor() {
+    dddEditor() {
       return this.$refs.editor;
     },
   },
@@ -97,31 +99,32 @@ export default {
                 mapData: JSON.parse(JSON.stringify(_data.mapData)),
               },
             ];
-            setTimeout(() => {
-              this.auaeEditor.setStoryMapData(this.storyMapData);
-            }, 100);
+           
           }
           console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
         } else {
           // _data.mapData.id = generateId();
           console.log(_data.mapData, "_data.mapData");
           this.templateData = JSON.parse(JSON.stringify(_data.mapData));
+        //   this.templateData = _data.mapData;
         }
       } catch (e) {
         console.log(e, "初始化出错", _data.mapData);
       }
     },
-    initStoryData() {
-      this.templateData = BASE_NODE;
-      this.storyOption.useDomRender = true;
-      this.storyOption.defaultLockStatus = false;
-      this.storyMapData = [
-        {
-          component: "stormEditor",
-          mapData: JSON.parse(JSON.stringify(storyData)),
-        },
-      ];
+    changeHistory(history){
+        console.log(history,'其他图的移动更新')
     },
+    storyMapChange({command,is}){
+        console.log('mapcahnge')
+        const editorStore = this.dddEditor.auaeEditor.$auaeStore;
+        const instance = editorStore.getters.domNodes[is];
+        if (instance) {
+            let blockData  = getBlockData(this.$attrs["block-id"]).data;
+            blockData.copyMapData = instance.userStoryMap
+            console.log(instance.userStoryMap , "用户故事地图数据更新",blockData);
+        }
+    }
   },
   beforeCreate() {},
   mounted() {
