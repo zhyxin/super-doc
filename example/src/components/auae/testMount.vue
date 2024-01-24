@@ -1,31 +1,18 @@
 <template>
-  <div>
-    <ddd-editor
-      ref="editor"
-      :options="editorOption"
-      :activator="editorActivator"
-      :templateData="templateData"
-      :storyMapData="storyMapData"
-      style="height: 500px"
-      class="ddd-editor-style"
-    ></ddd-editor>
-  </div>
+  <div ref="ddd" style=height:400px></div>
 </template>
-
 <script>
-// import { getBlockData } from "@super-doc/api";
 import {
   getBlockData,
   generateId,
 } from "../../../../packages/api/dist/api.umd";
-
 import dddEditorSdk from "@auae/dddeditor";
-import storyData from "../../libs/storyData.json";
 const { Activator, dddEditor, kanban, input } = dddEditorSdk;
-const editorActivator = new Activator();
+
 console.log(dddEditorSdk, "element>>>", dddEditorSdk);
 const EDITOR_NAME = "stormEditor";
 
+// 故事地图默认渲染节点
 const BASE_NODE = {
   name: "name-OLZpxtcj",
   desp: "模版",
@@ -59,12 +46,9 @@ const BASE_NODE = {
   },
 };
 export default {
-  components: {
-    "ddd-editor": dddEditor,
-  },
+  components: {},
   data() {
     return {
-      editorActivator: editorActivator,
       templateData: null,
       editorOption: {
         hiddenTopToolBar: true, // 是否隐藏顶部栏
@@ -75,10 +59,8 @@ export default {
       storyMapData: null,
     };
   },
-  computed: {
-    auaeEditor() {
-      return this.$refs.editor;
-    },
+  auaeEditor() {
+    return this.$refs.editor;
   },
   methods: {
     init() {
@@ -97,11 +79,8 @@ export default {
                 mapData: JSON.parse(JSON.stringify(_data.mapData)),
               },
             ];
-            setTimeout(() => {
-              this.auaeEditor.setStoryMapData(this.storyMapData);
-            }, 100);
           }
-          console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
+          console.log(this.storyMapData, "storyMapData数据", this.$refs.ddd);
         } else {
           // _data.mapData.id = generateId();
           console.log(_data.mapData, "_data.mapData");
@@ -111,35 +90,35 @@ export default {
         console.log(e, "初始化出错", _data.mapData);
       }
     },
-    initStoryData() {
-      this.templateData = BASE_NODE;
-      this.storyOption.useDomRender = true;
-      this.storyOption.defaultLockStatus = false;
-      this.storyMapData = [
-        {
-          component: "stormEditor",
-          mapData: JSON.parse(JSON.stringify(storyData)),
+    mountDDDeditor() {
+      const editorActivator = new Activator();
+      let dddComponent = Vue.extend(dddEditor);
+      console.log('ga------------333333---------------zua')
+
+      let vm = new dddComponent({
+        ref: "editor",
+        propsData: {
+          options: this.editorOption,
+          activator: editorActivator,
+          templateData: this.templateData,
+          storyMapData: this.storyMapData,
         },
-      ];
+      });
+      vm.$mount(this.$refs.ddd);
+      console.log('ga---------------------------zua')
     },
   },
-  beforeCreate() {},
+  beforeCreate() {
+  },
   mounted() {
+    this.init();
     this.$nextTick(() => {
-      this.init();
+      setTimeout(()=>{
+        this.mountDDDeditor();
+      },200)
     });
   },
 };
 </script>
 
-<style scoped lang="less">
-.ddd-editor-style {
-  ::v-deep {
-    .task-column {
-      > span {
-        min-height: 0 !important;
-      }
-    }
-  }
-}
-</style>
+<style scoped lang="less"></style>

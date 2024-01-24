@@ -1,0 +1,92 @@
+{
+  "name": "name1j3aQ2Qo",
+  "desp": "限界上下文",
+  "projectId": "1j3aQ2Qo",
+  "flowContent": {
+      "nodes": [
+          {
+              "nodeName": "测试",
+              "kind": "subDomain-common",
+              "nodeType": "bcSubDomain",
+              "nodeId": "xirdsgtds5s00",
+              "remark": "",
+              "origin": "edit",
+              "bounds": {
+                  "x": 299,
+                  "y": 136,
+                  "width": 244,
+                  "height": 51
+              },
+              "groupByIds": [
+                  "g396shx702000"
+              ],
+              "id": "V5CAGO7M",
+              "group": "s4ibvotn72o00"
+          },
+          {
+              "nodeName": "一级域",
+              "kind": "subDomain-core",
+              "nodeType": "bcSubDomain",
+              "nodeId": "1pgpmc8in4zk00",
+              "remark": "",
+              "origin": "edit",
+              "bounds": {
+                  "x": 299,
+                  "y": 206,
+                  "width": 244,
+                  "height": 51
+              },
+              "groupByIds": [
+                  "g396shx702000"
+              ],
+              "id": "WPMhnsol",
+              "group": "s4ibvotn72o00"
+          }
+      ],
+      "edges": [],
+      "groups": [
+          {
+              "noteId": "s4ibvotn72o00",
+              "bounds": {
+                  "x": 229,
+                  "y": 116,
+                  "width": 400,
+                  "height": 210
+              },
+              "type": "GROUP",
+              "id": "s4ibvotn72o00",
+              "nodeId": "RHUfsGnE",
+              "groupId": "RHUfsGnE",
+              "groupName": "测试BC",
+              "groupByIds": [
+                  "g396shx702000"
+              ],
+              "groupIds": [],
+              "nodeIds": [
+                  "V5CAGO7M",
+                  "1pgpmc8in4zk00",
+                  "xirdsgtds5s00",
+                  "WPMhnsol"
+              ],
+              "groupType": "bc",
+              "nameLocation": "top-center",
+              "cnName": "测试BC",
+              "enName": "",
+              "remark": "",
+              "nodeIndex": 0,
+              "nodeStatusRegular": {
+                  "normal": {
+                      "backgroundColor": "#fff",
+                      "borderColor": "#C8D0D4",
+                      "borderRadius": 8,
+                      "borderStyle": "dash",
+                      "borderWidth": "2",
+                      "color": "#333",
+                      "fontSize": "14px"
+                  }
+              }
+          }
+      ],
+      "legends": []
+  }
+}

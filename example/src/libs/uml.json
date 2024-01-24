@@ -1,0 +1,816 @@
+{
+  "name": "name-OLZpxtcj",
+  "desp": "模版",
+  "eType": "bounded_context",
+  "background": {
+      "background-image": "",
+      "background-color": "#fff",
+      "opacity": 1
+  },
+  "size": {
+      "width": 2000,
+      "height": 1200
+  },
+  "events": [],
+  "flowContent": {
+      "nodes": [
+          {
+              "kind": "BASE",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": 811,
+                  "y": 284,
+                  "width": 244,
+                  "height": 80
+              },
+              "groupByIds": [
+                  "4h1bboojjig000"
+              ],
+              "moduleId": "module-l2bVNYgw",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "testmoudule",
+              "referencedCounts": 1,
+              "allowedInherit": false,
+              "description": null,
+              "_id": "domainObj-bv5gngT4",
+              "_positionId": "nepYlQbe",
+              "name": "Customer",
+              "localName": "客户",
+              "nodeId": "domainObj-bv5gngT4",
+              "parentId": "",
+              "_pid": "module-l2bVNYgw"
+          },
+          {
+              "kind": "ENTITY",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": 11,
+                  "y": -147,
+                  "width": 224,
+                  "height": 80
+              },
+              "groupByIds": [],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "公共",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-c0WuZjFU",
+              "_positionId": "eaXnRyi3",
+              "name": "TestAbc",
+              "localName": "ttv",
+              "nodeId": "domainObj-c0WuZjFU",
+              "parentId": ""
+          },
+          {
+              "kind": "ENTITY",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": -280,
+                  "y": 224,
+                  "width": 224,
+                  "height": 80
+              },
+              "groupByIds": [
+                  "2ncwq9e1gws000"
+              ],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "aggregate-Hl3r7jWu",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "combile",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-CZvtCQMZ",
+              "_positionId": "THTa7kbH",
+              "name": "Entity",
+              "localName": "newEntiy",
+              "nodeId": "domainObj-CZvtCQMZ",
+              "parentId": "domainObj-c0WuZjFU",
+              "_pid": "aggregate-Hl3r7jWu"
+          },
+          {
+              "kind": "ENTITY",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": 943,
+                  "y": 83,
+                  "width": 224,
+                  "height": 80
+              },
+              "groupByIds": [
+                  "5covyl8gbwg000"
+              ],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "aggregate-tgzyrSu8",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "test1.test1aaa",
+              "referencedCounts": 1,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-jFn07nZU",
+              "_positionId": "carHCikG",
+              "name": "Test1",
+              "localName": "测试1",
+              "nodeId": "domainObj-jFn07nZU",
+              "parentId": "",
+              "_pid": "aggregate-tgzyrSu8"
+          },
+          {
+              "kind": "ENUM",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [
+                  {
+                      "createdDate": "2024-01-15 15:28:35",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-15 15:28:35",
+                      "updatedBy": "admin",
+                      "id": "enumValue-Lfl98mOs",
+                      "enumId": "domainObj-kD5gvwpv",
+                      "name": "CHEINE",
+                      "localName": "中文c",
+                      "inputs": [],
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.E",
+                      "compiled": false
+                  },
+                  {
+                      "createdDate": "2024-01-15 15:28:48",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-15 15:45:06",
+                      "updatedBy": "admin",
+                      "id": "enumValue-Btn9dIXD",
+                      "enumId": "domainObj-kD5gvwpv",
+                      "name": "CHINEAADDD",
+                      "localName": "CHINE",
+                      "inputs": [],
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.E",
+                      "compiled": false
+                  },
+                  {
+                      "createdDate": "2024-01-15 15:44:07",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-15 15:44:07",
+                      "updatedBy": "admin",
+                      "id": "enumValue-JErxRuoS",
+                      "enumId": "domainObj-kD5gvwpv",
+                      "name": "BHC",
+                      "localName": "ddddd",
+                      "inputs": [],
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.E",
+                      "compiled": false
+                  }
+              ],
+              "bounds": {
+                  "x": 92,
+                  "y": 633,
+                  "width": 224,
+                  "height": 140
+              },
+              "groupByIds": [],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": false,
+              "isHightLight": false,
+              "packagePosition": "公共",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-kD5gvwpv",
+              "_positionId": "rPANskm5",
+              "name": "E",
+              "localName": "e",
+              "nodeId": "domainObj-kD5gvwpv",
+              "parentId": ""
+          },
+          {
+              "kind": "BASE",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-4CyNefKl",
+                      "name": "contractArchive",
+                      "localName": "合同档案",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-TymSXK2r",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.Platform",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-O69NEMKc",
+                      "name": "name",
+                      "localName": "姓名",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-TymSXK2r",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.Platform",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-QXLyxDYL",
+                      "name": "id",
+                      "localName": "ID",
+                      "type": "java.lang.Integer",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.Integer",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-TymSXK2r",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.Platform",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-petRqey4",
+                      "name": "terms",
+                      "localName": "条款",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-TymSXK2r",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.Platform",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-yzWnnuu2",
+                      "name": "electronicSignature",
+                      "localName": "电子签名",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-TymSXK2r",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.Platform",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  }
+              ],
+              "values": [],
+              "bounds": {
+                  "x": 436,
+                  "y": 614,
+                  "width": 244,
+                  "height": 160
+              },
+              "groupByIds": [],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "公共",
+              "referencedCounts": 1,
+              "allowedInherit": false,
+              "description": null,
+              "_id": "domainObj-TymSXK2r",
+              "_positionId": "oOEOFfn9",
+              "name": "Platform",
+              "localName": "平台",
+              "nodeId": "domainObj-TymSXK2r",
+              "parentId": ""
+          },
+          {
+              "kind": "BASE",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-1LxYpQY2",
+                      "name": "id",
+                      "localName": "ID",
+                      "type": "java.lang.Integer",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.Integer",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-w4ICUuke",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.User",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-K4J1n0H0",
+                      "name": "name",
+                      "localName": "姓名",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-w4ICUuke",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.User",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-05 10:31:32",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-d1zry4Ls",
+                      "name": "identityProof",
+                      "localName": "身份证明",
+                      "type": "cn.com.test.domain.entity.Platform",
+                      "typeStructure": {
+                          "fromLocal": true,
+                          "resourceType": "domain_entity",
+                          "resourceId": "domainObj-TymSXK2r",
+                          "value": "cn.com.test.domain.entity.Platform",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-w4ICUuke",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.User",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  },
+                  {
+                      "createdDate": "2024-01-02 09:57:40",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-02 09:57:40",
+                      "updatedBy": "admin",
+                      "id": "domainAttr-iyGHNIx0",
+                      "name": "password",
+                      "localName": "密码",
+                      "type": "java.lang.String",
+                      "typeStructure": {
+                          "fromLocal": false,
+                          "resourceType": "",
+                          "resourceId": "",
+                          "value": "java.lang.String",
+                          "children": []
+                      },
+                      "domainObjectId": "domainObj-w4ICUuke",
+                      "domainTermId": "",
+                      "domainTerm": "",
+                      "packagePosition": "公共.User",
+                      "lineOperationDTO": "",
+                      "compiled": false,
+                      "typeId": ""
+                  }
+              ],
+              "values": [],
+              "bounds": {
+                  "x": 188,
+                  "y": 264,
+                  "width": 244,
+                  "height": 140
+              },
+              "groupByIds": [],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "公共",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": null,
+              "_id": "domainObj-w4ICUuke",
+              "_positionId": "0wZhnWpV",
+              "name": "User",
+              "localName": "用户",
+              "nodeId": "domainObj-w4ICUuke",
+              "parentId": ""
+          },
+          {
+              "kind": "ENTITY",
+              "nodeType": "domain_object",
+              "methods": [],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": 923,
+                  "y": 746,
+                  "width": 224,
+                  "height": 80
+              },
+              "groupByIds": [],
+              "moduleId": "",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "公共",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-wHMb5UuE",
+              "_positionId": "xYNNVWpJ",
+              "name": "QQQ",
+              "localName": "QQQ",
+              "nodeId": "domainObj-wHMb5UuE",
+              "parentId": ""
+          },
+          {
+              "kind": "ENTITY",
+              "nodeType": "domain_object",
+              "methods": [
+                  {
+                      "createdDate": "2024-01-11 09:59:30",
+                      "createdBy": "admin",
+                      "updatedDate": "2024-01-11 09:59:30",
+                      "updatedBy": "admin",
+                      "id": "domainMethod-jRxNXWX4",
+                      "name": "aaa",
+                      "localName": "aaa",
+                      "inputParams": [],
+                      "outputParam": {
+                          "name": "result",
+                          "index": 0,
+                          "paramType": "OUTPUT",
+                          "type": "VOID",
+                          "typeStructure": {
+                              "fromLocal": true,
+                              "resourceType": "",
+                              "resourceId": "",
+                              "value": "VOID",
+                              "children": []
+                          }
+                      },
+                      "domainObjectId": "domainObj-ZoQXk5HK",
+                      "userStoryMapEventId": "",
+                      "userStoryMapEventDTO": "",
+                      "lineOperationDTO": "",
+                      "packagePosition": "ddassssds.Test1ddd",
+                      "compiled": false
+                  }
+              ],
+              "attributes": [],
+              "values": [],
+              "bounds": {
+                  "x": 476,
+                  "y": 95,
+                  "width": 224,
+                  "height": 80
+              },
+              "groupByIds": [
+                  "ltk8a47oefk00"
+              ],
+              "moduleId": "module-2nQgosQw",
+              "domainTerm": "",
+              "domainTermId": "",
+              "aggregateId": "",
+              "aggregateRoot": "",
+              "po": null,
+              "dtoObj": null,
+              "compiled": true,
+              "isHightLight": false,
+              "packagePosition": "ddassssds",
+              "referencedCounts": 0,
+              "allowedInherit": false,
+              "description": "",
+              "_id": "domainObj-ZoQXk5HK",
+              "_positionId": "RNJ9VH3h",
+              "name": "Test1ddd",
+              "localName": "测试1",
+              "nodeId": "domainObj-ZoQXk5HK",
+              "parentId": "",
+              "_pid": "module-2nQgosQw"
+          }
+      ],
+      "edges": [
+          {
+              "edgeId": "line-z4Vl9tGX",
+              "type": "edge",
+              "startId": "domainObj-CZvtCQMZ",
+              "endId": "domainObj-c0WuZjFU",
+              "lineType": "GENERALIZATION",
+              "lineWidth": 2,
+              "ctrl": {
+                  "ctrl1": "",
+                  "ctrl2": "",
+                  "ctrl3": ""
+              },
+              "zIndex": 99,
+              "endPosition": "bottom",
+              "freeNodeLine": false,
+              "_id": "line-z4Vl9tGX",
+              "position": "top",
+              "text": "",
+              "warning": false
+          },
+          {
+              "edgeId": "line-nODCw4jc",
+              "type": "edge",
+              "startId": "domainObj-TymSXK2r",
+              "endId": "domainObj-w4ICUuke",
+              "lineType": "AGGREGATION",
+              "lineWidth": 2,
+              "ctrl": {
+                  "ctrl1": "",
+                  "ctrl2": "",
+                  "ctrl3": ""
+              },
+              "zIndex": 99,
+              "endPosition": "bottom",
+              "freeNodeLine": false,
+              "_id": "line-nODCw4jc",
+              "position": "top",
+              "text": "identityProof",
+              "warning": false
+          }
+      ],
+      "groups": [
+          {
+              "name": "combile",
+              "localName": "comp",
+              "groupId": "aggregate-Hl3r7jWu",
+              "groupType": "aggregate",
+              "bounds": {
+                  "x": -325,
+                  "y": 121,
+                  "width": 317,
+                  "height": 222
+              },
+              "_positionId": "fwT2S3Yt",
+              "_id": "aggregate-Hl3r7jWu",
+              "moduleId": "",
+              "groupByIds": [
+                  "2ncwq9e1gws000"
+              ],
+              "groupIds": [],
+              "nodeIds": [
+                  "domainObj-CZvtCQMZ"
+              ],
+              "aggregateRootId": "",
+              "packagePosition": "公共",
+              "elementCounts": {
+                  "baseObjCounts": 0,
+                  "entityCounts": 1,
+                  "valueObjCounts": 0,
+                  "outsideOfAggregateCounts": 0
+              },
+              "description": ""
+          },
+          {
+              "name": "test1aaa",
+              "localName": "测试1abc",
+              "groupId": "aggregate-tgzyrSu8",
+              "groupType": "aggregate",
+              "bounds": {
+                  "x": 895,
+                  "y": 55,
+                  "width": 297,
+                  "height": 116
+              },
+              "_positionId": "o8jUIcke",
+              "_id": "aggregate-tgzyrSu8",
+              "moduleId": "module-hZIdFuvv",
+              "groupByIds": [
+                  "5covyl8gbwg000"
+              ],
+              "groupIds": [],
+              "nodeIds": [
+                  "domainObj-jFn07nZU"
+              ],
+              "aggregateRootId": "",
+              "packagePosition": "test1",
+              "elementCounts": {
+                  "baseObjCounts": 0,
+                  "entityCounts": 1,
+                  "valueObjCounts": 0,
+                  "outsideOfAggregateCounts": 0
+              },
+              "description": ""
+          },
+          {
+              "name": "ddassssds",
+              "localName": "ddddd",
+              "groupId": "module-2nQgosQw",
+              "groupType": "module",
+              "bounds": {
+                  "x": 388,
+                  "y": 33,
+                  "width": 361,
+                  "height": 172
+              },
+              "_positionId": "QvrxJgRa",
+              "_id": "module-2nQgosQw",
+              "groupByIds": [
+                  "ltk8a47oefk00"
+              ],
+              "groupIds": [],
+              "nodeIds": [
+                  "domainObj-ZoQXk5HK"
+              ],
+              "elementCounts": {
+                  "domainObjectCounts": 1,
+                  "aggregateCounts": 0
+              },
+              "description": ""
+          },
+          {
+              "name": "aaaa",
+              "localName": "模块A",
+              "groupId": "module-AkMKev6w",
+              "groupType": "module",
+              "bounds": {
+                  "x": 1315,
+                  "y": 280,
+                  "width": 1085,
+                  "height": 623
+              },
+              "_positionId": "AH12VLCh",
+              "_id": "module-AkMKev6w",
+              "groupByIds": [
+                  "aby9y30gvgc00"
+              ],
+              "groupIds": [],
+              "nodeIds": [],
+              "elementCounts": {
+                  "domainObjectCounts": 0,
+                  "aggregateCounts": 0
+              },
+              "description": ""
+          },
+          {
+              "name": "testmoudule",
+              "localName": "测试模块绑定",
+              "groupId": "module-l2bVNYgw",
+              "groupType": "module",
+              "bounds": {
+                  "x": 755,
+                  "y": 232,
+                  "width": 326,
+                  "height": 161
+              },
+              "_positionId": "6DLl5ZST",
+              "_id": "module-l2bVNYgw",
+              "groupByIds": [
+                  "4h1bboojjig000"
+              ],
+              "groupIds": [],
+              "nodeIds": [
+                  "domainObj-bv5gngT4"
+              ],
+              "elementCounts": {
+                  "domainObjectCounts": 1,
+                  "aggregateCounts": 0
+              },
+              "description": ""
+          }
+      ],
+      "legends": []
+  },
+  "edges": {
+      "type": "edge",
+      "color": "#333",
+      "lineWidth": 2,
+      "lineType": "line"
+  },
+  "layout": {
+      "name": "",
+      "params": {}
+  },
+  "projectId": "UuilfInA"
+}

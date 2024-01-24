@@ -2,25 +2,51 @@
   <div>
     <ddd-editor
       ref="editor"
-      :options="editorOption"
+      :options="storyOption"
       :activator="editorActivator"
       :templateData="templateData"
       :storyMapData="storyMapData"
       style="height: 500px"
-      class="ddd-editor-style"
+    ></ddd-editor>
+    <ddd-editor
+      ref="editor2"
+      :options="storyOption"
+      :activator="editorActivator"
+      :templateData="templateData"
+      :storyMapData="storyMapData"
+      style="height: 500px"
+    ></ddd-editor>
+    <ddd-editor
+      ref="editor4"
+      :options="editorOption"
+      :activator="editorActivator"
+      :templateData="divideTemplateData"
+      :storyMapData="storyMapData"
+      style="height: 500px"
+    ></ddd-editor>
+    <ddd-editor
+      ref="editor5"
+      :options="editorOption"
+      :activator="editorActivator"
+      :templateData="subTemplateData"
+      style="height: 500px"
+    ></ddd-editor>
+    <ddd-editor
+      ref="editor6"
+      :options="editorOption"
+      :activator="editorActivator"
+      :templateData="umlTemplateData"
+      style="height: 500px"
     ></ddd-editor>
   </div>
 </template>
 
 <script>
-// import { getBlockData } from "@super-doc/api";
-import {
-  getBlockData,
-  generateId,
-} from "../../../../packages/api/dist/api.umd";
-
 import dddEditorSdk from "@auae/dddeditor";
+import divideJson from "../../libs/divide.json";
+import subDomain from "../../libs/subDomain.json";
 import storyData from "../../libs/storyData.json";
+import uml from "../../libs/uml.json";
 const { Activator, dddEditor, kanban, input } = dddEditorSdk;
 const editorActivator = new Activator();
 console.log(dddEditorSdk, "element>>>", dddEditorSdk);
@@ -73,12 +99,17 @@ export default {
         // defaultLockStatus: false,
       },
       storyMapData: null,
+      storyOption: {
+        hiddenTopToolBar: true, // 是否隐藏顶部栏
+        hiddenRightViewPart: false, // 是否开启右侧边栏
+      },
+      divideTemplateData: divideJson,
+      subTemplateData: subDomain,
+      umlTemplateData: uml,
     };
   },
-  computed: {
-    auaeEditor() {
-      return this.$refs.editor;
-    },
+  auaeEditor() {
+    return this.$refs.editor;
   },
   methods: {
     init() {
@@ -97,9 +128,6 @@ export default {
                 mapData: JSON.parse(JSON.stringify(_data.mapData)),
               },
             ];
-            setTimeout(() => {
-              this.auaeEditor.setStoryMapData(this.storyMapData);
-            }, 100);
           }
           console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
         } else {
@@ -126,20 +154,11 @@ export default {
   beforeCreate() {},
   mounted() {
     this.$nextTick(() => {
-      this.init();
+      // this.init();
+      this.initStoryData();
     });
   },
 };
 </script>
 
-<style scoped lang="less">
-.ddd-editor-style {
-  ::v-deep {
-    .task-column {
-      > span {
-        min-height: 0 !important;
-      }
-    }
-  }
-}
-</style>
+<style scoped></style>

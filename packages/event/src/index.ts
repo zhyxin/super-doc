@@ -21,7 +21,7 @@ export default class Event extends Module {
   public mouseX: number;
   public mouseY: number;
 
-  private SELECT_TIME: number;
+  private SELECT_TIME: any;
   public Selection: any = {};
 
   public keyDownInstance: KeyDown = null;
