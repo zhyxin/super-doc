@@ -1,6 +1,7 @@
 import {
   Module,
   deepFindBlockIdElement,
+  getBlockIdForElement,
   getElementCoordinates,
   keyCodes,
 } from "@super-doc/share";
@@ -49,7 +50,6 @@ export default class Event extends Module {
   }
 
   public registerSelectionEvent(element: Element): void {
-
     document.removeEventListener(
       "selectionchange",
       this.sectionHandler.bind(this)
@@ -58,7 +58,7 @@ export default class Event extends Module {
       "selectionchange",
       this.sectionHandler.bind(this)
     );
-    
+
     document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
     document.addEventListener("mouseup", this.mouseUpHandler.bind(this));
 
@@ -114,28 +114,15 @@ export default class Event extends Module {
   public menuEvent(blocks: BlockInstance[]) {}
 
   public inputEvent(event: any): void {
-    let el = event.currentTarget.getAttribute("[block-id]");
-    if (!el) {
-      el = event.currentTarget.querySelector("[block-id]");
-    }
-    if (!el) return;
-    const isNative = el.getAttribute("native");
-    if (!isNative) return;
-    let blockId = el.getAttribute("block-id");
-    const block = this.Editor.BlockManager.findBlockConfigForId(blockId);
-    block.data.text = el.innerHTML;
+    const [id, element] = getBlockIdForElement(event.currentTarget);
+    const block = this.Editor.BlockManager.findBlockConfigForId(id);
+    block.data.text = element.innerHTML;
   }
 
   public mouseClick(event: any) {
-    let el = event.currentTarget.getAttribute("[block-id]");
-    if (!el) {
-      el = event.currentTarget.querySelector("[block-id]");
-    }
-    if (!el) return;
-    const isNative = el.getAttribute("native");
-    if (!isNative) return;
-    let id = el.getAttribute("block-id");
+    const [id] = getBlockIdForElement(event.currentTarget);
     this.Editor.BlockManager.changeCurrentBlockId(id);
+    this.Editor.BlockManager.cursor.block = this.Editor.BlockManager.curentFocusBlock;
   }
 
   public onmouseout(event: any) {}
@@ -238,7 +225,7 @@ export default class Event extends Module {
 
   public regiterateGlobalClickEvent() {
     this.Editor.UI.nodes.holder.addEventListener("click", (event: any) => {
-      this.globalClickListenerList.forEach(fn => fn());
+      this.globalClickListenerList.forEach((fn) => fn());
     });
   }
 }

@@ -6,6 +6,7 @@ import {
 } from "@super-doc/types";
 import { generateParagraphData } from "@super-doc/api"
 import { Block } from "./components/block";
+import Cursor from './components/cursor';
 import {
   batchInsertBlock,
   findBlockInstanceForId,
@@ -76,11 +77,6 @@ export default class BlockManager extends Module {
     this.Editor.UI.toolbarFollowFocusBlock();
     this.Editor.UI.command.visible = false;
     this.Editor.UI.layout.visible = false;
-    // TODO：控制鼠标相关的时间统一在keyDown.ts里
-    // if(document.activeElement !== $.querySelector(`[block-id="${this._currentBlockId}"]`)) {
-    //   const blockElement = $.querySelector(`[block-id="${this._currentBlockId}"]`);
-    //   setCursorForEnd(blockElement);
-    // }
     
     // TODO 这里待优化 回车新增block获取焦点和上下箭头获取焦点逻辑冲突了
     if(document.activeElement !== $.querySelector(`[block-id="${this._currentBlockId}"]`)) {
@@ -110,7 +106,10 @@ export default class BlockManager extends Module {
     return this.config.data.blocks;
   }
 
+  public cursor:Cursor;
+
   public prepare(): void {
+    this.cursor = new Cursor();
     this.proxyBlocks();
     this.instanceBlocks();
     this.loadTools();

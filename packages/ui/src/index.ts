@@ -259,8 +259,10 @@ export default class Ui extends Module {
       );
       popoverItem.textContent = plugin.text;
       popoverItem.addEventListener("click", () => {
-        this.Editor.BlockManager.replaceBlockForBlockId(
-          JSON.parse(JSON.stringify(plugin.blockData))
+        this.Editor.BlockManager.insertBlockForBlockId(
+          JSON.parse(JSON.stringify(plugin.blockData)),
+          this.Editor.BlockManager.currentHoverBlockId,
+          this.Editor.BlockManager.cursor.cursorPosition
         );
       });
       elements.push(popoverItem);
