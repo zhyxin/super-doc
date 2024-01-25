@@ -1,7 +1,6 @@
 import { BlockId, BlockInstance } from "@super-doc/types";
 import { getElementCoordinates, getModules, isCursorAtFirstOrLastLine, keyCodes } from "@super-doc/share";
 import Event from "../index";
-
 export default class KeyDown {
   public isBindEvent = false;
   public Event: Event;
@@ -34,11 +33,13 @@ export default class KeyDown {
       this.backspaceEvent(event);
     } else if (event.keyCode === keyCodes.ENTER) {
       this.enterEvent(event);
-    } else if (event.metaKey && event.keyCode === keyCodes.A) {
+    } else if ((event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.A) {
       console.log('全选');
       getModules().BlockManager.blockInstances.forEach(block => {
         block.checkAll = true;
       })
+    } else if ((event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.C) {
+      console.log('复制')
     }
   };
 

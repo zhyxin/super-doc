@@ -90,5 +90,6 @@ export default {
   position: relative;
   border: 2px solid transparent;
   transition: border 0.3s;
+  margin-top: 5px;
 }
 </style>

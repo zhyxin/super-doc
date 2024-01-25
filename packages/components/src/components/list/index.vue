@@ -9,6 +9,7 @@
       @addHandler="keydownHandler"
       @updateContent="updateContent"
       @remove="removeHandler"
+      class="list-item"
     ></ListItem>
   </div>
 </template>
@@ -83,4 +84,10 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.list-item{
+  margin-top: 2.6px;
+  margin-bottom: 2.6px;
+  padding-left: 0px;
+}
+</style>
