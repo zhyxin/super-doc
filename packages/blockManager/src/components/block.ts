@@ -22,6 +22,9 @@ export class Block {
   private CHECKOUT_ALL_NUMBER: number = 3;
   private CHECKOUT_BLOCK_NUMBER: number = 2;
   public CURRENT_CHECKOUT_COUNT: number = 0;
+  public CURRENT_CURSOR_START: string = 'start';
+  public CURRENT_CURSOR_MIDDLE: string = 'middle';
+  public CURRENT_CURSOR_END: string = 'end';
 
   public readonly holder: HTMLDivElement;
 
@@ -36,6 +39,7 @@ export class Block {
   private _Editor: EditorModules;
   public _isEditable: boolean = false;
   private BlockManager;
+  private foucsCursor = null; // 光标位置
   get isEditable(): boolean {
     return this._isEditable;
   }
@@ -120,5 +124,33 @@ export class Block {
         this.checkAll = false;
       }
     });
+  }
+
+  /**
+   * 获取当前行的光标位置
+   */
+   getCursorPosition() {
+    if (window.getSelection) { // 支持现代浏览器
+        return window.getSelection().anchorOffset;
+    } else if ((document as any).selection && (document as any).selection.createRange) { // 支持IE浏览器
+        var range = (document as any).selection.createRange();
+        return range.moveEnd('character', -1);
+    }
+  }
+  // 判断光标前中后位置
+  setCursorPosition(){
+    let currentBlockId = this.BlockManager.currentBlockId;
+    let position = this.getCursorPosition();
+    let length = this.currentElement.innerText.length;
+    if(position == 0) {
+      this.foucsCursor = this.CURRENT_CURSOR_START
+      return this.CURRENT_CURSOR_START
+    }else if(position == length){
+      this.foucsCursor = this.CURRENT_CURSOR_END
+      return this.CURRENT_CURSOR_END
+    }else {
+      this.foucsCursor = this.CURRENT_CURSOR_MIDDLE
+      return this.CURRENT_CURSOR_MIDDLE
+    }
   }
 }
