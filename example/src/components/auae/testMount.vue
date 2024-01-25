@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       templateData: null,
+      editorActivator:null,
       editorOption: {
         hiddenTopToolBar: true, // 是否隐藏顶部栏
         hiddenRightViewPart: false, // 是否开启右侧边栏
@@ -91,31 +92,27 @@ export default {
       }
     },
     mountDDDeditor() {
-      const editorActivator = new Activator();
       let dddComponent = Vue.extend(dddEditor);
-      console.log('ga------------333333---------------zua')
-
       let vm = new dddComponent({
         ref: "editor",
         propsData: {
           options: this.editorOption,
-          activator: editorActivator,
+          activator: this.editorActivator,
           templateData: this.templateData,
           storyMapData: this.storyMapData,
         },
       });
       vm.$mount(this.$refs.ddd);
-      console.log('ga---------------------------zua')
     },
   },
-  beforeCreate() {
+  created() {
+      this.editorActivator = new Activator();
+      console.log('进入了')
   },
   mounted() {
     this.init();
     this.$nextTick(() => {
-      setTimeout(()=>{
         this.mountDDDeditor();
-      },200)
     });
   },
 };

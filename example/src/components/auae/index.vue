@@ -8,7 +8,8 @@
       :storyMapData="storyMapData"
       @after_changeHistory="changeHistory"
       @mapChange="storyMapChange"
-      style="height: 500px"
+      @after_editor_init="afterInit"
+      style="height: 500px;margin-bottom:10px"
       class="ddd-editor-style"
     ></ddd-editor>
   </div>
@@ -75,6 +76,7 @@ export default {
         // defaultLockStatus: false,
       },
       storyMapData: null,
+      blockData:null,
     };
   },
   computed: {
@@ -83,30 +85,37 @@ export default {
     },
   },
   methods: {
+    afterInit(){
+        const editorStore = this.dddEditor.auaeEditor.$auaeStore;
+        const instance = editorStore.getters.domNodes[EDITOR_NAME];
+        if (instance) {
+            instance.offsetX = 0
+        }
+    },
     init() {
       const _data = getBlockData(this.$attrs["block-id"]).data;
-      let type = _data.mapType;
+      let type = _data.mapType || "userStory";
       try {
         if (type == "userStory") {
           this.editorOption.useDomRender = true;
           this.editorOption.defaultLockStatus = false;
-          this.templateData = BASE_NODE;
+          this.templateData = JSON.parse(JSON.stringify(BASE_NODE));
           if (_data.mapData) {
             _data.mapData.id = generateId();
+          }else {
+            _data.mapData = storyData
+          }
             this.storyMapData = [
-              {
-                component: "stormEditor",
+                {
+                component: EDITOR_NAME,
                 mapData: JSON.parse(JSON.stringify(_data.mapData)),
-              },
+                },
             ];
            
-          }
           console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
         } else {
-          // _data.mapData.id = generateId();
           console.log(_data.mapData, "_data.mapData");
           this.templateData = JSON.parse(JSON.stringify(_data.mapData));
-        //   this.templateData = _data.mapData;
         }
       } catch (e) {
         console.log(e, "初始化出错", _data.mapData);
@@ -116,20 +125,23 @@ export default {
         console.log(history,'其他图的移动更新')
     },
     storyMapChange({command,is}){
-        console.log('mapcahnge')
+        // console.log('mapcahnge')
         const editorStore = this.dddEditor.auaeEditor.$auaeStore;
         const instance = editorStore.getters.domNodes[is];
         if (instance) {
             let blockData  = getBlockData(this.$attrs["block-id"]).data;
-            blockData.copyMapData = instance.userStoryMap
+            blockData.mapData = instance.userStoryMap
             console.log(instance.userStoryMap , "用户故事地图数据更新",blockData);
         }
     }
   },
-  beforeCreate() {},
+  created() {
+    // this.init()
+  },
   mounted() {
     this.$nextTick(() => {
-      this.init();
+        this.init();
+
     });
   },
 };
@@ -142,6 +154,9 @@ export default {
       > span {
         min-height: 0 !important;
       }
+    }
+    .task-container{
+        margin-top: 0px !important;
     }
   }
 }
