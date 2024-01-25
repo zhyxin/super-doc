@@ -1,0 +1,3 @@
+export type CURSOR_POSITION_START = 0;
+export type CURSOR_POSITION_MIDDLE = 1;
+export type CURSOR_POSITION_END = 2;
