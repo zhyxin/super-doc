@@ -11,16 +11,28 @@ import '../superDocPlugins/block/index'
 // import superDoc from "D:/Company/agree_project/super-doc/packages/core/dist/core.esm-bundler.js";
 import divideJson from "../libs/divide.json";
 import subDomain from "../libs/subDomain.json";
+import subDomain2 from "../libs/subDomain2.json";
 import uml from "../libs/uml.json";
 import storyData from "../libs/storyData.json";
 import storyData2 from "../libs/storyData2.json";
 import directory from './directory/index.vue'
+import { generateId } from '../../../packages/api/dist/api.esm-bundler.js';
 const testData =   [{
               type: "Auae",
               class: "Auae",
               data: {
                 title: "故事地图",
                 mapData: divideJson,
+                mapType:'divide'
+              },
+            },
+            {
+              type: "Auae",
+              class: "Auae",
+              data: {
+                title: "故事地图",
+                mapData: subDomain2,
+                mapType:'subDomain'
               },
             },
             {
@@ -29,6 +41,7 @@ const testData =   [{
               data: {
                 title: "划分子域",
                 mapData: subDomain,
+                mapType:'subDomain'
               },
             },
             {
@@ -37,6 +50,7 @@ const testData =   [{
               data: {
                 title: "uml流程图",
                 mapData: uml,
+                mapType:'uml'
               },
             },
             // {
@@ -126,14 +140,14 @@ export default {
       let data = blockData.slice(0);
       window.superDoc.setData(data.length!==0? data:testData);
       this.addDirectory()
-
+        // this.initDirectory()
     },
     formatData(data) {
       return data
         .filter((item) => {
           return (
             // item.template.type === "ImageDocFlowChart"
-            item.template.type === "Head" || item.template.type === "Paragraph" || item.template.type === "TableDoc"
+          item.template.type === "ImageDocFlowChart" ||  item.template.type === "Head" || item.template.type === "Paragraph" || item.template.type === "TableDoc"
           );
         })
         .map((item) => {
@@ -225,6 +239,25 @@ export default {
       // });
       // window.superDoc = doc;
     },
+    getEventList(event,parent){
+      // eventList
+      let eventList = { 
+        "id": event.id,
+        "description": null,
+        "placeholder": event.name,
+        "taskId": parent.id,
+        }
+        if(event.ruleInfo){
+          eventList.rule = {
+            "id": 'rule_'+ generateId(),
+            "description": event.ruleInfo,
+            "placeholder":event.ruleInfo,
+            "taskId": parent.id
+          }
+        }
+      return eventList
+    },
+    // 格式化用户故事地图数据
     formatUserMapData(data) {
       let userMap = {
         activitys: [],
@@ -238,18 +271,15 @@ export default {
       }
       activitys.forEach((f) => {
         userMap.activitys.push({
-          id: f.id,
+          id: 'activity'+ f.id,
           description: null,
-          placeholder: f.name,
+          placeholder: f.name || "未知",
           childActivityList: [],
-          taskList:
-            f.commandList?.map((c) => {
-              return {
-                id: c.id,
-                description: null,
-                placeholder: c.name || "未知",
-              };
-            }) || [],
+          taskList:[{
+            id: f.id,
+            placeholder: f.name || '未知',
+            eventList: f.commandList?.map((c=>{return this.getEventList(c,f)})) ?? []
+          }]
         });
       });
       return userMap;
@@ -280,7 +310,7 @@ export default {
           directoryList.push(object)
         }
       })
-     let superDirectory = $(`<div class="super-directory">目录<div>`)
+     let superDirectory = $(`<div class="super-directory"><p class="super-directory-title">目录</p><div>`)
       //事件代理
      $(superDirectory).click((e)=>{
         if(e.target){
@@ -305,7 +335,7 @@ export default {
       let vm = new directoryComp({
         ref: "superDirectory",
         propsData: {
-          treeData:[],
+          ddd:['1232333'],
         },
       });
      $('#editorjs').append(superDirectory)
@@ -348,23 +378,31 @@ a
     top:0;
     bottom: 0;
     // height: 100px;
-    max-height: 50vh;
+    min-height: 100vh;
+    height: 100%;
+    // max-height: 50vh;
     margin: auto;
     overflow: auto;
     cursor: pointer;
-    text-align: center;
     font-weight: bold;
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
-    box-shadow: 0px 3px 10px #bbbbbb;
+    // box-shadow: 0px 3px 10px #bbbbbb;
+    border-left: 1px solid var(--we_line_light_color,rgba(23,26,29,0.08));
+    .super-directory-title{
+      margin: 5px;
+    }
     .super-directory-item{
       text-align: left;
       margin: 0;
       padding-top: 5px;
       padding-bottom: 5px;
       font-weight: normal;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
       &:hover{
         background: rgb(245, 247, 250);
       }

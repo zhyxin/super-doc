@@ -264,6 +264,7 @@ export default class Ui extends Module {
           this.Editor.BlockManager.currentHoverBlockId,
           this.Editor.BlockManager.cursor.cursorPosition
         );
+        
       });
       elements.push(popoverItem);
     });
