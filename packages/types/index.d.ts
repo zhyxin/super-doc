@@ -15,3 +15,4 @@ export type BlockTuneData = any;
 export { OutputData, OutputBlockData} from './data-formats/output-data';
 export { BlockId } from './data-formats/block-id';
 export { MountedCallback } from './data-formats/mounted-callback';
+export * from './cursor/index'
