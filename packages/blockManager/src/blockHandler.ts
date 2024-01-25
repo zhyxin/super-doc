@@ -1,6 +1,7 @@
-import { OutputBlockData, BlockId, BlockToolData } from "@super-doc/types";
-import { generateBlockId, BlockType } from "@super-doc/share";
+import { OutputBlockData, BlockId, BlockToolData, CURSOR_DIRECTION } from "@super-doc/types";
+import { generateBlockId, BlockType, cursorPositionType } from "@super-doc/share";
 import { Block } from ".";
+import { generateParagraphData } from "@super-doc/api";
 
 export const findBlockInstanceForId = function (blockId: BlockId): {
   pre: { state: Block; index: number };
@@ -51,24 +52,22 @@ export const replaceBlockForBlockId = function (
 };
 
 export const insertBlockForBlockId = function (
-  blockData?: OutputBlockData,
-  blockId?: BlockId
+  blockData: OutputBlockData = generateParagraphData(),
+  blockId: BlockId = this.currentBlockId,
+  direction: CURSOR_DIRECTION = cursorPositionType.CURSOR_POSITION_END
 ): void {
-  const target = blockData ?? {
-    id: generateBlockId(),
-    type: "Paragraph",
-    data: {
-      text: '',
-    },
-    class: 'Paragraph',
-  };
-  if (!target.id) {
-    target.id = generateBlockId();
-  }
-
-  this.blocks.some((blockData, index, _target) => {
-    if (blockData.id === this.currentBlockId) {
-      _target.splice(index + 1, 0, target);
+  blockData.id = blockData.id ? blockData.id : generateBlockId();
+  this.blocks.some(({ id }, index, _target) => {
+    if (id === blockId) {
+      let i = index;
+      if(direction === cursorPositionType.CURSOR_POSITION_END) {
+        i = index + 1;
+      } else if (direction === cursorPositionType.CURSOR_POSITION_MIDDLE) {
+        i = index + 1;
+      } else if (direction === cursorPositionType.CURSOR_POSITION_START) {
+        i = index;
+      }
+      _target.splice(i, 0, blockData);
       return true;
     }
   });
