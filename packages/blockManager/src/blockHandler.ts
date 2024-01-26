@@ -73,48 +73,6 @@ export const insertBlockForBlockId = function (
   });
 };
 
- export const changeBlockForBlockId = function(
-  blockData?: OutputBlockData,
-  blockId?: BlockId
-){
-  let insertFn:Function;
-  const {CURRENT_CURSOR_START,foucsCursor} = this.curentFocusBlock
-  switch (foucsCursor){
-    case CURRENT_CURSOR_START: insertFn = insertBeforeBlockForBlockId.bind(this);break;
-    default: insertFn = insertBlockForBlockId.bind(this);
-  }
-  console.log(foucsCursor,'位置')
-  insertFn && insertFn(blockData,blockId)
-}
-
-// 往前插入
-export const insertBeforeBlockForBlockId = function(
-  blockData?: OutputBlockData,
-  blockId?: BlockId
-){
-  const target = blockData ?? {
-    id: generateBlockId(),
-    type: "Paragraph",
-    data: {
-      text: '',
-    },
-    class: 'Paragraph',
-  };
-  if (!target.id) {
-    target.id = generateBlockId();
-  }
-  this.blocks.some((blockData, index, _target) => {
-    if (blockData.id === this.currentBlockId) {
-      if(index ==  0){
-        _target.unshift(target)
-      }else{
-        _target.splice(index, 0, target);
-      }
-      return true;
-    }
-  });
-}
-
 export const batchInsertBlock = function (blockDatas: OutputBlockData[] = []) {
   blockDatas.forEach(blockData => {
     insertBlockForBlockId(blockData);

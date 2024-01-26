@@ -14,7 +14,6 @@ import {
   replaceBlockForBlockId,
   replaceCurrentBlock,
   updateBlockData,
-  changeBlockForBlockId
 } from "./blockHandler";
 export * from "./components/block";
 
@@ -210,7 +209,6 @@ export default class BlockManager extends Module {
   public replaceBlockForBlockId = replaceBlockForBlockId;
   public findBlockInstanceForId = findBlockInstanceForId;
   public insertBlockForBlockId = insertBlockForBlockId;
-  public changeBlockForBlockId = changeBlockForBlockId;
   public batchInsertBlock = batchInsertBlock;
   public replaceCurrentBlock = replaceCurrentBlock;
   public updateBlockData = updateBlockData;

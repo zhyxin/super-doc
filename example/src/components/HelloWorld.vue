@@ -120,9 +120,11 @@ export default {
       return null;
     },
     async getData() {
+      let bcId = this.getParams('bcId') || 'd59pi7dr2yw00'
+      let projectId = this.getParams('projectId') || 'pro-1OYFBwfB'
       const result = await axios({
         method: "GET",
-        url: "/dddd/doc/mapping/getData?bcId=d59pi7dr2yw00&projectId=pro-1OYFBwfB",
+        url: `/dddd/doc/mapping/getData?bcId=${bcId}&projectId=${projectId}`,
         headers: {
           authorization: `Bearer ${this.getParams('token')}=`,
         },
@@ -326,7 +328,7 @@ export default {
       })
      $(superDirectory).append($(directoryString))
      $('#editorjs').append(superDirectory)
-     console.log(directoryString,'directoryString')
+    //  console.log(directoryString,'directoryString')
     },
 
     initDirectory(){
