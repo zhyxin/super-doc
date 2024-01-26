@@ -1,5 +1,14 @@
 import { BlockId, BlockInstance } from "@super-doc/types";
-import { getElementCoordinates, getModules, isCursorAtFirstOrLastLine, keyCodes } from "@super-doc/share";
+import { Dom as $ } from "@super-doc/share";
+
+import {
+  getBlockIdForElement,
+  getElementCoordinates,
+  getModules,
+  getParagraphElements,
+  isCursorAtFirstOrLastLine,
+  keyCodes,
+} from "@super-doc/share";
 import Event from "../index";
 export default class KeyDown {
   public isBindEvent = false;
@@ -33,13 +42,19 @@ export default class KeyDown {
       this.backspaceEvent(event);
     } else if (event.keyCode === keyCodes.ENTER) {
       this.enterEvent(event);
-    } else if ((event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.A) {
-      console.log('全选');
-      getModules().BlockManager.blockInstances.forEach(block => {
+    } else if (
+      (event.metaKey || event.ctrlKey) &&
+      event.keyCode === keyCodes.A
+    ) {
+      console.log("全选");
+      getModules().BlockManager.blockInstances.forEach((block) => {
         block.checkAll = true;
-      })
-    } else if ((event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.C) {
-      console.log('复制')
+      });
+    } else if (
+      (event.metaKey || event.ctrlKey) &&
+      event.keyCode === keyCodes.C
+    ) {
+      console.log("复制");
     }
   };
 
@@ -51,17 +66,17 @@ export default class KeyDown {
     const isDOWN = event.key === "ArrowDown";
     if (!isUP && !isDOWN) return;
     // 判断是否为第一行
-    const { isFirstLine, isLastLine } = isCursorAtFirstOrLastLine(event.currentTarget as Element);
-    if(isUP && !isFirstLine || isDOWN && !isLastLine) return;
-    event.preventDefault();
-    const currentTarget = event.currentTarget as HTMLElement;
-    const target = event.target;
-    const blockId = currentTarget.getAttribute("block-id");
-    const allParagraphs: HTMLElement[] = Array.from(
-      document.querySelectorAll("#superdoc-paragraph")
+    const { isFirstLine, isLastLine } = isCursorAtFirstOrLastLine(
+      event.target as Element
     );
-    if ((target as HTMLElement).getAttribute("id") !== "superdoc-paragraph")
-      return;
+    if ((isUP && !isFirstLine) || (isDOWN && !isLastLine)) return;
+    event.preventDefault();
+    const [blockId, currentTarget] = getBlockIdForElement(
+      event.currentTarget as HTMLElement
+    );
+    const target = event.target;
+    if ($.getAttr(target, "id") !== "superdoc-paragraph") return;
+    const allParagraphs = getParagraphElements();
     let focusEl = null;
     allParagraphs.some((el, i, _element) => {
       if (el === target) {
@@ -164,25 +179,13 @@ export default class KeyDown {
 
   /**
    * 粘贴事件
-  */
+   */
   public bindCopyEvent(blockInstances: BlockInstance[]) {
-    blockInstances.forEach(instance => {
-      instance.element.addEventListener('copy', (event: ClipboardEvent) => {
-        event.clipboardData.setData('text', event.target['getInnerHTML']());
+    blockInstances.forEach((instance) => {
+      instance.element.addEventListener("copy", (event: ClipboardEvent) => {
+        event.clipboardData.setData("text", event.target["getInnerHTML"]());
         event.preventDefault();
       });
-    })
+    });
   }
-
-  /**
-   * 移动一个字符
-   */
-
-  /**
-   * 移动一个字母
-   */
-
-  /**
-   * 光标往下
-  */
 }

@@ -7,6 +7,10 @@ export class Dom {
     return document.querySelector(selector);
   }
 
+  public static getAttr(el, attr): string | null {
+    return el.getAttribute(attr);
+  }
+
   // 在某元素的父元素的开头添加一个或者多个元素
   public static prepend(parent: Element, elements: Element | Element[]): void {
     if (Array.isArray(elements)) {
@@ -63,7 +67,6 @@ export class Dom {
   }
 }
 
-
 export const keyCodes = {
   BACKSPACE: 8,
   TAB: 9,
@@ -80,12 +83,10 @@ export const keyCodes = {
   DELETE: 46,
   META: 91,
   A: 65,
-  C:67,
+  C: 67,
 };
 
-
 export function getElementCoordinates(rect) {
-
   const scrollX = window.scrollX || window.pageXOffset;
   const scrollY = window.scrollY || window.pageYOffset;
 
@@ -97,17 +98,17 @@ export function getElementCoordinates(rect) {
     top: docY,
     right: docX + rect.width,
     bottom: docY + rect.height,
-    rect
+    rect,
   };
 }
 
-export function setCursorForEnd (element: HTMLElement) {
+export function setCursorForEnd(element: HTMLElement) {
   const range = document.createRange();
   const selection = document.getSelection();
   const child = Array.from(element.childNodes);
-  if(child.length) {
+  if (child.length) {
     const lastChild = child.slice(child.length - 1)[0];
-    if(lastChild.nodeType === Node.TEXT_NODE) {
+    if (lastChild.nodeType === Node.TEXT_NODE) {
       range.setStart(lastChild, (lastChild as Text).length);
       range.setEnd(lastChild, (lastChild as Text).length);
     } else if (lastChild.nodeType === Node.ELEMENT_NODE) {
@@ -122,9 +123,15 @@ export function setCursorForEnd (element: HTMLElement) {
   selection.addRange(range);
 }
 
-export function isCursorAtFirstOrLastLine(element:Element): {isFirstLine: Boolean, isLastLine: Boolean} {
+export function isCursorAtFirstOrLastLine(element: Element): {
+  isFirstLine: Boolean;
+  isLastLine: Boolean;
+} {
+  if (element.childNodes.length === 0)
+    return { isFirstLine: true, isLastLine: true };
   const selection = window.getSelection();
-  if (selection.rangeCount === 0) return null; // No selection
+  if (selection.rangeCount === 0)
+    return { isFirstLine: false, isLastLine: false };
   const range = selection.getRangeAt(0);
   const rangeRect = range.getBoundingClientRect();
   const elemRect = element.getBoundingClientRect();

@@ -1,4 +1,9 @@
-import { BlockId, CURSOR_POSITION_END, CURSOR_POSITION_MIDDLE, CURSOR_POSITION_START } from "@super-doc/types";
+import {
+  BlockId,
+  CURSOR_POSITION_END,
+  CURSOR_POSITION_MIDDLE,
+  CURSOR_POSITION_START,
+} from "@super-doc/types";
 
 export const BlockType = {
   LIST_DOC: "ListDoc",
@@ -7,15 +12,14 @@ export const BlockType = {
   IMAGE: "Image",
 };
 
-
 export const cursorPositionType: {
-  CURSOR_POSITION_START: CURSOR_POSITION_START,
-  CURSOR_POSITION_MIDDLE: CURSOR_POSITION_MIDDLE,
-  CURSOR_POSITION_END: CURSOR_POSITION_END
+  CURSOR_POSITION_START: CURSOR_POSITION_START;
+  CURSOR_POSITION_MIDDLE: CURSOR_POSITION_MIDDLE;
+  CURSOR_POSITION_END: CURSOR_POSITION_END;
 } = {
   CURSOR_POSITION_START: 0,
   CURSOR_POSITION_MIDDLE: 1,
-  CURSOR_POSITION_END: 2
+  CURSOR_POSITION_END: 2,
 };
 
 /**
@@ -27,7 +31,7 @@ export const getBlockIdForElement = (el: HTMLElement): [BlockId, Element] => {
   if (!id) {
     const subElement = el.querySelector("[block-id]");
     id = subElement.getAttribute("block-id");
-    if(!id) {
+    if (!id) {
       throw new Error(`${el}非文档元素`);
     }
     element = subElement;
@@ -35,4 +39,8 @@ export const getBlockIdForElement = (el: HTMLElement): [BlockId, Element] => {
     element = el;
   }
   return [id, element];
+};
+
+export const getParagraphElements = (): HTMLElement[] => {
+  return Array.from(document.querySelectorAll("#superdoc-paragraph"));
 };
