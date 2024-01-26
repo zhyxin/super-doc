@@ -71,7 +71,6 @@ export default class Event extends Module {
     const selection = window.getSelection();
     if (!selection.isCollapsed && selection.rangeCount > 0) {
       this.SELECT_TIME = setTimeout(() => {
-        const rang = selection.getRangeAt(0);
         this.Editor.UI.menu.visible = true;
       }, 100);
     } else {

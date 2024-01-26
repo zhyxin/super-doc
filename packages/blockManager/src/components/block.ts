@@ -80,6 +80,10 @@ export class Block {
     this._checkAll = status;
   }
 
+  get checkAll():boolean {
+    return this._checkAll;
+  }
+
   constructor({
     index,
     id = _.generateBlockId(),

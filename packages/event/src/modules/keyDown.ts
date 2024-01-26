@@ -46,10 +46,15 @@ export default class KeyDown {
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.A
     ) {
-      console.log("全选");
-      getModules().BlockManager.blockInstances.forEach((block) => {
-        block.checkAll = true;
-      });
+      const { BlockManager } = getModules();
+      const { curentFocusBlock, blockInstances } = BlockManager;
+      if (curentFocusBlock.checkAll) {
+        blockInstances.forEach((block) => {
+          block.checkAll = true;
+        });
+      } else {
+        curentFocusBlock.checkAll = true;
+      }
     } else if (
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.C
