@@ -355,21 +355,17 @@ export default {
       $("#editorjs").append(superDirectory);
       //  console.log(directoryString,'directoryString')
     },
-
-    initDirectory() {
-      let directoryComp = Vue.extend(directory);
-      let superDirectory = $(`<div><div>`);
-      let vm = new directoryComp({
-        ref: "superDirectory",
-        propsData: {
-          ddd: ["1232333"],
-        },
-      });
-      $("#editorjs").append(superDirectory);
-      vm.$mount(superDirectory[0]);
-    },
+    // 接收窗口刷新信息
+    bindPostMessage(){
+       window.addEventListener('message',(e)=>{
+        if(e.data.isreload){
+          window.location.reload(true)
+        }
+      },false)
+    }
   },
-  mounted() {
+   mounted() {
+    this.bindPostMessage()
     this.getData();
     this.initSuperDoc();
   },
