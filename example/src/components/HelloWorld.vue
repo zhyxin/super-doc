@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div v-loading="loading">
+    <div id="editorjs"></div>
+  </div>
 </template>
 
 <script>
@@ -105,6 +107,11 @@ export default {
     msg: String,
   },
   components: {},
+  data() {
+    return {
+      loading: true
+    }
+  },
   methods: {
     getParams(param) {
       var queryString = window.location.href.split("?")[1];
@@ -135,10 +142,11 @@ export default {
           }
         } catch (error) {
           alert("请求数据失败");
+        } finally {
+          this.loading = false;
         }
       });
       const blockData = this.formatData(result);
-      console.log("-=====-", blockData);
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
       this.addDirectory();
