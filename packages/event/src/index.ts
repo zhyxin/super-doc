@@ -100,10 +100,7 @@ export default class Event extends Module {
 
   public mouseEvent(blocks) {
     blocks.forEach((block) => {
-      block.element.addEventListener("click", (e)=>{
-       let mouseClick = this.mouseClick.bind(this)
-       mouseClick(e,block)
-      });
+      block.element.addEventListener("click", this.mouseClick.bind(this));
       block.element.addEventListener("input", this.inputEvent.bind(this));
       // block.element.addEventListener("mouseout", this.onmouseout.bind(this));
       block.element.addEventListener(
