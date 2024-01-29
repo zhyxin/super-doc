@@ -19,9 +19,9 @@ interface BlockConstructorOptions {
 
 export class Block {
   private _checkAll: boolean = false;
-  private CHECKOUT_ALL_NUMBER: number = 3;
-  private CHECKOUT_BLOCK_NUMBER: number = 2;
-  public CURRENT_CHECKOUT_COUNT: number = 0;
+  public CHECKOUT_ALL_NUMBER: number = 3;
+  public CHECKOUT_BLOCK_NUMBER: number = 2;
+  public _CURRENT_CHECKOUT_COUNT: number = 0;
 
   public readonly holder: HTMLDivElement;
 
@@ -36,6 +36,24 @@ export class Block {
   private _Editor: EditorModules;
   public _isEditable: boolean = false;
   private BlockManager;
+  get CURRENT_CHECKOUT_COUNT () {
+    return this._CURRENT_CHECKOUT_COUNT;
+  }
+  set CURRENT_CHECKOUT_COUNT(count: number) {
+    if(count === this.CHECKOUT_BLOCK_NUMBER) {
+      this.checkAll = true;
+      this._CURRENT_CHECKOUT_COUNT = count;
+    } else if (count === this.CHECKOUT_ALL_NUMBER) {
+      this.BlockManager.checkAllStatus(true);
+      this._CURRENT_CHECKOUT_COUNT = count;
+    } else if (count === 0){
+      this.checkAll = false;
+      this._CURRENT_CHECKOUT_COUNT = 0;
+    } else {
+      this._CURRENT_CHECKOUT_COUNT = count;
+    }
+  }
+
   get isEditable(): boolean {
     return this._isEditable;
   }
@@ -63,25 +81,10 @@ export class Block {
 
   set checkAll(status: boolean) {
     if(!status) {
-      if(this.CURRENT_CHECKOUT_COUNT === this.CHECKOUT_ALL_NUMBER) {
-        this.BlockManager.checkAllStatus(status);
-      } else {
-        this.currentElement.classList.remove(this.Editor.UI.CSS.selectedStatus);
-      }
-      this.CURRENT_CHECKOUT_COUNT = 0;
+      this.currentElement.classList.remove(this.Editor.UI.CSS.selectedStatus);
     } else {
-      this.CURRENT_CHECKOUT_COUNT += 1;
-      if(this.CURRENT_CHECKOUT_COUNT === this.CHECKOUT_BLOCK_NUMBER) {
-        this.currentElement.classList.add(this.Editor.UI.CSS.selectedStatus);
-      } else if (this.CURRENT_CHECKOUT_COUNT === this.CHECKOUT_ALL_NUMBER) {
-        this.BlockManager.checkAllStatus(status);
-      }
+      this.currentElement.classList.add(this.Editor.UI.CSS.selectedStatus);
     }
-    this._checkAll = status;
-  }
-
-  get checkAll():boolean {
-    return this._checkAll;
   }
 
   constructor({
