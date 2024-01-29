@@ -18,7 +18,6 @@ interface BlockConstructorOptions {
 }
 
 export class Block {
-  private _checkAll: boolean = false;
   public CHECKOUT_ALL_NUMBER: number = 3;
   public CHECKOUT_BLOCK_NUMBER: number = 2;
   public _CURRENT_CHECKOUT_COUNT: number = 0;
@@ -82,8 +81,10 @@ export class Block {
   set checkAll(status: boolean) {
     if(!status) {
       this.currentElement.classList.remove(this.Editor.UI.CSS.selectedStatus);
+      this._CURRENT_CHECKOUT_COUNT = 0;
     } else {
       this.currentElement.classList.add(this.Editor.UI.CSS.selectedStatus);
+      this._CURRENT_CHECKOUT_COUNT = 2;
     }
   }
 
