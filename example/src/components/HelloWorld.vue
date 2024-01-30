@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div>
+    <!-- 目录 -->
+    <directory :blockData="blockData"/>
+  </div>
 </template>
 
 <script>
@@ -16,6 +19,7 @@ import storyData from "../libs/storyData.json";
 import storyData2 from "../libs/storyData2.json";
 import directory from "./directory/index.vue";
 import { generateId } from "../../../packages/api/dist/api.esm-bundler.js";
+
 const testData = [
   {
     type: "Auae",
@@ -104,7 +108,12 @@ export default {
   props: {
     msg: String,
   },
-  components: {},
+  components: {directory},
+  data(){
+    return {
+      blockData:[]
+    }
+  },
   methods: {
     getParams(param) {
       var queryString = window.location.href.split("?")[1];
@@ -141,14 +150,13 @@ export default {
       console.log("-=====-", blockData);
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
-      this.addDirectory();
-      // this.initDirectory()
+      // 目录数据追加-响应式
+      this.blockData = window.superDoc.getBlocks().filter((item)=> item.type  == 'Head')
     },
     formatData(data) {
       return data
         .filter((item) => {
           return (
-            // item.template.type === "ImageDocFlowChart"
             item.template.type === "ImageDocFlowChart" ||
             item.template.type === "Head" ||
             item.template.type === "Paragraph" ||
@@ -305,55 +313,6 @@ export default {
         });
       });
       return userMap;
-    },
-    // 添加目录
-    addDirectory() {
-      let directoryList = [];
-      let includesNode = ["H1", "H2", "H3", "H4", "H5"];
-      let classMap = {
-        H1: "super-directory-h1",
-        H2: "super-directory-h2",
-        H3: "super-directory-h3",
-        H4: "super-directory-h4",
-        H5: "super-directory-h5",
-      };
-      let directoryString = ``;
-      $(".super-doc-editor__redactor .super-doc-block").each(function (
-        index,
-        block
-      ) {
-        let headData = $(block).children()?.children();
-        if (headData && includesNode.includes(headData[0].nodeName)) {
-          let nodeName = headData[0].nodeName;
-          let object = {
-            id: headData.attr("block-id"),
-            nodeName,
-            text: headData.text(),
-            el: headData,
-          };
-          directoryString += `<p class="super-directory-item ${classMap[nodeName]}" block-id=${object.id} >${object.text}</p>`;
-          directoryList.push(object);
-        }
-      });
-      let superDirectory = $(
-        `<div class="super-directory"><p class="super-directory-title">目录</p><div>`
-      );
-      //事件代理
-      $(superDirectory).click((e) => {
-        if (e.target) {
-          let blockId = e.target.getAttribute("block-id");
-          if (blockId) {
-            let targetDom = directoryList.find((f) => f.id == blockId);
-            targetDom &&
-              targetDom.el[0].scrollIntoView({
-                behavior: "smooth",
-              });
-          }
-        }
-      });
-      $(superDirectory).append($(directoryString));
-      $("#editorjs").append(superDirectory);
-      //  console.log(directoryString,'directoryString')
     },
     // 接收窗口刷新信息
     bindPostMessage(){

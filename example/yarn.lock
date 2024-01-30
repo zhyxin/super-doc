@@ -39,10 +39,10 @@
     crypto-js "^4.1.1"
     uaeengine "^2.4.35"
 
-"@auae/dddeditor@^1.0.2":
-  version "1.0.2"
-  resolved "https://nexus.awebide.com/repository/npm-group/@auae/dddeditor/-/dddeditor-1.0.2.tgz#fb7d154b44df49efaff03d1d3e7694822cc9821f"
-  integrity sha1-+30VS0TfSe+v8D0dPnaUgizJgh8=
+"@auae/dddeditor@^1.0.3":
+  version "1.0.3"
+  resolved "https://nexus.awebide.com/repository/npm-group/@auae/dddeditor/-/dddeditor-1.0.3.tgz#185f808d9965e1475351cf8df5a38ce81903dcc6"
+  integrity sha1-GF+AjZll4UdTUc+N9aOM6BkD3MY=
   dependencies:
     "@v2-lib/micro.package" "^1.0.20"
     uaeengine "^2.4.35"
@@ -120,9 +120,9 @@
     "@babel/helper-plugin-utils" "^7.22.5"
 
 "@babel/types@^7.22.15":
-  version "7.23.4"
-  resolved "https://nexus.awebide.com/repository/npm-group/@babel/types/-/types-7.23.4.tgz#7206a1810fc512a7f7f7d4dace4cb4c1c9dbfb8e"
-  integrity sha512-7uIFwVYpoplT5jp/kVv6EF93VaJ8H+Yn5IczYiaAi98ajzjfoZfslet/e0sLh+wVBjb2qqIut1b0S26VSafsSQ==
+  version "7.23.9"
+  resolved "https://nexus.awebide.com/repository/npm-group/@babel/types/-/types-7.23.9.tgz#1dd7b59a9a2b5c87f8b41e52770b5ecbf492e002"
+  integrity sha512-dQjSq/7HaSjRM43FFGnv5keM2HsxpmyV1PfaSVm0nzzjwwTmjOe6J4bC8e3+pTEIgHaHj+1ZlLThRJ2auc/w1Q==
   dependencies:
     "@babel/helper-string-parser" "^7.23.4"
     "@babel/helper-validator-identifier" "^7.22.20"
@@ -436,9 +436,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "20.9.4"
-  resolved "https://nexus.awebide.com/repository/npm-group/@types/node/-/node-20.9.4.tgz#cc8f970e869c26834bdb7ed480b30ede622d74c7"
-  integrity sha512-wmyg8HUhcn6ACjsn8oKYjkN/zUzQeNtMy44weTJSM6p4MMzEOuKbA3OjJ267uPCOW7Xex9dyrNTful8XTQYoDA==
+  version "20.11.10"
+  resolved "https://nexus.awebide.com/repository/npm-group/@types/node/-/node-20.11.10.tgz#6c3de8974d65c362f82ee29db6b5adf4205462f9"
+  integrity sha512-rZEfe/hJSGYmdfX9tvcPMYeYPW2sNl50nsw4jZmRcaG0HIAb0WYEpsB05GOb53vjqpyE9GUhlDQ4jLSoB5q9kg==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3898,7 +3898,15 @@ postcss-reduce-transforms@^5.1.0:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-selector-parser@^6.0.2, postcss-selector-parser@^6.0.4, postcss-selector-parser@^6.0.5, postcss-selector-parser@^6.0.9:
+postcss-selector-parser@^6.0.2:
+  version "6.0.15"
+  resolved "https://nexus.awebide.com/repository/npm-group/postcss-selector-parser/-/postcss-selector-parser-6.0.15.tgz#11cc2b21eebc0b99ea374ffb9887174855a01535"
+  integrity sha512-rEYkQOMUCEMhsKbK66tbEU9QVIxbhN18YiniAwA7XQYTVBqrBy+P2p5JcdqsHgKM2zWylp8d7J6eszocfds5Sw==
+  dependencies:
+    cssesc "^3.0.0"
+    util-deprecate "^1.0.2"
+
+postcss-selector-parser@^6.0.4, postcss-selector-parser@^6.0.5, postcss-selector-parser@^6.0.9:
   version "6.0.13"
   resolved "https://nexus.awebide.com/repository/npm-group/postcss-selector-parser/-/postcss-selector-parser-6.0.13.tgz#d05d8d76b1e8e173257ef9d60b706a8e5e99bf1b"
   integrity sha512-EaV1Gl4mUEV4ddhDnv/xtj7sxwrwxdetHdWUGnT4VJQf+4d05v6lHYZr8N573k5Z0BViss7BDhfWtKS3+sfAqQ==
