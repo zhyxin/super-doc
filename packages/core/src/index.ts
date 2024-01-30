@@ -6,7 +6,7 @@ import Core from './components/code';
 import * as _ from '@super-doc/share';
 import { Block } from '@super-doc/block-manager';
 
-export default class SupperDoc {
+export default class SuperDoc {
 
   public isReady: Promise<void>;
 

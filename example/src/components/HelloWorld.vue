@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <!-- 目录 -->
-    <directory :blockData="blockData"/>
+  <div v-loading="loading">
+    <div id="editorjs"></div>
+      <!-- 目录 -->
+     <directory :blockData="blockData"/>
   </div>
 </template>
 
@@ -109,9 +110,10 @@ export default {
     msg: String,
   },
   components: {directory},
-  data(){
+  data() {
     return {
-      blockData:[]
+      loading: true,
+       blockData:[]
     }
   },
   methods: {
@@ -144,10 +146,11 @@ export default {
           }
         } catch (error) {
           alert("请求数据失败");
+        } finally {
+          this.loading = false;
         }
       });
       const blockData = this.formatData(result);
-      console.log("-=====-", blockData);
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
       // 目录数据追加-响应式

@@ -48,18 +48,14 @@ export default class KeyDown {
     ) {
       const { BlockManager } = getModules();
       const { curentFocusBlock, blockInstances } = BlockManager;
-      if (curentFocusBlock.checkAll) {
-        blockInstances.forEach((block) => {
-          block.checkAll = true;
-        });
-      } else {
-        curentFocusBlock.checkAll = true;
-      }
+      curentFocusBlock.CURRENT_CHECKOUT_COUNT += 1;
+      if(curentFocusBlock.CURRENT_CHECKOUT_COUNT < curentFocusBlock.CHECKOUT_BLOCK_NUMBER ) return;
+      event.preventDefault();
     } else if (
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.C
     ) {
-      console.log("复制");
+      console.log('复制');
     }
   };
 
@@ -188,6 +184,7 @@ export default class KeyDown {
   public bindCopyEvent(blockInstances: BlockInstance[]) {
     blockInstances.forEach((instance) => {
       instance.element.addEventListener("copy", (event: ClipboardEvent) => {
+        console.log('粘贴事件', instance);
         event.clipboardData.setData("text", event.target["getInnerHTML"]());
         event.preventDefault();
       });
