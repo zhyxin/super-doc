@@ -6,11 +6,12 @@
       :activator="editorActivator"
       :templateData="templateData"
       :storyMapData="storyMapData"
-      @after_changeHistory="changeHistory"
+      @changeFlowContent="changeFlowContent"
       @mapChange="storyMapChange"
       @after_editor_init="afterInit"
       style="height: 500px;margin-bottom:10px"
       class="ddd-editor-style"
+      :readOnly="readOnly"
     ></ddd-editor>
   </div>
 </template>
@@ -77,6 +78,7 @@ export default {
       },
       storyMapData: null,
       blockData:null,
+      readOnly:true
     };
   },
   computed: {
@@ -112,7 +114,7 @@ export default {
                 },
             ];
            
-          console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
+          // console.log(this.storyMapData, "storyMapData数据", this.$refs.editor);
         } else {
           console.log(_data.mapData, "_data.mapData");
           this.templateData = JSON.parse(JSON.stringify(_data.mapData));
@@ -121,8 +123,8 @@ export default {
         console.log(e, "初始化出错", _data.mapData);
       }
     },
-    changeHistory(history){
-        console.log(history,'其他图的移动更新')
+    changeFlowContent(history){
+        // console.log(history,'其他图的移动更新')
     },
     storyMapChange({command,is}){
         // console.log('mapcahnge')

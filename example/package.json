@@ -17,7 +17,7 @@
     "@ai/chatsdk": "1.0.25",
     "@auae/au-components": "^0.1.4",
     "@auae/core": "^1.2.11",
-    "@auae/dddeditor":"^1.0.2",
+    "@auae/dddeditor": "^1.0.3",
     "axios": "^1.5.1",
     "editMixin.js": "link:@auae/core/nodes/editMixin.js",
     "element-ui": "^2.15.14",
