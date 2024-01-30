@@ -32,7 +32,7 @@ import { MountedCallback } from "@super-doc/types";
       const blockInstances = this.Editor.BlockManager.blockInstances;
       let wrapEl = null;
       if (isString(this.config.holder)) {
-        wrapEl = $.get(this.config.holder as string);
+        wrapEl = $.querySelector(this.config.holder as string);
       } else if (isDOM(this.config.holder)) {
         wrapEl = this.config.holder;
       }

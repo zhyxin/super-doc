@@ -91,7 +91,7 @@ export default class Ui extends Module {
   private makeInitContainer(): void {
     this.nodes.holder =
       typeof this.config.holder === "string"
-        ? document.getElementById(this.config.holder)
+        ? $.querySelector(this.config.holder)
         : this.config.holder;
 
     this.nodes.wrapper = $.make("div", [this.CSS.editorWrapper, ...[]]);

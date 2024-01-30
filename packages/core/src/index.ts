@@ -38,8 +38,7 @@ export default class SuperDoc {
     blockJson.forEach(item => {
       item.id = item.id ? item.id : _.generateBlockId();
       this.editor.config.data.blocks.push(item)
-    })
-    
+    }) 
   }
 
   /**
@@ -78,4 +77,7 @@ export default class SuperDoc {
     }
   }
 
+  destroy() {
+    this.editor.destroy();
+  }
 }

@@ -11,7 +11,6 @@ import axios from "../../../axios.min.js";
 import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
 import { AuaeTool } from "../superDocPlugins/tools/index";
 import "../superDocPlugins/block/index";
-// import superDoc from "D:/Company/agree_project/super-doc/packages/core/dist/core.esm-bundler.js";
 import divideJson from "../libs/divide.json";
 import subDomain from "../libs/subDomain.json";
 import subDomain2 from "../libs/subDomain2.json";
@@ -19,7 +18,7 @@ import uml from "../libs/uml.json";
 import storyData from "../libs/storyData.json";
 import storyData2 from "../libs/storyData2.json";
 import directory from "./directory/index.vue";
-import { generateId } from "../../../packages/api/dist/api.esm-bundler.js";
+import { generateId, addListener } from "../../../packages/api/dist/api.esm-bundler.js";
 
 const testData = [
   {
@@ -256,16 +255,6 @@ export default {
           },
         },
       });
-      // window.superDoc.setData();
-      // window.superDoc.on('add', (...agrs) => {
-      //   console.log('添加===', agrs);
-      // });
-      // window.superDoc.on('delete', (...agrs) => {
-      //   console.log('删除====', agrs);
-      // });
-      // window.superDoc.on('update', (...agrs) => {
-      // });
-      // window.superDoc = doc;
     },
     getEventList(event, parent) {
       // eventList
@@ -330,6 +319,9 @@ export default {
     this.bindPostMessage()
     this.getData();
     this.initSuperDoc();
+    addListener('add', (block) => {
+      console.log('新增了！');
+    })
   },
 };
 </script>

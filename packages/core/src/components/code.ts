@@ -82,7 +82,7 @@ export default class Core {
         console.error(`加载${key}模块失败`, e);
       }
     });
-    window["__SUPERDOC__"] = this.moduleInstances;
+    _.setModules(this.moduleInstances);
   }
 
   private configureModules(): void {
@@ -106,7 +106,7 @@ export default class Core {
     }
 
     if (this.config.holder == null) {
-      this.config.holder = "editorjs";
+      this.config.holder = "#editorjs";
     }
 
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -194,5 +194,14 @@ export default class Core {
     }
 
     return diff;
+  }
+
+  destroy() {
+    _.setModules(null);
+    if(_.isString(this.configuration.holder)) {
+      _.Dom.querySelector(this.configuration.holder as string).remove();
+    } else if (_.isDOM(this.configuration.holder)) {
+      this.configuration.holder['remove']();
+    }
   }
 }
