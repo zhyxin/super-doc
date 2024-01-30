@@ -42,9 +42,11 @@ export class Block {
     if(count === this.CHECKOUT_BLOCK_NUMBER) {
       this.checkAll = true;
       this._CURRENT_CHECKOUT_COUNT = count;
+      this.BlockManager.cursor.removeAllRanges();
     } else if (count === this.CHECKOUT_ALL_NUMBER) {
       this.BlockManager.checkAllStatus(true);
       this._CURRENT_CHECKOUT_COUNT = count;
+      this.BlockManager.cursor.removeAllRanges();
     } else if (count === 0){
       this.checkAll = false;
       this._CURRENT_CHECKOUT_COUNT = 0;
@@ -106,7 +108,6 @@ export class Block {
     this.BlockManager = BlockManager;
     this.block2html();
     this.bindEvent();
-
   }
 
   block2html() {
@@ -119,6 +120,7 @@ export class Block {
    * 事件绑定
   */
   private bindEvent() {
+    console.log('====', this);
     this.Editor.Event.mouseEvent([this]);
     this.Editor.Event.bindKeydownEvent([this], this.Editor.Event);
     this.Editor.Event.globalClickListenerList.push(() => {

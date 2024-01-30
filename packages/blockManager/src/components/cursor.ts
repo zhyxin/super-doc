@@ -43,4 +43,8 @@ export default class Cursor {
       this.cursorPosition = this.CURSOR_POSITION_MIDDLE;
     }
   }
+
+  public removeAllRanges() {
+    window.getSelection().removeAllRanges();
+  }
 }

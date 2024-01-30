@@ -55,11 +55,7 @@ export default class KeyDown {
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.C
     ) {
-      const { BlockManager } = getModules();
-      const { curentFocusBlock, blockInstances } = BlockManager;
-      curentFocusBlock.CURRENT_CHECKOUT_COUNT += 1;
-      if(curentFocusBlock.CURRENT_CHECKOUT_COUNT < curentFocusBlock.CHECKOUT_BLOCK_NUMBER ) return;
-      event.preventDefault();
+      console.log('复制');
     }
   };
 
