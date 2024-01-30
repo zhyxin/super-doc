@@ -199,9 +199,9 @@ export default class Core {
   destroy() {
     _.setModules(null);
     if(_.isString(this.configuration.holder)) {
-      _.Dom.querySelector(this.configuration.holder as string).remove();
+      _.Dom.querySelector(this.configuration.holder as string)['innerHTML'] = '';
     } else if (_.isDOM(this.configuration.holder)) {
-      this.configuration.holder['remove']();
+      this.configuration.holder['innerHTML'] = '';
     }
   }
 }
