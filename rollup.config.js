@@ -8,6 +8,10 @@ import path, { format } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import css from "rollup-plugin-import-css";
 import vuePlugin from 'rollup-plugin-vue';
+import commonjs from '@rollup/plugin-commonjs';
+import image from '@rollup/plugin-image';
+
+
 import { terser } from 'rollup-plugin-terser';
 
 import { uglify } from "rollup-plugin-uglify";
@@ -59,10 +63,11 @@ function createConfig(format, output) {
     return {
         input: resolve(options.enter),
         output,
-        external: ['lodash-es'],
+        external: ['lodash-es', 'vue'],
         // 插件一定要按配置
         plugins: [
             // uglify(),
+            image(),
             json(),
             ts({
                 tsconfig: path.resolve(__dirname, 'tsconfig.json')
@@ -75,7 +80,7 @@ function createConfig(format, output) {
             //         comments: false
             //     }
             // })
-            // commonjs()
+            commonjs()
         ],
     }
 }

@@ -1,12 +1,11 @@
 <template>
-  <!-- <SuperDocInput
+  <SuperDocInput
     style="width: 100%;"
     ref="superDocInput"
     contenteditable="true"
     :content="scope.row[formatTitleVal(item.value)]"
     @contentChange="contentChange($event)"
-  /> -->
-  <demo></demo>
+  />
 </template>
 <script>
 import SuperDocInput from "../../common/input.vue";

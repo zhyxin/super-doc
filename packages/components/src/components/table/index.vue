@@ -29,8 +29,7 @@
   <script>
   import { generateId, getBlockData } from "@super-doc/api";
   import SuperDocInput from '../../common/input.vue';
-  import Cell from './cell.vue';
-  import Demo from './demo.vue';
+  // import Cell from './cell.vue';
   
   
 
@@ -57,13 +56,30 @@
         return content.split(".")[1].replace("}", "");
       },
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2];
-          } else if (columnIndex === 1) {
-            return [0, 0];
-          }
+        if(rowIndex === 0 && columnIndex === 0) {
+          return [2, 2];
         }
+        if(rowIndex === 0 && columnIndex === 1 ||
+          rowIndex === 1 && columnIndex === 0 ||
+          rowIndex === 1 && columnIndex === 1 ||
+          rowIndex === 4 && columnIndex === 3 ||
+          rowIndex === 5 && columnIndex === 3 ||
+          rowIndex === 5 && columnIndex === 2 ||
+          rowIndex === 3 && columnIndex === 2
+        ) {
+          return [0, 0]
+        }
+
+        if(rowIndex === 4 && columnIndex === 2) {
+          return [2, 2]
+        }
+
+        if(rowIndex === 3 && columnIndex === 1) {
+          return [1, 2]
+        }
+
+
+
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0) {

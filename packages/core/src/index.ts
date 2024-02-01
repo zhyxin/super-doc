@@ -5,6 +5,7 @@ import { EditorConfig, OutputBlockData } from '@super-doc/types';
 import Core from './components/code';
 import * as _ from '@super-doc/share';
 import { Block } from '@super-doc/block-manager';
+import { generateParagraphData } from '@super-doc/api';
 
 export default class SuperDoc {
 
@@ -33,7 +34,12 @@ export default class SuperDoc {
    * 设置blocks数据
   */
   public setData(jsonData: OutputBlockData[]) {
-    const blockJson = _.deepClone(jsonData);
+    let blockJson;
+    if(!jsonData || !jsonData.length) {
+      blockJson = [ generateParagraphData() ]
+    } else {
+      blockJson = _.deepClone(jsonData);
+    }
     this.editor.config.data.blocks.length = 0;
     blockJson.forEach(item => {
       item.id = item.id ? item.id : _.generateBlockId();

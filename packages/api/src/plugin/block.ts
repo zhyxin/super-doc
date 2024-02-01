@@ -1,3 +1,4 @@
+import Vue from 'vue';
 export class BlockBase {
   _config = null;
   _blockId: string;
@@ -18,10 +19,10 @@ export class BlockBase {
   }
 
   _injectionForVue() {
-      window["Vue"].prototype['$blocks'] = () => this._config.Editor.UI.Editor.BlockManager.blocks;
-      window["Vue"].prototype['$replaceCurrentBlock'] = (...args) => this._config.Editor.API.replaceCurrentBlock(...args);
-      window["Vue"].prototype['$superDocUpdateBlockData'] = (...args) => this._config.Editor.API.superDocUpdateBlockData(...args);
-      window["Vue"].prototype['$superDocListen'] = (...args) => this._config.Editor.API.superDocListen(...args);
+      Vue.prototype['$blocks'] = () => this._config.Editor.UI.Editor.BlockManager.blocks;
+      Vue.prototype['$replaceCurrentBlock'] = (...args) => this._config.Editor.API.replaceCurrentBlock(...args);
+      Vue.prototype['$superDocUpdateBlockData'] = (...args) => this._config.Editor.API.superDocUpdateBlockData(...args);
+      Vue.prototype['$superDocListen'] = (...args) => this._config.Editor.API.superDocListen(...args);
   }
 
   // 子类生产的dom进行最后的包装
@@ -38,7 +39,7 @@ export class BlockBase {
       dom = document.createElement("div");
       const _that = this;
       return [ dom, function () {
-        new window["Vue"]({
+        new Vue({
           el: dom,
           components: {
             comp: _dom,
