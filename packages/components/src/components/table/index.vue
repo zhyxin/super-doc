@@ -4,6 +4,7 @@
         :data="tableData.table"
         border
         style="width: 100%; margin-top: 20px"
+        :span-method="arraySpanMethod"
       >
         <el-table-column
           v-for="item in tableData.title"
@@ -37,7 +38,10 @@
     data() {
       return {
         tableData: {table: [], title: []},
-        uuid: generateId()
+        uuid: generateId(),
+        coords: [],
+        hiddens: [],
+        merges: []
       }
     },
     components: {
@@ -46,40 +50,41 @@
     },
     methods: {
       init() {
-        const _data = getBlockData(this.$attrs["block-id"]).data
+        const _data = getBlockData(this.$attrs["block-id"]).data;
         _data.table.forEach(d => {
           d.__id__ = generateId();
         });
-        this.tableData = _data;
+        
+        this.tableData = {table: _data.table, title: _data.title};
+        _data.mergeInfo.forEach(item => {
+          this.coords.push(item.coord);
+          this.merges.push(item.merge);
+          this.hiddens.push(...item.hidden);
+        })
       },
       formatTitleVal(content) {
         return content.split(".")[1].replace("}", "");
       },
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        if(rowIndex === 0 && columnIndex === 0) {
-          return [2, 2];
-        }
-        if(rowIndex === 0 && columnIndex === 1 ||
-          rowIndex === 1 && columnIndex === 0 ||
-          rowIndex === 1 && columnIndex === 1 ||
-          rowIndex === 4 && columnIndex === 3 ||
-          rowIndex === 5 && columnIndex === 3 ||
-          rowIndex === 5 && columnIndex === 2 ||
-          rowIndex === 3 && columnIndex === 2
-        ) {
-          return [0, 0]
-        }
+        let merge = null;
+        this.coords.some((coord, idx) => {
+          const [r, c] = coord;
+          const [mr, mc] = this.merges[idx]
+          if(rowIndex === r && columnIndex === c) {
+            merge = [mr, mc];
+            return true;
+          }
+        })
+        if(merge) return merge;
 
-        if(rowIndex === 4 && columnIndex === 2) {
-          return [2, 2]
-        }
-
-        if(rowIndex === 3 && columnIndex === 1) {
-          return [1, 2]
-        }
-
-
-
+        let hidden = null; 
+        this.hiddens.some(([ hr, hc ]) => {
+          if(rowIndex === hr && columnIndex === hc) {
+            hidden = [0, 0];
+            return true;
+          }
+        });
+        if(hidden) return [0, 0];
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0) {

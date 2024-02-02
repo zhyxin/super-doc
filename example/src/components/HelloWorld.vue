@@ -2,7 +2,7 @@
   <div v-loading="loading">
     <div id="editorjs"></div>
     <!-- 目录 -->
-    <directory :blockData="blockData"/>
+    <directory :blockData="blockData" />
   </div>
 </template>
 
@@ -18,7 +18,10 @@ import uml from "../libs/uml.json";
 import storyData from "../libs/storyData.json";
 import storyData2 from "../libs/storyData2.json";
 import directory from "./directory/index.vue";
-import { generateId, addListener } from "../../../packages/api/dist/api.esm-bundler.js";
+import {
+  generateId,
+  addListener,
+} from "../../../packages/api/dist/api.esm-bundler.js";
 
 const testData = [
   {
@@ -108,12 +111,12 @@ export default {
   props: {
     msg: String,
   },
-  components: {directory},
-  data(){
+  components: { directory },
+  data() {
     return {
       loading: true,
-      blockData:[]
-    }
+      blockData: [],
+    };
   },
   methods: {
     getParams(param) {
@@ -131,7 +134,7 @@ export default {
     },
     async getData() {
       let bcId = this.getParams("bcId") || "d59pi7dr2yw00";
-      let projectId = this.getParams("projectId") || "pro-1OYFBwfB";
+      let projectId = this.getParams("projectId") || "pro-7CPYLsqB";
       const result = await axios({
         method: "GET",
         url: `/dddd/doc/mapping/getData?bcId=${bcId}&projectId=${projectId}`,
@@ -153,17 +156,19 @@ export default {
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
       // 目录数据追加-响应式
-      this.blockData = window.superDoc.getBlocks().filter((item)=> item.type  == 'Head')
+      this.blockData = window.superDoc
+        .getBlocks()
+        .filter((item) => item.type == "Head");
     },
     formatData(data) {
       return data
         .filter((item) => {
           return (
-            item.template.type === "ImageDocFlowChart" ||
-            item.template.type === "Head" ||
-            item.template.type === "Paragraph" ||
-            item.template.type === "TableDoc" ||
-            item.template.type === "ImageDoc"
+            (item.template.type === "ImageDocFlowChart" && !this.getParams("hiddenChar")) ||
+            (item.template.type === "Head" && !this.getParams("hiddenHead")) ||
+            (item.template.type === "Paragraph" && !this.getParams("hiddenParagraph")) ||
+            (item.template.type === "TableDoc" && !this.getParams("hiddenTable")) ||
+            (item.template.type === "ImageDoc" && !this.getParams("hiddenImage"))
           );
         })
         .map((item) => {
@@ -195,12 +200,22 @@ export default {
               },
             };
           } else if (item.template.type === "TableDoc") {
+            let mergeInfo = [];
+            const data = this.generateTableMerge(item);
+            for (let key in data) {
+              if (!data[key]) continue;
+              data[key].forEach((item) => {
+                if (!item.hidden.length) return;
+                mergeInfo.push(item);
+              });
+            }
             return {
               type: "TableDoc",
               class: "TableDoc",
               data: {
                 table: item.datasource.datas,
                 title: item.template.data.content,
+                mergeInfo,
               },
             };
           } else if (item.template.type === "ImageDocFlowChart") {
@@ -307,21 +322,67 @@ export default {
       return userMap;
     },
     // 接收窗口刷新信息
-    bindPostMessage(){
-       window.addEventListener('message',(e)=>{
-        if(e.data.isreload){
-          window.location.reload(true)
+    bindPostMessage() {
+      window.addEventListener(
+        "message",
+        (e) => {
+          if (e.data.isreload) {
+            window.location.reload(true);
+          }
+        },
+        false
+      );
+    },
+    generateTableMerge(data) {
+      const mergeRow = {};
+      let mergeInfo = null;
+      data.template.data.content.forEach((content, idx) => {
+        if (content.mergeRuleValue) {
+          if (!mergeInfo) mergeInfo = {};
+          const key = content.mergeRuleValue
+            .replace("${datas[].", "")
+            .replace("}", "");
+          mergeRow[key] = idx;
+          mergeInfo[key] = [];
         }
-      },false)
-    }
+      });
+
+      if (!mergeInfo) return null;
+      data.datasource.datas.forEach((datasource, rIdx, target) => {
+        const keys = Object.keys(mergeInfo);
+        keys.forEach((key) => {
+          if (datasource[key]) {
+            const mergeItem = mergeInfo[key].find((mergeItem, idx) => {
+              return mergeItem.key === datasource[key];
+            });
+            if (mergeItem) {
+              mergeItem.hidden.push([rIdx, mergeRow[key]]);
+              mergeItem.merge[0] += 1;
+            } else {
+              mergeInfo[key].push({
+                coord: [rIdx, mergeRow[key]],
+                merge: [1, 1],
+                hidden: [],
+                key: datasource[key],
+              });
+            }
+          } else {
+            if (mergeInfo[key][mergeInfo[key].length - 1]) {
+              mergeInfo[key][mergeInfo[key].length - 1].key = null;
+            }
+          }
+        });
+      });
+      return mergeInfo;
+    },
   },
-   mounted() {
-    this.bindPostMessage()
+  mounted() {
+    this.bindPostMessage();
     this.getData();
     this.initSuperDoc();
-    addListener('add', (block) => {
-      console.log('新增了！');
-    })
+    // addListener('add', (block) => {
+    //   console.log('新增了！');
+    // })
   },
 };
 </script>
