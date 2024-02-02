@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="super-hover" v-show="!showDirectory" @click="toggleDirectory">
-      目录
+      大纲
     </div>
     <div class="super-directory" v-show="showDirectory">
       <p class="super-directory-title">
-        目录
+        大纲
         <i class="el-icon-close" @click="toggleDirectory"></i>
       </p>
       <div
@@ -15,7 +15,7 @@
         :directory-id="item.id"
         @click="scrollInto(item)"
       >
-        <i :class="[collapse(item)]" @click.stop="collapseDirectory(item)"></i>
+        <i style="color: #818c92;" :class="[collapse(item)]" @click.stop="collapseDirectory(item)"></i>
         <p>{{ item.data.text }}</p>
       </div>
     </div>
@@ -254,7 +254,7 @@ export default {
   }
 }
 .super-directory {
-  width: 250px;
+  width: 268px;
   z-index: 1;
   position: fixed;
   background: #fff;
@@ -269,10 +269,22 @@ export default {
   overflow: auto;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-radius: 10px;
-  border-left: 1px solid var(--we_line_light_color, rgba(23, 26, 29, 0.08));
+  // border-radius: 10px;
+  // border-left: 1px solid var(--we_line_light_color, rgba(23, 26, 29, 0.08));
+  border: none;
+  &::after {
+    content: '';
+    position: fixed;
+    right: 264px;
+    top: 50%;
+    width: 1px;
+    height: calc(100vh - 50px);
+    background: #e8ecef;
+    z-index: -1;
+    transform: translateY(-50%);
+  }
   .super-directory-title {
-    margin: 5px;
+    margin: 5px 5px 5px 41px;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
@@ -310,22 +322,22 @@ export default {
     }
   }
   .super-directory-h1 {
-    padding-left: 2px;
+    padding-left: 20px;
   }
   .super-directory-h2 {
-    padding-left: 16px;
+    padding-left: 34px;
   }
   .super-directory-h3 {
-    padding-left: 32px;
+    padding-left: 50px;
   }
   .super-directory-h4 {
-    padding-left: 48px;
+    padding-left: 66px;
   }
   .super-directory-h5 {
-    padding-left: 54px;
+    padding-left: 72px;
   }
   .super-directory-h6 {
-    padding-left: 70px;
+    padding-left: 88px;
   }
   .super-directory-display {
     display: none;
@@ -337,11 +349,12 @@ export default {
     &::before {
       position: absolute;
       content: "";
-      width: 4px;
-      height: 100%;
-      background: #dddddd;
+      width: 8px;
+      height: 8px;
+      /* height: 100%; */
+      background: #57b0bd;
       left: 0px;
-      border-radius: 16px;
+      border-radius: 50%;
     }
   }
   &::-webkit-scrollbar {
