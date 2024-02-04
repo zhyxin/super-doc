@@ -2,6 +2,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "init": "pnpm install && cd example && yarn",
+    "start-example": "cd example && yarn serve",
     "build": "node scripts/build.js",
     "dev": "node scripts/dev.js",
     "build-example": "cd example && yarn build"
@@ -25,7 +27,7 @@
     "rollup-plugin-uglify": "^6.0.4",
     "rollup-plugin-vue": "5.1.8",
     "typescript": "^5.2.2",
-    "vue": "2.6.14",
+    "vue": "^2.6.14",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.6.14"
   },

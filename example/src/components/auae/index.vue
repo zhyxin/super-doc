@@ -23,7 +23,7 @@ import {
   generateId,
 } from "../../../../packages/api/dist/api.umd";
 
-import dddEditorSdk from "./index.umd.min.js";
+import dddEditorSdk from "@auae/dddeditor";
 import storyData from "../../libs/storyData.json";
 const { Activator, dddEditor, kanban, input } = dddEditorSdk;
 const editorActivator = new Activator();
