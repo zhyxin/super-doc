@@ -3,7 +3,8 @@
   "description": "",
   "scripts": {
     "build": "node scripts/build.js",
-    "dev": "node scripts/dev.js"
+    "dev": "node scripts/dev.js",
+    "build-example": "cd example && yarn build"
   },
   "keywords": [],
   "author": "",

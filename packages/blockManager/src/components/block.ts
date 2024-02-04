@@ -120,7 +120,6 @@ export class Block {
    * 事件绑定
   */
   private bindEvent() {
-    console.log('====', this);
     this.Editor.Event.mouseEvent([this]);
     this.Editor.Event.bindKeydownEvent([this], this.Editor.Event);
     this.Editor.Event.globalClickListenerList.push(() => {

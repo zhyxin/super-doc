@@ -10,7 +10,6 @@ export default class Menu extends Module {
     }
 
     public prepare() {
-        console.log('====', this);
         this.instanceMenu();
     }
 

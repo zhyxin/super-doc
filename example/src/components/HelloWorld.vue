@@ -153,6 +153,7 @@ export default {
         }
       });
       const blockData = this.formatData(result);
+      console.log('所有表格数据', blockData);
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
       // 目录数据追加-响应式
@@ -334,36 +335,38 @@ export default {
       );
     },
     generateTableMerge(data) {
-      const mergeRow = {};
+      const mergeRow = [];
       let mergeInfo = null;
-      data.template.data.content.forEach((content, idx) => {
+      data.template.data.content.forEach((content, col) => {
         if (content.mergeRuleValue) {
           if (!mergeInfo) mergeInfo = {};
           const key = content.mergeRuleValue
             .replace("${datas[].", "")
             .replace("}", "");
-          mergeRow[key] = idx;
-          mergeInfo[key] = [];
+          mergeRow.push([key, col]);
+          mergeInfo[key] = mergeInfo[key] ? mergeInfo[key] : [];
+          // mergeInfo[key] = [];
         }
       });
 
       if (!mergeInfo) return null;
+
       data.datasource.datas.forEach((datasource, rIdx, target) => {
-        const keys = Object.keys(mergeInfo);
-        keys.forEach((key) => {
+        mergeRow.forEach((colItem, idx, target) => {
+          const [key, colIdx] = colItem;
           if (datasource[key]) {
             const mergeItem = mergeInfo[key].find((mergeItem, idx) => {
-              return mergeItem.key === datasource[key];
+              return mergeItem.key === `${datasource[key]}+${colIdx}`;
             });
-            if (mergeItem) {
-              mergeItem.hidden.push([rIdx, mergeRow[key]]);
+            if(mergeItem) {
+              mergeItem.hidden.push([rIdx, colIdx]);
               mergeItem.merge[0] += 1;
             } else {
               mergeInfo[key].push({
-                coord: [rIdx, mergeRow[key]],
+                coord: [rIdx, colIdx],
                 merge: [1, 1],
                 hidden: [],
-                key: datasource[key],
+                key: `${datasource[key]}+${colIdx}`
               });
             }
           } else {
@@ -371,7 +374,7 @@ export default {
               mergeInfo[key][mergeInfo[key].length - 1].key = null;
             }
           }
-        });
+        })
       });
       return mergeInfo;
     },
