@@ -169,6 +169,7 @@ export default {
             (item.template.type === "Head" && !this.getParams("hiddenHead")) ||
             (item.template.type === "Paragraph" && !this.getParams("hiddenParagraph")) ||
             (item.template.type === "TableDoc" && !this.getParams("hiddenTable")) ||
+            (item.template.type === "ListDoc" && !this.getParams("ListDoc")) ||
             (item.template.type === "ImageDoc" && !this.getParams("hiddenImage"))
           );
         })
@@ -220,11 +221,13 @@ export default {
               },
             };
           } else if (item.template.type === "ImageDocFlowChart") {
-            let value = this.replaceTemplateStrings(
+            let value = this.replaceTemplateStringsDemo(
               item.template.data.text,
               item.datasource
             );
             value = this.formatUserMapData(JSON.parse(value));
+            // let value = this.formatUserMapData(item.datasource.data.task);
+
             return {
               type: "Auae",
               class: "Auae",
@@ -246,13 +249,29 @@ export default {
               },
               class: "ImageDoc",
             };
+          } else if (item.template.type === "ListDoc") {
+            return {
+              type: "ListDoc",
+              data: {
+                type: "ul",
+                list: item.template.data.list.map((_item) => {
+                  return {
+                    text: this.replaceTemplateStrings(
+                      _item.text,
+                      item.datasource
+                    )
+                  }
+                })
+              },
+              class: "ListDoc",
+            };
           }
         });
     },
     getPropertyValue(obj, path) {
       return path.split(".").reduce((o, key) => o && o[key], obj);
     },
-    replaceTemplateStrings(str, values) {
+    replaceTemplateStringsDemo(str, values) {
       return str.replace(/\$\{(.*?)\}/g, (match, path) => {
         const replacement = this.getPropertyValue(values, path);
         return replacement !== undefined
@@ -260,6 +279,23 @@ export default {
             ? JSON.stringify(replacement)
             : replacement
           : match;
+      });
+    },
+    replaceTemplateStrings(templateString, data) {
+      console.log(templateString, data);
+      return templateString.replace(/\$\{([\w.\[\]]+)\}/g, function(match, key) {
+        let keys = key.replace(/\[([^\]]+)\]/g, '.$1').split('.');
+        let value = data;
+        for (let i = 0; i < keys.length; i++) {
+            value = value[keys[i]];
+
+            // 如果找不到对应的值，则返回原始的匹配字符串
+            if (value === undefined) {
+                return match;
+            }
+        }
+        // 返回找到的值作为替换结果
+        return value;
       });
     },
     initSuperDoc() {

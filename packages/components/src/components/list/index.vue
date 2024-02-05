@@ -5,7 +5,7 @@
       :listData="item"
       :key="item.id"
       :isFocus="focusId"
-      :type="listType.toUpperCase() === 'UL' ? '+' : index + 1"
+      :type="listType.toUpperCase() === 'UL' ? '•' : index + 1"
       @addHandler="keydownHandler"
       @updateContent="updateContent"
       @remove="removeHandler"
