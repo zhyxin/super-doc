@@ -5,8 +5,8 @@ import {
   BlockId,
 } from "@super-doc/types";
 import { generateParagraphData } from "@super-doc/api"
-import { Block } from "./components/block";
-import Cursor from './components/cursor';
+import { Block } from "./block";
+import Cursor from './cursor';
 import {
   batchInsertBlock,
   findBlockInstanceForId,
@@ -15,7 +15,7 @@ import {
   replaceCurrentBlock,
   updateBlockData,
 } from "./blockHandler";
-export * from "./components/block";
+export * from "./block";
 
 export default class BlockManager extends Module {
   // 事件存储

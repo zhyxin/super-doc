@@ -1,9 +1,9 @@
 import { EditorConfig } from "@super-doc/types";
 import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
 import styles from "./styles/main.css";
-import Command from "./components/command";
-import Layout from "./components/layout";
-import Menu from "./components/menu";
+import Command from "./command";
+import Layout from "./layout";
+import Menu from "./menu";
 interface ModuleConfig {
   config: EditorConfig;
 }

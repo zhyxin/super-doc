@@ -1,7 +1,7 @@
 import { BlockId, BlockToolData } from "@super-doc/types";
 import { EditorModules, MountedCallback } from "@super-doc/types";
 import * as _ from "@super-doc/share";
-import BlockManager from "..";
+import BlockManager from ".";
 /**
  * Interface describes Block class constructor argument
  */
@@ -18,6 +18,8 @@ interface BlockConstructorOptions {
 }
 
 export class Block {
+  private _Editor: EditorModules;
+  private BlockManager;
   public CHECKOUT_ALL_NUMBER: number = 3;
   public CHECKOUT_BLOCK_NUMBER: number = 2;
   public _CURRENT_CHECKOUT_COUNT: number = 0;
@@ -32,9 +34,7 @@ export class Block {
   public class: any;
   public isBindEvent: boolean = false;
   public mountedCallback: MountedCallback = null;
-  private _Editor: EditorModules;
   public _isEditable: boolean = false;
-  private BlockManager;
   get CURRENT_CHECKOUT_COUNT () {
     return this._CURRENT_CHECKOUT_COUNT;
   }

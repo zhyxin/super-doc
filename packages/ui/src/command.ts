@@ -1,4 +1,4 @@
-import UI from '../index';
+import UI from './index';
 export default class CommandList {
     private _visible: boolean = false;
     public x: number = 0;

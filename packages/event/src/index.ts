@@ -91,10 +91,10 @@ export default class Event extends Module {
   }
 
   public registerGlobalDocumentMousemove() {
-    document.addEventListener("mousemove", (event) => {
-      this.mouseX = event.pageX;
-      this.mouseY = event.pageY;
-    });
+    // document.addEventListener("mousemove", (event) => {
+      // this.mouseX = event.pageX;
+      // this.mouseY = event.pageY;
+    // });
   }
 
   public mouseEvent(blocks) {
