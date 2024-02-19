@@ -2,7 +2,7 @@
 
 import { EditorConfig, OutputBlockData } from '@super-doc/types';
 
-import Core from './components/code';
+import Core from './core';
 import * as _ from '@super-doc/share';
 import { Block } from '@super-doc/block-manager';
 import { generateParagraphData } from '@super-doc/api';

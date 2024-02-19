@@ -160,7 +160,9 @@ export default class Core {
             ]
           : interComponents.tools.layout,
       },
-      menu: [...interComponents.menu],
+      menu: this.config?.tools?.menu
+        ? [...this.config?.tools?.menu, ...interComponents.menu]
+        : [...interComponents.menu],
     };
 
     // if(!this.config?.tools) {
@@ -198,10 +200,11 @@ export default class Core {
 
   destroy() {
     _.setModules(null);
-    if(_.isString(this.configuration.holder)) {
-      _.Dom.querySelector(this.configuration.holder as string)['innerHTML'] = '';
+    if (_.isString(this.configuration.holder)) {
+      _.Dom.querySelector(this.configuration.holder as string)["innerHTML"] =
+        "";
     } else if (_.isDOM(this.configuration.holder)) {
-      this.configuration.holder['innerHTML'] = '';
+      this.configuration.holder["innerHTML"] = "";
     }
   }
 }
