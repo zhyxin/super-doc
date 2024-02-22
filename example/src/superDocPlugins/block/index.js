@@ -17,4 +17,10 @@ export class Auae extends Plugin.BlockBase {
   }
 }
 
+
+export class AiTranslation extends Plugin.Custom {
+  main({ BlockManager, Renderer, API, Menu, UI, Event }) {
+  }
+}
 window.Auae = Auae;
+window.AiTranslation = AiTranslation;

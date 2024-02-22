@@ -119,6 +119,7 @@ export default class Event extends Module {
   }
 
   public mouseClick(event: any) {
+    // BUGGER 事件触发了两次
     const [id] = getBlockIdForElement(event.currentTarget);
     this.Editor.BlockManager.changeCurrentBlockId(id);
     this.Editor.BlockManager.cursor.block = this.Editor.BlockManager.curentFocusBlock;
@@ -213,11 +214,13 @@ export default class Event extends Module {
       const el = menuElMap.get(Menu);
       const menuInstance = menuInstanceMap.get(Menu);
       el.addEventListener("click", (event: any) => {
-        const placing = menuInstance.action(this.Selection?.content);
-        this.Selection.deleteContents();
-        this.Selection.insertNode(placing);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(this.Selection);
+        const placing = menuInstance.action(this.Selection?.content, this.Editor.BlockManager.curentFocusBlock);
+        if(placing) {
+          this.Selection.deleteContents();
+          this.Selection.insertNode(placing);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(this.Selection);
+        }
       });
     });
   }

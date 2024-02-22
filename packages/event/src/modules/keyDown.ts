@@ -171,10 +171,10 @@ export default class KeyDown {
     const { BlockManager } = this.Event["Editor"];
     const element =
       BlockManager.curentFocusBlock.element.querySelector(`[block-id]`);
-    if (element.childNodes.length === 0) {
+    if (event.target.childNodes.length === 0) {
       BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
       event.preventDefault();
-    } else if (element.childNodes.length > 0) {
+    } else if (event.target.childNodes.length > 0) {
     }
   }
 

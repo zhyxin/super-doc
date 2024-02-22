@@ -1614,3 +1614,22 @@ highlightMenu: "super-doc-menu--highlightMenu" */
   z-index: 1;
   text-align: center;
 }
+
+
+
+.super-doc-translation {
+  position: relative;
+}
+
+
+.super-doc-translation::before {
+  content: attr(text);
+  position: absolute;
+  top: -100%;
+  left: -50%;
+  opacity: 0;
+  transition: all .3s;
+}
+.super-doc-translation:hover::before {
+  opacity: 1;
+}

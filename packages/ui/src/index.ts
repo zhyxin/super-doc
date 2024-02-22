@@ -1,5 +1,5 @@
 import { EditorConfig } from "@super-doc/types";
-import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
+import { Dom as $, Module, getElementCoordinates, getModules } from "@super-doc/share";
 import styles from "./styles/main.css";
 import Command from "./command";
 import Layout from "./layout";
@@ -259,12 +259,19 @@ export default class Ui extends Module {
       );
       popoverItem.textContent = plugin.text;
       popoverItem.addEventListener("click", () => {
-        this.Editor.BlockManager.insertBlockForBlockId(
-          JSON.parse(JSON.stringify(plugin.blockData)),
-          this.Editor.BlockManager.currentHoverBlockId,
-          this.Editor.BlockManager.cursor.cursorPosition
-        );
-        
+        if(plugin.type === 'custom') {
+          plugin.main(getModules());
+        } else {
+          this.Editor.BlockManager.insertBlockForBlockId(
+            JSON.parse(JSON.stringify(plugin.blockData)),
+            this.Editor.BlockManager.currentHoverBlockId,
+            this.Editor.BlockManager.cursor.cursorPosition
+          );
+        }
+        setTimeout(() => {
+          this.command.visible = false;
+          this.layout.visible = false;
+        }, 0)
       });
       elements.push(popoverItem);
     });

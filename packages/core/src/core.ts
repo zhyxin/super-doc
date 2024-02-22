@@ -5,7 +5,7 @@ import Renderer from "@super-doc/renderer";
 import { EditorModules } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import Event from "@super-doc/event";
-import { API } from "@super-doc/api";
+import { API, generateParagraphData } from "@super-doc/api";
 import interComponents from "@super-doc/components";
 import Menu from "@super-doc/menu";
 
@@ -113,14 +113,7 @@ export default class Core {
     this.config.minHeight =
       this.config.minHeight !== undefined ? this.config.minHeight : 300;
 
-    const defaultBlockData = {
-      id: _.generateBlockId(),
-      type: "Paragraph",
-      data: {
-        text: "",
-      },
-      class: "Paragraph",
-    };
+    const defaultBlockData = generateParagraphData();
 
     this.config.placeholder = this.config.placeholder || false;
 
