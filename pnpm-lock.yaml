@@ -183,6 +183,9 @@ importers:
 
   packages/share:
     dependencies:
+      '@super-doc/api':
+        specifier: workspace:^1.0.0
+        version: link:../api
       '@super-doc/types':
         specifier: workspace:^1.0.0
         version: link:../types

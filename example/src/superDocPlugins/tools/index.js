@@ -54,7 +54,8 @@ export class FullTextTranslationEnglishTool extends Plugin.ToolPluginBase {
     const paragraphBlocks = BlockManager.blocks.filter(block => {
       return block.type === "Paragraph" || block.type === 'Head';
     });
-    paragraphBlocks.map(block => {
+    paragraphBlocks.forEach(block => {
+      if(!block.data.text) return;
       translationEnglishApi({
         "text": block.data.text
       }).then(translate => {
@@ -96,7 +97,8 @@ export class FullTextTranslationHKTool extends Plugin.ToolPluginBase {
     const paragraphBlocks = BlockManager.blocks.filter(block => {
       return block.type === "Paragraph" || block.type === 'Head';
     });
-    paragraphBlocks.map(block => {
+    paragraphBlocks.forEach(block => {
+      if(!block.data.text) return;
       translationHKhApi({
         "text": block.data.text,
         "is_simple": true
@@ -136,6 +138,7 @@ export class ParagraphTranslationEnglishTool extends Plugin.ToolPluginBase {
   
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const block = BlockManager.currentHoverBlock;
+    if(!block.data.text) return;
     translationEnglishApi({
       "text": block.data.text
     }).then(translate => {
@@ -173,7 +176,7 @@ export class ParagraphTranslationHKTool extends Plugin.ToolPluginBase {
   
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const block = BlockManager.currentHoverBlock;
-
+    if(!block.data.text) return;
     translationHKhApi({
       "text": block.data.text,
       "is_simple": true

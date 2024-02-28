@@ -19,8 +19,8 @@ export default class Event extends Module {
 
   public globalClickListenerList: Function[] = [];
 
-  public mouseX: number;
-  public mouseY: number;
+  public viewPort: number;
+  public viewPortY: number;
 
   private SELECT_TIME: any;
   public Selection: any = {};
@@ -91,10 +91,10 @@ export default class Event extends Module {
   }
 
   public registerGlobalDocumentMousemove() {
-    // document.addEventListener("mousemove", (event) => {
-      // this.mouseX = event.pageX;
-      // this.mouseY = event.pageY;
-    // });
+    document.addEventListener("mousemove", (event) => {
+      this.viewPortX = event.x;
+      this.viewPortY = event.y;
+    });
   }
 
   public mouseEvent(blocks) {
@@ -120,9 +120,12 @@ export default class Event extends Module {
 
   public mouseClick(event: any) {
     // BUGGER 事件触发了两次
+    if(!document.contains(event.currentTarget)) return;
     const [id] = getBlockIdForElement(event.currentTarget);
     this.Editor.BlockManager.changeCurrentBlockId(id);
     this.Editor.BlockManager.cursor.block = this.Editor.BlockManager.curentFocusBlock;
+    this.Editor.UI.command.visible = false;
+    this.Editor.UI.layout.visible = false;
   }
 
   public onmouseout(event: any) {}

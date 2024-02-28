@@ -146,11 +146,12 @@ export default {
           .filter((content) => !!content)
           .join("\n")
       );
+      // console.log(blocks);
       this.$replaceCurrentBlock(blocks, this.$superConfig.blockId);
     },
     generateAiContent(event) {
       if (event.keyCode === 13) {
-        this.requestAiApi();
+        this.requestAiApi(); 
       }
       event.stopPropagation();
     },

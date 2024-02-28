@@ -68,6 +68,7 @@
       <el-divider></el-divider>
       <div style="text-align: right;">
         <el-button type="primary" size="mini" @click="restoreHandler">还原</el-button>
+        <el-button size="mini" @click="closeHandler">关闭</el-button>
       </div>
     </div>
   </div>
@@ -121,7 +122,9 @@ export default {
       const _temp = this.content.translate;
       this.content.translate = '';
       this.content.text = _temp;
-      
+    },
+    closeHandler() {
+      this.content.translate = '';
     }
   },
   mounted() {
@@ -156,33 +159,5 @@ export default {
 
 #superdoc-paragraph {
   min-height: 22px;
-}
-.paragraph-container {
-  position: relative;
-  >.translate {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: none;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    color: bisque;
-    padding: 8px;
-    border-radius: 5px;
-    font-size: 15px;
-    color: #f23f3f;
-    background-color: #ffffff;
-    z-index: 1;
-    min-width: 200px;
-    > span {
-      color: red;
-      font-size: 13px;
-      font-weight: 800;
-    }
-  }
-}
-.paragraph-container:hover {
-  >.translate {
-    display: inline-block;
-  }
 }
 </style>

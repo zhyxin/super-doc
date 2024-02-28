@@ -1633,3 +1633,33 @@ highlightMenu: "super-doc-menu--highlightMenu" */
 .super-doc-translation:hover::before {
   opacity: 1;
 }
+
+
+/* ===================ai翻译弹窗=====================*/
+.paragraph-container {
+  position: relative;
+}
+.paragraph-container >.translate {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  color: bisque;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 15px;
+  color: #f23f3f;
+  background-color: #ffffff;
+  z-index: 1;
+  min-width: 200px;
+}
+.paragraph-container >.translate > span {
+  color: red;
+  font-size: 13px;
+  font-weight: 800;
+}
+.paragraph-container:hover > .translate{
+  display: inline-block;
+}
+/* ================================================*/

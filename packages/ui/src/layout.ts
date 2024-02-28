@@ -11,7 +11,11 @@ export default class LayoutList {
             console.log(this.element);
             const elHeight = this.UI['Editor'].BlockManager.currentHoverBlock?.element.clientHeight;
             this.element.style.left = '60px';
-            this.element.style.top = '30px';
+            const commandElHeight = this.element.getBoundingClientRect()["height"];
+            this.element.style.top =
+                window.innerHeight - this.UI["Editor"].Event.viewPortY < commandElHeight
+                ? `-${commandElHeight}px`
+                : "30px";
             this.element.classList.add(this.UI.CSS.commonShow);
         } else {
             this.element.classList.remove(this.UI.CSS.commonShow);

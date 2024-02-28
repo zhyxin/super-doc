@@ -144,7 +144,7 @@ export default class BlockManager extends Module {
             });
             this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
           } catch (error) {
-            // console.log('添加不是block类型数据', blocks);
+            console.log('添加不是block类型数据', error);
           }
         },
         update: (proxy: any, key: string, value: any) => {

@@ -5,7 +5,7 @@ import Renderer from "@super-doc/renderer";
 import { EditorModules } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import Event from "@super-doc/event";
-import { API, generateParagraphData } from "@super-doc/api";
+import { API, generateHeadData, generateParagraphData } from "@super-doc/api";
 import interComponents from "@super-doc/components";
 import Menu from "@super-doc/menu";
 
@@ -113,8 +113,8 @@ export default class Core {
     this.config.minHeight =
       this.config.minHeight !== undefined ? this.config.minHeight : 300;
 
-    const defaultBlockData = generateParagraphData();
-
+    const defaultBlockData = generateHeadData('h1');
+    defaultBlockData.data.text = '标题'
     this.config.placeholder = this.config.placeholder || false;
 
     this.config.hideToolbar = this.config.hideToolbar
@@ -137,13 +137,33 @@ export default class Core {
     ) {
       this.config.data = { blocks: [defaultBlockData] };
     }
-
+    const [
+      AITool,
+      ParagraphTool,
+      HeadTool1,
+      HeadTool2,
+      HeadTool3,
+      HeadTool4,
+      ImageTool,
+      TableTool,
+      ListTool,
+      TodoListTool,
+    ] = interComponents.tools.plugins;
     this.config.tools = {
       toolbar: {
         plugins: this.config?.tools?.toolbar?.plugins
           ? [
+              AITool,
               ...this.config?.tools?.toolbar?.plugins,
-              ...interComponents.tools.plugins,
+              ParagraphTool,
+              HeadTool1,
+              HeadTool2,
+              HeadTool3,
+              HeadTool4,
+              ImageTool,
+              TableTool,
+              ListTool,
+              TodoListTool,
             ]
           : interComponents.tools.plugins,
         layout: this.config?.tools?.toolbar?.layout
