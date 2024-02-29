@@ -1,5 +1,6 @@
-import { translationEnglishApi, translationHKhApi } from '../../api/index';
 import { Plugin } from '../../../../packages/api/dist/api.esm-bundler.js';
+import { translateBySentence } from './translation';
+
 export class AuaeTool extends Plugin.ToolPluginBase {
   type = 'Auae';
   text = 'Auae';
@@ -49,24 +50,18 @@ export class FullTextTranslationEnglishTool extends Plugin.ToolPluginBase {
     div.textContent = '全文翻译';
     return div;
   }
-  
+
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const paragraphBlocks = BlockManager.blocks.filter(block => {
       return block.type === "Paragraph" || block.type === 'Head';
     });
-    paragraphBlocks.forEach(block => {
-      if(!block.data.text) return;
-      translationEnglishApi({
-        "text": block.data.text
-      }).then(translate => {
-        const original = block.data.text;
-        block.data.text = translate;
-        block.data.translate = original;
-      })
-    })
+    (async () => {
+      for (const block of paragraphBlocks) {
+        if (!block.data.text) continue;
+        await translateBySentence(block)
+      }
+    })();
   }
-
-  
 }
 export class FullTextTranslationHKTool extends Plugin.ToolPluginBase {
   type = 'custom';
@@ -92,22 +87,17 @@ export class FullTextTranslationHKTool extends Plugin.ToolPluginBase {
     div.textContent = '全文翻译';
     return div;
   }
-  
+
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const paragraphBlocks = BlockManager.blocks.filter(block => {
       return block.type === "Paragraph" || block.type === 'Head';
     });
-    paragraphBlocks.forEach(block => {
-      if(!block.data.text) return;
-      translationHKhApi({
-        "text": block.data.text,
-        "is_simple": true
-      }).then(translate => {
-        const original = block.data.text;
-        block.data.text = translate;
-        block.data.translate = original;
-      })
-    }) 
+    (async () => {
+      for (const block of paragraphBlocks) {
+        if (!block.data.text) continue;
+        await translateBySentence(block, true)
+      }
+    })();
   }
 }
 
@@ -135,17 +125,11 @@ export class ParagraphTranslationEnglishTool extends Plugin.ToolPluginBase {
     div.textContent = '全文翻译';
     return div;
   }
-  
+
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const block = BlockManager.currentHoverBlock;
-    if(!block.data.text) return;
-    translationEnglishApi({
-      "text": block.data.text
-    }).then(translate => {
-      const original = block.data.text;
-      block.data.text = translate;
-      block.data.translate = original;
-    })
+    if (!block.data.text) return;
+    translateBySentence(block)
   }
 }
 
@@ -173,18 +157,11 @@ export class ParagraphTranslationHKTool extends Plugin.ToolPluginBase {
     div.textContent = '全文翻译';
     return div;
   }
-  
+
   main({ BlockManager, Renderer, API, Menu, UI, Event }) {
     const block = BlockManager.currentHoverBlock;
-    if(!block.data.text) return;
-    translationHKhApi({
-      "text": block.data.text,
-      "is_simple": true
-    }).then(translate => {
-      const original = block.data.text;
-      block.data.text = translate;
-      block.data.translate = original;
-    })
+    if (!block.data.text) return;
+    translateBySentence(block, true)
   }
 }
 
