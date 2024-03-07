@@ -160,7 +160,7 @@ export default {
       this.aiOutput = "";
       const result = await axios({
         method: "POST",
-        url: "/arm/super_doc_ai",
+        url: "/ai/api/v1/ecology/exec_instruction",
         data: {
           user_input: this.aiInput.default.content,
           session_id: this.aiInput.default.session_id,
