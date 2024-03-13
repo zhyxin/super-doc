@@ -1,15 +1,64 @@
 <template>
   <div class="paragraph-container">
-    <SuperDocInput
-      v-show="!showTranslate"
-      ref="superDocInput"
-      contenteditable="true"
-      :content="content.text"
-      @contentChange="contentChange"
-      style="margin: 8px 0; padding: 0 0; line-height: 1.7"
-      class="super-input"
-    >
-    </SuperDocInput>
+    <h1 v-if="content.level === 'h1'">
+      <SuperDocInput
+        v-show="!showTranslate"
+        ref="superDocInput"
+        contenteditable="true"
+        :content="content.text"
+        @contentChange="contentChange"
+        style="font-size: 32px;margin-top: 26px;margin-bottom:12px;padding:0;margin:0;font-weight: bold;line-height:1.45;"
+        class="super-input"
+      >
+      </SuperDocInput>
+    </h1>
+    <h2 v-if="content.level === 'h2'">
+      <SuperDocInput
+        v-show="!showTranslate"
+        ref="superDocInput"
+        contenteditable="true"
+        :content="content.text"
+        @contentChange="contentChange"
+        style="font-size: 25px;margin-top: 21px;margin-bottom:12px;padding:0;margin:0;font-weight: bold;line-height:1.45;"
+        class="super-input"
+      >
+      </SuperDocInput>
+    </h2>
+    <h3 v-if="content.level === 'h3'">
+      <SuperDocInput
+        v-show="!showTranslate"
+        ref="superDocInput"
+        contenteditable="true"
+        :content="content.text"
+        @contentChange="contentChange"
+        style="font-size: 18px;margin-top: 18px;margin-bottom:12px;padding:0;margin:0;font-weight: bold;line-height:1.45;"
+        class="super-input"
+      >
+      </SuperDocInput>
+    </h3>
+    <h4 v-if="content.level === 'h4'">
+      <SuperDocInput
+        v-show="!showTranslate"
+        ref="superDocInput"
+        contenteditable="true"
+        :content="content.text"
+        @contentChange="contentChange"
+        style="font-size: 16px;margin-top: 16px;margin-bottom:12px;padding:0;margin:0;font-weight: bold;line-height:1.45;"
+        class="super-input"
+      >
+      </SuperDocInput>
+    </h4>
+    <h5 v-if="content.level === 'h5'">
+      <SuperDocInput
+        v-show="!showTranslate"
+        ref="superDocInput"
+        contenteditable="true"
+        :content="content.text"
+        @contentChange="contentChange"
+        class="super-input"
+      >
+      </SuperDocInput>
+    </h5>
     <div
       class="translate"
       ref="translate"
@@ -34,6 +83,7 @@
  */
 import { getBlockData } from "@super-doc/api";
 import SuperDocInput from "../common/input.vue";
+import Paragraph from './paragraph.vue';
 export default {
   props: ["$superConfig"],
   data() {
@@ -46,6 +96,7 @@ export default {
   },
   components: {
     SuperDocInput,
+    Paragraph
   },
   methods: {
     contentChange({ content, id }) {
@@ -68,8 +119,9 @@ export default {
       }
     },
     restoreHandler() {
-      this.content.text = this.content.translate;
+      const _temp = this.content.translate;
       this.content.translate = '';
+      this.content.text = _temp;
     },
     closeHandler() {
       this.content.translate = '';
@@ -108,5 +160,4 @@ export default {
 #superdoc-paragraph {
   min-height: 22px;
 }
-
 </style>

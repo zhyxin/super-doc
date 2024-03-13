@@ -5,7 +5,7 @@ import Renderer from "@super-doc/renderer";
 import { EditorModules } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import Event from "@super-doc/event";
-import { API } from "@super-doc/api";
+import { API, generateHeadData, generateParagraphData } from "@super-doc/api";
 import interComponents from "@super-doc/components";
 import Menu from "@super-doc/menu";
 
@@ -37,6 +37,7 @@ export default class Core {
     Promise.resolve().then(async () => {
       await this.start();
       await this.render();
+      onReady();
     });
   }
 
@@ -113,15 +114,8 @@ export default class Core {
     this.config.minHeight =
       this.config.minHeight !== undefined ? this.config.minHeight : 300;
 
-    const defaultBlockData = {
-      id: _.generateBlockId(),
-      type: "Paragraph",
-      data: {
-        text: "",
-      },
-      class: "Paragraph",
-    };
-
+    const defaultBlockData = generateHeadData('h1');
+    defaultBlockData.data.text = '标题'
     this.config.placeholder = this.config.placeholder || false;
 
     this.config.hideToolbar = this.config.hideToolbar
@@ -144,13 +138,33 @@ export default class Core {
     ) {
       this.config.data = { blocks: [defaultBlockData] };
     }
-
+    const [
+      AITool,
+      ParagraphTool,
+      HeadTool1,
+      HeadTool2,
+      HeadTool3,
+      HeadTool4,
+      ImageTool,
+      TableTool,
+      ListTool,
+      TodoListTool,
+    ] = interComponents.tools.plugins;
     this.config.tools = {
       toolbar: {
         plugins: this.config?.tools?.toolbar?.plugins
           ? [
+              AITool,
               ...this.config?.tools?.toolbar?.plugins,
-              ...interComponents.tools.plugins,
+              ParagraphTool,
+              HeadTool1,
+              HeadTool2,
+              HeadTool3,
+              HeadTool4,
+              ImageTool,
+              TableTool,
+              ListTool,
+              TodoListTool,
             ]
           : interComponents.tools.plugins,
         layout: this.config?.tools?.toolbar?.layout
@@ -160,7 +174,9 @@ export default class Core {
             ]
           : interComponents.tools.layout,
       },
-      menu: [...interComponents.menu],
+      menu: this.config?.tools?.menu
+        ? [...this.config?.tools?.menu, ...interComponents.menu]
+        : [...interComponents.menu],
     };
 
     // if(!this.config?.tools) {
@@ -198,10 +214,11 @@ export default class Core {
 
   destroy() {
     _.setModules(null);
-    if(_.isString(this.configuration.holder)) {
-      _.Dom.querySelector(this.configuration.holder as string)['innerHTML'] = '';
+    if (_.isString(this.configuration.holder)) {
+      _.Dom.querySelector(this.configuration.holder as string)["innerHTML"] =
+        "";
     } else if (_.isDOM(this.configuration.holder)) {
-      this.configuration.holder['innerHTML'] = '';
+      this.configuration.holder["innerHTML"] = "";
     }
   }
 }

@@ -6,7 +6,7 @@
     "start-example": "cd example && yarn serve",
     "build": "node scripts/build.js",
     "dev": "node scripts/dev.js",
-    "build-example": "cd example && yarn build"
+    "build-example": "cd example && yarn build && open ."
   },
   "keywords": [],
   "author": "",

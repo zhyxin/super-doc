@@ -1,12 +1,12 @@
-import { Module, Dom as $ } from "@super-doc/share";
+import { Module, Dom as $, getElementCoordinates } from "@super-doc/share";
 import TimeMachine from "@super-doc/time-machine";
 import {
   OutputBlockData,
   BlockId,
 } from "@super-doc/types";
 import { generateParagraphData } from "@super-doc/api"
-import { Block } from "./components/block";
-import Cursor from './components/cursor';
+import { Block } from "./block";
+import Cursor from './cursor';
 import {
   batchInsertBlock,
   findBlockInstanceForId,
@@ -15,7 +15,7 @@ import {
   replaceCurrentBlock,
   updateBlockData,
 } from "./blockHandler";
-export * from "./components/block";
+export * from "./block";
 
 export default class BlockManager extends Module {
   // 事件存储
@@ -73,17 +73,25 @@ export default class BlockManager extends Module {
     }
   }
   public set currentBlockId(value: string) {
+    if(value === this._currentBlockId) return;
     this._currentBlockId = value;
     this.Editor.UI.toolbarFollowFocusBlock();
     this.Editor.UI.command.visible = false;
     this.Editor.UI.layout.visible = false;
-    
     // TODO 这里待优化 回车新增block获取焦点和上下箭头获取焦点逻辑冲突了
     if(document.activeElement !== $.querySelector(`[block-id="${this._currentBlockId}"]`)) {
       const blockElement = $.querySelector(`[block-id="${this._currentBlockId}"]`);
-      if(blockElement.getAttribute('id') === "superdoc-paragraph") {
-        this.Editor.Event.keyDownInstance.setCursorForX(blockElement, 0)
-      }
+      const paragraphEl = blockElement.querySelector('#superdoc-paragraph') as HTMLElement;
+      if(paragraphEl) {
+        try {
+          const selection = window.getSelection();
+          const range = selection.getRangeAt(0);
+          const { left: x } = getElementCoordinates(range.getBoundingClientRect());
+          this.Editor.Event.keyDownInstance.setCursorForX(paragraphEl, x === 0 ? 1000 : x);
+        } catch (error) {
+          this.Editor.Event.keyDownInstance.setCursorForX(paragraphEl, 0);
+        }
+      } 
     }
   }
 
@@ -136,7 +144,7 @@ export default class BlockManager extends Module {
             });
             this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
           } catch (error) {
-            // console.log('添加不是block类型数据', blocks);
+            console.log('添加不是block类型数据', error);
           }
         },
         update: (proxy: any, key: string, value: any) => {

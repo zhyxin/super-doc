@@ -55,7 +55,7 @@ export const insertBlockForBlockId = function (
   blockData: OutputBlockData = generateParagraphData(),
   blockId: BlockId = this.currentBlockId,
   direction: CURSOR_DIRECTION = cursorPositionType.CURSOR_POSITION_END
-): void {
+): BlockId {
   blockData.id = blockData.id ? blockData.id : generateBlockId();
   this.blocks.some(({ id }, index, _target) => {
     if (id === blockId) {
@@ -71,6 +71,7 @@ export const insertBlockForBlockId = function (
       return true;
     }
   });
+  return blockData.id;
 };
 
 export const batchInsertBlock = function (blockDatas: OutputBlockData[] = []) {
@@ -79,7 +80,7 @@ export const batchInsertBlock = function (blockDatas: OutputBlockData[] = []) {
   })
 };
 
-export const replaceCurrentBlock = function (blockDatas: OutputBlockData[], id: BlockId) {
+export const replaceCurrentBlock = function (blockDatas: OutputBlockData[], id?: BlockId) {
   blockDatas.forEach(block => block.class = block.class);
   const currentBlockIndex = this.blocks.findIndex(block => block.id === (id ? id : this.currentBlockId));
   this.blocks.splice(currentBlockIndex, 1, ...blockDatas);

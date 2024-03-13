@@ -1,4 +1,4 @@
-import UI from "../index";
+import UI from "./index";
 import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
 
 export default class Menu {

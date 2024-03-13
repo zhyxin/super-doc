@@ -1,5 +1,5 @@
-import UI from '../index';
-export default class CommandList {
+import UI from './index';
+export default class LayoutList {
     private _visible: boolean = false;
     public x: number = 0;
     public y: number = 0;
@@ -8,14 +8,17 @@ export default class CommandList {
 
     set visible(v: boolean) {
         if(!!v) {
+            console.log(this.element);
             const elHeight = this.UI['Editor'].BlockManager.currentHoverBlock?.element.clientHeight;
             this.element.style.left = '60px';
-            this.element.style.top = '30px';
-            this.element.classList.remove(this.UI.CSS.commonHidden);
+            const commandElHeight = this.element.getBoundingClientRect()["height"];
+            this.element.style.top =
+                window.innerHeight - this.UI["Editor"].Event.viewPortY < commandElHeight
+                ? `-${commandElHeight - (window.innerHeight - this.UI["Editor"].Event.viewPortY)}px`
+                : "30px";
             this.element.classList.add(this.UI.CSS.commonShow);
         } else {
             this.element.classList.remove(this.UI.CSS.commonShow);
-            this.element.classList.add(this.UI.CSS.commonHidden);
         }
         this._visible = v;
     }
@@ -25,6 +28,6 @@ export default class CommandList {
     
     constructor(UI: UI) {
         this.UI = UI;
-        this.element = UI.makePopover().appendChild(UI.makePopoverPluginItem().element).element;
+        this.element = UI.makePopover().appendChild(UI.makePopoverLayoutItem().element).element;
     }
 }

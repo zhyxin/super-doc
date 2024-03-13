@@ -146,11 +146,12 @@ export default {
           .filter((content) => !!content)
           .join("\n")
       );
+      // console.log(blocks);
       this.$replaceCurrentBlock(blocks, this.$superConfig.blockId);
     },
     generateAiContent(event) {
       if (event.keyCode === 13) {
-        this.requestAiApi();
+        this.requestAiApi(); 
       }
       event.stopPropagation();
     },
@@ -159,7 +160,7 @@ export default {
       this.aiOutput = "";
       const result = await axios({
         method: "POST",
-        url: "/arm/super_doc_ai",
+        url: "/ai/api/v1/ecology/exec_instruction",
         data: {
           user_input: this.aiInput.default.content,
           session_id: this.aiInput.default.session_id,

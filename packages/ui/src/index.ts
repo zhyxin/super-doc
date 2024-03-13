@@ -1,9 +1,9 @@
 import { EditorConfig } from "@super-doc/types";
-import { Dom as $, Module, getElementCoordinates } from "@super-doc/share";
-import styles from "./styles/main.css";
-import Command from "./components/command";
-import Layout from "./components/layout";
-import Menu from "./components/menu";
+import { Dom as $, Module, getElementCoordinates, getModules } from "@super-doc/share";
+import "./styles/main.css";
+import Command from "./command";
+import Layout from "./layout";
+import Menu from "./menu";
 interface ModuleConfig {
   config: EditorConfig;
 }
@@ -72,11 +72,11 @@ export default class Ui extends Module {
     // this.makeLoadStyles();
   }
   public makeMounted() {
+    // this.makeLoadStyles();
     this.makeCommandList();
     this.makeLayoutList();
     this.makeMenuList();
     this.makeToolbar();
-    this.makeLoadStyles();
   }
   public makeCommandList(): void {
     this.command = new Command(this);
@@ -137,16 +137,16 @@ export default class Ui extends Module {
     this.nodes.wrapper.appendChild(this.nodes.toolbarWrapper);
   }
 
-  private makeLoadStyles(): void {
-    let blob = new Blob([styles as any], { type: "text/css" });
-    const cssLink = $.make("link", null, {
-      rel: "stylesheet",
-      type: "text/css",
-      href: URL.createObjectURL(blob),
-    });
+  // private makeLoadStyles(): void {
+  //   let blob = new Blob([styles as any], { type: "text/css" });
+  //   const cssLink = $.make("link", null, {
+  //     rel: "stylesheet",
+  //     type: "text/css",
+  //     href: URL.createObjectURL(blob),
+  //   });
 
-    document.head.appendChild(cssLink);
-  }
+  //   document.head.appendChild(cssLink);
+  // }
 
   public generateBlockContainerDiv(): HTMLElement {
     const wrapperDiv = $.make("div", [this.CSS.wrapper], ...[]);
@@ -259,12 +259,19 @@ export default class Ui extends Module {
       );
       popoverItem.textContent = plugin.text;
       popoverItem.addEventListener("click", () => {
-        this.Editor.BlockManager.insertBlockForBlockId(
-          JSON.parse(JSON.stringify(plugin.blockData)),
-          this.Editor.BlockManager.currentHoverBlockId,
-          this.Editor.BlockManager.cursor.cursorPosition
-        );
-        
+        if(plugin.type === 'custom') {
+          plugin.main(getModules());
+        } else {
+          this.Editor.BlockManager.insertBlockForBlockId(
+            JSON.parse(JSON.stringify(plugin.blockData)),
+            this.Editor.BlockManager.currentHoverBlockId,
+            this.Editor.BlockManager.cursor.cursorPosition
+          );
+        }
+        setTimeout(() => {
+          this.command.visible = false;
+          this.layout.visible = false;
+        }, 0)
       });
       elements.push(popoverItem);
     });

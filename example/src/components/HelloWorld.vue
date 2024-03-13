@@ -9,7 +9,13 @@
 <script>
 import axios from "../../../axios.min.js";
 import superDoc from "../../../packages/core/dist/core.esm-bundler.js";
-import { AuaeTool } from "../superDocPlugins/tools/index";
+import {
+  AuaeTool,
+  FullTextTranslationEnglishTool,
+  FullTextTranslationHKTool,
+  ParagraphTranslationEnglishTool,
+  ParagraphTranslationHKTool,
+} from "../superDocPlugins/tools/index";
 import "../superDocPlugins/block/index";
 import divideJson from "../libs/divide.json";
 import subDomain from "../libs/subDomain.json";
@@ -114,7 +120,7 @@ export default {
   components: { directory },
   data() {
     return {
-      loading: true,
+      loading: false,
       blockData: [],
     };
   },
@@ -135,6 +141,7 @@ export default {
     async getData() {
       let bcId = this.getParams("bcId") || "d59pi7dr2yw00";
       let projectId = this.getParams("projectId") || "pro-7CPYLsqB";
+      this.loading = true;
       const result = await axios({
         method: "GET",
         url: `/dddd/doc/mapping/getData?bcId=${bcId}&projectId=${projectId}`,
@@ -153,7 +160,6 @@ export default {
         }
       });
       const blockData = this.formatData(result);
-      console.log('所有表格数据', blockData);
       let data = blockData.slice(0);
       window.superDoc.setData(data.length !== 0 ? data : testData);
       // 目录数据追加-响应式
@@ -165,11 +171,16 @@ export default {
       return data
         .filter((item) => {
           return (
-            (item.template.type === "ImageDocFlowChart" && !this.getParams("hiddenChar")) ||
+            (item.template.type === "ImageDocFlowChart" &&
+              !this.getParams("hiddenChar")) ||
             (item.template.type === "Head" && !this.getParams("hiddenHead")) ||
-            (item.template.type === "Paragraph" && !this.getParams("hiddenParagraph")) ||
-            (item.template.type === "TableDoc" && !this.getParams("hiddenTable")) ||
-            (item.template.type === "ImageDoc" && !this.getParams("hiddenImage"))
+            (item.template.type === "Paragraph" &&
+              !this.getParams("hiddenParagraph")) ||
+            (item.template.type === "TableDoc" &&
+              !this.getParams("hiddenTable")) ||
+            (item.template.type === "ListDoc" && !this.getParams("ListDoc")) ||
+            (item.template.type === "ImageDoc" &&
+              !this.getParams("hiddenImage"))
           );
         })
         .map((item) => {
@@ -220,11 +231,13 @@ export default {
               },
             };
           } else if (item.template.type === "ImageDocFlowChart") {
-            let value = this.replaceTemplateStrings(
+            let value = this.replaceTemplateStringsDemo(
               item.template.data.text,
               item.datasource
             );
             value = this.formatUserMapData(JSON.parse(value));
+            // let value = this.formatUserMapData(item.datasource.data.task);
+
             return {
               type: "Auae",
               class: "Auae",
@@ -246,13 +259,29 @@ export default {
               },
               class: "ImageDoc",
             };
+          } else if (item.template.type === "ListDoc") {
+            return {
+              type: "ListDoc",
+              data: {
+                type: "ul",
+                list: item.template.data.list.map((_item) => {
+                  return {
+                    text: this.replaceTemplateStrings(
+                      _item.text,
+                      item.datasource
+                    ),
+                  };
+                }),
+              },
+              class: "ListDoc",
+            };
           }
         });
     },
     getPropertyValue(obj, path) {
       return path.split(".").reduce((o, key) => o && o[key], obj);
     },
-    replaceTemplateStrings(str, values) {
+    replaceTemplateStringsDemo(str, values) {
       return str.replace(/\$\{(.*?)\}/g, (match, path) => {
         const replacement = this.getPropertyValue(values, path);
         return replacement !== undefined
@@ -262,13 +291,41 @@ export default {
           : match;
       });
     },
+    replaceTemplateStrings(templateString, data) {
+      console.log(templateString, data);
+      return templateString.replace(
+        /\$\{([\w.\[\]]+)\}/g,
+        function (match, key) {
+          let keys = key.replace(/\[([^\]]+)\]/g, ".$1").split(".");
+          let value = data;
+          for (let i = 0; i < keys.length; i++) {
+            value = value[keys[i]];
+
+            // 如果找不到对应的值，则返回原始的匹配字符串
+            if (value === undefined) {
+              return match;
+            }
+          }
+          // 返回找到的值作为替换结果
+          return value;
+        }
+      );
+    },
     initSuperDoc() {
       window.superDoc = new superDoc({
+        isReadOnly: false,
         tools: {
           toolbar: {
-            plugins: [AuaeTool],
+            plugins: [
+              ParagraphTranslationEnglishTool,
+              ParagraphTranslationHKTool,
+              FullTextTranslationEnglishTool,
+              FullTextTranslationHKTool,
+              AuaeTool
+            ],
             layout: [],
           },
+          menu: [],
         },
       });
     },
@@ -358,7 +415,7 @@ export default {
             const mergeItem = mergeInfo[key].find((mergeItem, idx) => {
               return mergeItem.key === `${datasource[key]}+${colIdx}`;
             });
-            if(mergeItem) {
+            if (mergeItem) {
               mergeItem.hidden.push([rIdx, colIdx]);
               mergeItem.merge[0] += 1;
             } else {
@@ -366,7 +423,7 @@ export default {
                 coord: [rIdx, colIdx],
                 merge: [1, 1],
                 hidden: [],
-                key: `${datasource[key]}+${colIdx}`
+                key: `${datasource[key]}+${colIdx}`,
               });
             }
           } else {
@@ -374,14 +431,16 @@ export default {
               mergeInfo[key][mergeInfo[key].length - 1].key = null;
             }
           }
-        })
+        });
       });
       return mergeInfo;
     },
   },
   mounted() {
-    this.bindPostMessage();
-    this.getData();
+    if(this.getParams("isDDD")) {
+      this.bindPostMessage();
+      this.getData();
+    }
     this.initSuperDoc();
     // addListener('add', (block) => {
     //   console.log('新增了！');
@@ -407,6 +466,4 @@ a
   color #42b983
 </style>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

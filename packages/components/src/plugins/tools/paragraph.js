@@ -1,16 +1,11 @@
-import { Plugin } from '@super-doc/api'
+import { Plugin, generateParagraphData } from '@super-doc/api'
+
 export class ParagraphTool extends Plugin.ToolPluginBase {
     type = "Paragraph";
     text = "段落";
     icon = null;
   
-    blockData = {
-      type: this.type,
-      data: {
-        text: '',
-      },
-      class: this.type,
-    };
+    blockData = generateParagraphData();
   
     constructor(options) {
       super(options);

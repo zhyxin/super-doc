@@ -1,5 +1,5 @@
 import { BlockId, BlockInstance } from "@super-doc/types";
-import { Dom as $ } from "@super-doc/share";
+import { Dom as $, compileParagraph } from "@super-doc/share";
 
 import {
   getBlockIdForElement,
@@ -171,10 +171,10 @@ export default class KeyDown {
     const { BlockManager } = this.Event["Editor"];
     const element =
       BlockManager.curentFocusBlock.element.querySelector(`[block-id]`);
-    if (element.childNodes.length === 0) {
+    if (event.target.childNodes.length === 0) {
       BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
       event.preventDefault();
-    } else if (element.childNodes.length > 0) {
+    } else if (event.target.childNodes.length > 0) {
     }
   }
 
@@ -182,11 +182,28 @@ export default class KeyDown {
    * 粘贴事件
    */
   public bindCopyEvent(blockInstances: BlockInstance[]) {
+    const that = this;
     blockInstances.forEach((instance) => {
       instance.element.addEventListener("copy", (event: ClipboardEvent) => {
         console.log('粘贴事件', instance);
-        event.clipboardData.setData("text", event.target["getInnerHTML"]());
+        event.clipboardData.setData("text", event.target['innerHTML']);
         event.preventDefault();
+      });
+      instance.element.addEventListener("paste", (event: ClipboardEvent) => {
+        if(event.target['getAttribute']('id') !== 'superdoc-paragraph') return;
+        var clipboardData = event.clipboardData || window['clipboardData']; // 获取剪贴板数据对象
+        if (clipboardData && clipboardData.getData) {
+          event.preventDefault();
+          var text = clipboardData.getData("text/plain");// 获取纯文本格式的复制内容
+          const blocks = compileParagraph(
+            text.split('\n')
+              .filter(content => !!content)
+              .join("\n")
+          );
+          const blockId = that.Event['Editor'].BlockManager.insertBlockForBlockId();
+          that.Event['Editor'].BlockManager.replaceCurrentBlock(blocks, blockId)
+          event.preventDefault();
+        }
       });
     });
   }

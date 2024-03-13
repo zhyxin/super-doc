@@ -45,6 +45,9 @@ export default {
     },
     syncDom(newDom) {
       syncDom(this.$refs['super-paragraph'], newDom);
+    },
+    focus() {
+      this.$refs['super-paragraph'].focus();
     }
   },
   mounted() {

@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@super-doc/types": "workspace:^1.0.0",
+    "@super-doc/api": "workspace:^1.0.0",
     "nanoid": "4.0.2"
   }
 }

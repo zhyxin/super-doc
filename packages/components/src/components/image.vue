@@ -54,17 +54,17 @@ export default {
       fd.append("img", event.file);
       const result = await axios({
         method: "POST",
-        url: "/arm/create/img",
+        url: "/akb/knowledge/resource",
         headers: {
           "content-type": "multipart/form-data",
-          authorization: `Bearer rELUYyv2+yrUiuW4Bea2n78GH18=`,
+          authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         data: fd,
       });
-      const path = result?.data?.content?.path;
+      const path = result?.data?.msg;
       if (!path) return;
       this.loading = false;
-      this.imagePath = `/arm${path}`;
+      this.imagePath = path;
     },
   },
   computed: {

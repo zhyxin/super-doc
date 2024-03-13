@@ -10,6 +10,10 @@ module.exports = {
         '/dddd': {
           target: 'http://10.9.1.114:18050',
           changeOrigin: true
+        },
+        '/api': {
+          target: 'http://10.8.4.166:8123',
+          changeOrigin: true
         }
       }
     }

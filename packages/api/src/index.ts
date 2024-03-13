@@ -1,6 +1,5 @@
 import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom, IMAGE_MD_REGEX, getMDImage, getModules } from "@super-doc/share";
 import { BlockId, OutputBlockData } from "@super-doc/types";
-
 /**
  * 对外暴露的plugin
  */
@@ -106,6 +105,7 @@ export const generateParagraphData = () => {
     type: "Paragraph",
     data: {
       text: "",
+      translate: ''
     },
     class: "Paragraph",
   };
@@ -118,6 +118,7 @@ export const generateHeadData = (level) => {
     data: {
       text: "",
       level,
+      translate: ''
     },
     class: "Head",
   };
@@ -221,7 +222,8 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     content = content.replace('# ', '');
     headData.data = {
       text: content,
-      level: 'h1'
+      level: 'h1',
+      translate: ''
     };
     getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('## ') === 0) {
@@ -230,7 +232,8 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     console.log('更新后的content', content);
     headData.data = {
       text: content,
-      level: 'h2'
+      level: 'h2',
+      translate: ''
     };
     getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('### ') === 0) {
@@ -238,7 +241,8 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     content = content.replace('### ', '');
     headData.data = {
       text: content,
-      level: 'h3'
+      level: 'h3',
+      translate: ''
     };
     getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('#### ') === 0) {
@@ -246,7 +250,8 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     content = content.replace('#### ', '');
     headData.data = {
       text: content,
-      level: 'h4'
+      level: 'h4',
+      translate: ''
     };
     getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('##### ') === 0) {
@@ -254,7 +259,8 @@ export function markdownSyntaxTransform(content: string, id: BlockId) {
     content = content.replace('##### ', '');
     headData.data = {
       text: content,
-      level: 'h5'
+      level: 'h5',
+      translate: ''
     };
     getModules().BlockManager.replaceBlockForBlockId(headData as any, id);
   } else if(content.indexOf('- ') === 0) {
