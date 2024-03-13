@@ -26,8 +26,17 @@ export default class SuperDoc {
     this.isReady = this.editor.isReady.then(() => {
     //   this.exportAPI(editor);
         // 调用用户传入的渲染完成后的回调
+        if(this.editor.config.isReadOnly) {
+          this.closeEditor();
+        }
         onReady();
+
     });
+  }
+
+  closeEditor() {
+    document.querySelectorAll('[contenteditable=true]').forEach(el => el.setAttribute('contenteditable', 'false'));
+    this.editor.moduleInstances.UI.nodes.holder['style']['user-select'] = 'none';
   }
 
   /**

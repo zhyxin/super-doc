@@ -28,6 +28,7 @@ export default class Event extends Module {
   public keyDownInstance: KeyDown = null;
 
   public prepare(): void {
+    if(this.config.isReadOnly) return;
     this.registerGlobalEvent();
     this.registerBlankAreaEvent();
     this.registerMenuEvent();

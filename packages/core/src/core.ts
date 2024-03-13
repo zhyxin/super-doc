@@ -37,6 +37,7 @@ export default class Core {
     Promise.resolve().then(async () => {
       await this.start();
       await this.render();
+      onReady();
     });
   }
 

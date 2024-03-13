@@ -1,6 +1,6 @@
 import { EditorConfig } from "@super-doc/types";
 import { Dom as $, Module, getElementCoordinates, getModules } from "@super-doc/share";
-import styles from "./styles/main.css";
+import "./styles/main.css";
 import Command from "./command";
 import Layout from "./layout";
 import Menu from "./menu";
@@ -72,11 +72,11 @@ export default class Ui extends Module {
     // this.makeLoadStyles();
   }
   public makeMounted() {
+    // this.makeLoadStyles();
     this.makeCommandList();
     this.makeLayoutList();
     this.makeMenuList();
     this.makeToolbar();
-    this.makeLoadStyles();
   }
   public makeCommandList(): void {
     this.command = new Command(this);
@@ -137,16 +137,16 @@ export default class Ui extends Module {
     this.nodes.wrapper.appendChild(this.nodes.toolbarWrapper);
   }
 
-  private makeLoadStyles(): void {
-    let blob = new Blob([styles as any], { type: "text/css" });
-    const cssLink = $.make("link", null, {
-      rel: "stylesheet",
-      type: "text/css",
-      href: URL.createObjectURL(blob),
-    });
+  // private makeLoadStyles(): void {
+  //   let blob = new Blob([styles as any], { type: "text/css" });
+  //   const cssLink = $.make("link", null, {
+  //     rel: "stylesheet",
+  //     type: "text/css",
+  //     href: URL.createObjectURL(blob),
+  //   });
 
-    document.head.appendChild(cssLink);
-  }
+  //   document.head.appendChild(cssLink);
+  // }
 
   public generateBlockContainerDiv(): HTMLElement {
     const wrapperDiv = $.make("div", [this.CSS.wrapper], ...[]);

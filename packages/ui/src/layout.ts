@@ -14,7 +14,7 @@ export default class LayoutList {
             const commandElHeight = this.element.getBoundingClientRect()["height"];
             this.element.style.top =
                 window.innerHeight - this.UI["Editor"].Event.viewPortY < commandElHeight
-                ? `-${commandElHeight}px`
+                ? `-${commandElHeight - (window.innerHeight - this.UI["Editor"].Event.viewPortY)}px`
                 : "30px";
             this.element.classList.add(this.UI.CSS.commonShow);
         } else {

@@ -313,6 +313,7 @@ export default {
     },
     initSuperDoc() {
       window.superDoc = new superDoc({
+        isReadOnly: false,
         tools: {
           toolbar: {
             plugins: [

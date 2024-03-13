@@ -107,7 +107,9 @@ export class Block {
     this.class = _class;
     this.BlockManager = BlockManager;
     this.block2html();
-    this.bindEvent();
+    if(!this.BlockManager['config'].isReadOnly) {
+      this.bindEvent();
+    }
   }
 
   block2html() {
