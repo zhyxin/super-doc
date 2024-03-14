@@ -1,5 +1,6 @@
 import { EditorConfig } from "@super-doc/types";
 import { Dom as $, Module, getElementCoordinates, getModules } from "@super-doc/share";
+
 import "./styles/main.css";
 import Command from "./command";
 import Layout from "./layout";
@@ -59,6 +60,7 @@ export default class Ui extends Module {
   public command: Command;
   public layout: Layout;
   public menu: Menu;
+  public isCurrentBlockPos: boolean = false
 
   constructor({ config: EditorConfig }) {
     super({ config: EditorConfig });
@@ -107,10 +109,12 @@ export default class Ui extends Module {
     this.nodes.pluginContainer.element.addEventListener("click", () => {
       this.layout.visible = false;
       this.command.visible = true;
+      this.isCurrentBlockPos = false
     });
     this.nodes.layoutContainer.element.addEventListener("click", () => {
       this.command.visible = false;
       this.layout.visible = true;
+      this.isCurrentBlockPos = false
     });
     // this.Editor.Event.addShowCommandListEvent(
     //   this.nodes.pluginContainer.element
@@ -261,7 +265,12 @@ export default class Ui extends Module {
       popoverItem.addEventListener("click", () => {
         if(plugin.type === 'custom') {
           plugin.main(getModules());
-        } else {
+        } else if(this.isCurrentBlockPos){ // 暂时实现 TODO:优化
+          let currentBlockId = this.Editor.BlockManager.currentHoverBlockId
+          let currentBlockData = JSON.parse(JSON.stringify(plugin.blockData))
+          currentBlockData.id = currentBlockId
+          this.Editor.BlockManager.replaceCurrentBlock([currentBlockData],currentBlockId,);
+        }else{
           this.Editor.BlockManager.insertBlockForBlockId(
             JSON.parse(JSON.stringify(plugin.blockData)),
             this.Editor.BlockManager.currentHoverBlockId,
@@ -271,6 +280,7 @@ export default class Ui extends Module {
         setTimeout(() => {
           this.command.visible = false;
           this.layout.visible = false;
+          this.isCurrentBlockPos = false
         }, 0)
       });
       elements.push(popoverItem);

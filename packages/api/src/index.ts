@@ -68,8 +68,10 @@ export class API extends Module {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * 对外暴露使用的方法
  */
-export const showCommand = () => {
+export const showCommand = (isCurrentBlockPos = false) => {
   getModules().UI.command.visible = true;
+  // 增加当前行替换内容判断
+  getModules().UI.isCurrentBlockPos = isCurrentBlockPos;
 };
 
 export const addListener = (type: string, callback) => {

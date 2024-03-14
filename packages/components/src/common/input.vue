@@ -8,6 +8,7 @@
     @input.stop.self="contentChange"
     @focus.stop.self="$emit('focusChange',true)"
     @blur.stop.self="$emit('focusChange',false)"
+    v-on="$listeners"
     style="margin: 0;"
   ></p>
 </template>
@@ -18,6 +19,11 @@ export default {
   props: ["content", "contenteditable", "params"],
   data() {
     return {};
+  },
+  watch:{
+    content(newVal,oldVal){
+      this.init()
+    }
   },
   methods: {
     init() {
@@ -35,7 +41,7 @@ export default {
     quickTransform(event) {
       const content = event.target.innerText;
       if (content === "/") {
-        showCommand();
+        showCommand(true);
       }
     },
     contentChange(event) {
@@ -51,7 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.init();
+      this.init();
   }
 };
 </script>
