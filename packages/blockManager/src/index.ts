@@ -144,7 +144,7 @@ export default class BlockManager extends Module {
             });
             this.Editor.Event.addListeners.forEach(callback => callback(blocks, this.blocks));
           } catch (error) {
-            console.log('添加不是block类型数据', error);
+            console.log('添加不是block类型数据', error,blocks);
           }
         },
         update: (proxy: any, key: string, value: any) => {
@@ -158,6 +158,7 @@ export default class BlockManager extends Module {
           this.Editor.Event.updateListeners.forEach(callback => callback(target, this.blocks));
         },
         delete: (blocks: OutputBlockData[]) => {
+          console.log('删除内容....')
           try {
             const { id } = blocks[0];
             // TODO 这里需要优化 不能从页面获取上一个block-id
