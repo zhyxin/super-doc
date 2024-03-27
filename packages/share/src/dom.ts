@@ -84,6 +84,9 @@ export const keyCodes = {
   META: 91,
   A: 65,
   C: 67,
+  X: 88,
+  V: 86,
+  S: 83
 };
 
 export function getElementCoordinates(rect) {
@@ -98,6 +101,24 @@ export function getElementCoordinates(rect) {
     top: docY,
     right: docX + rect.width,
     bottom: docY + rect.height,
+    rect,
+  };
+}
+
+// 
+export function getElementCoordinatesByHolder(hodler,rect) {
+  const scrollX = hodler.scrollLeft ||  window.scrollX || window.pageXOffset;
+  const scrollY = hodler.scrollTop ||  window.scrollY || window.pageYOffset;
+  let hodlerRect = hodler.getBoundingClientRect();
+  const docX = rect.left + scrollX;
+  const docY = rect.top + scrollY;
+
+  return {
+    left: docX,
+    top: docY,
+    right: docX + rect.width,
+    bottom: docY + rect.height,
+    hodlerRect,
     rect,
   };
 }

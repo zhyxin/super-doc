@@ -53,7 +53,7 @@ export class BlockBase {
               props: {
                 '$superConfig': {
                   blockData: _that._config,
-                  blockId:  _that._blockId
+                  blockId:  _that._blockId,
                 }
               },
             })
@@ -61,5 +61,10 @@ export class BlockBase {
         });
       }];
     }
+  }
+
+  // 解析数据
+  compileData(blockInstance,text){
+    return []
   }
 }

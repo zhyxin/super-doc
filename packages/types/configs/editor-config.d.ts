@@ -27,5 +27,4 @@ export interface EditorConfig {
   // onChange?(api: API, event: BlockMutationEvent | BlockMutationEvent[]): void;
 
   inlineToolbar?: string[]|boolean;
-  
 }

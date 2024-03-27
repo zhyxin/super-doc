@@ -15,6 +15,7 @@ export default class Cursor {
   public CURSOR_POSITION_END: CURSOR_POSITION_END = 2;
 
   public cursorPosition: CURSOR_DIRECTION = 0;
+  public cursorRange:Range;
 
   private _block: Block;
   get block(): Block {
@@ -30,11 +31,10 @@ export default class Cursor {
     const elementList = Array.from(block.currentElement.childNodes).filter(
       (el) => el.textContent.length !== 0
     );
-
     const { anchorOffset, anchorNode } = window.getSelection();
     if (anchorNode === elementList[0] && anchorOffset === 0) {
       this.cursorPosition = this.CURSOR_POSITION_START;
-    } else if (
+    } else if ( 
       anchorNode === elementList[elementList.length - 1] &&
       elementList[elementList.length - 1].textContent.length === anchorOffset
     ) {
@@ -42,6 +42,7 @@ export default class Cursor {
     } else {
       this.cursorPosition = this.CURSOR_POSITION_MIDDLE;
     }
+    // 上述方法是记录在block内光标的位置。
   }
 
   public removeAllRanges() {

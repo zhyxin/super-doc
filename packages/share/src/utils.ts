@@ -76,3 +76,34 @@ export const deepClone = function (object: Object | []) {
         console.error('深度克隆只支持object和array类型');   
     }
 }
+
+
+export const deepCloneRefreshId = function(object:Object | [],refreshKey:string[],hash = new WeakMap()){
+    // 如果是基本类型或者 null，直接返回
+    if (object === null || typeof object !== 'object') {
+        return object;
+    }
+
+    // 如果已经拷贝过了该对象，直接返回它的拷贝
+    if (hash.has(object)) {
+        return hash.get(object);
+    }
+    // 根据对象的类型，创建一个新的目标对象
+    let newObject = Array.isArray(object) ? [] : {};
+
+     // 将原始对象和对应的拷贝对象存入哈希表中
+     hash.set(object, newObject);
+
+    // 遍历原始对象的属性
+    for (let key in object) {
+        // 确保属性来自于对象本身而不是原型链
+        if (object.hasOwnProperty(key)) {
+            // 如果属性是对象，则递归调用深拷贝函数
+            newObject[key] = deepCloneRefreshId(object[key],refreshKey,hash);
+            if(refreshKey.includes(key)){
+                newObject[key] = generateBlockId()
+            }
+        }
+    }
+    return newObject;
+}

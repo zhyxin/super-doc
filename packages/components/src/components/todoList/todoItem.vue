@@ -1,5 +1,5 @@
 <template>
-  <div class="super-doc-todo-option-container" :class="[foucsFlag?'foucs-style':'']" @keydown="enterKeydownHandler">
+  <div class="super-doc-todo-option-container" :parent-id="blockId" :task-id="todo.id" :class="[foucsFlag?'foucs-style':'']" @keydown="enterKeydownHandler">
     <el-checkbox class="icon" size="small" v-model="todo.finish"></el-checkbox>
     <SuperDocInput
       style="width: calc(650px - 24px);"
@@ -16,7 +16,7 @@
 <script>
 import SuperDocInput from "../../common/input.vue";
 export default {
-  props: ["todo", "focus"],
+  props: ["todo", "focus", "blockId"],
   data() {
     return {
       foucsFlag:false,

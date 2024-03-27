@@ -33,7 +33,10 @@
  *
  */
 import axios from "../../../../axios.min.js";
-import { getBlockData } from "@super-doc/api";
+import { getBlockData,uploadImage } from "@super-doc/api";
+import {
+  getModules,
+} from "@super-doc/share";
 export default {
   data() {
     return {
@@ -47,30 +50,35 @@ export default {
   props: ["$superConfig"],
   methods: {
     async uploadImage(event) {
-      this.loading = true;
-      const fd = new FormData();
-      fd.append("menuId", this.menuId);
-      fd.append("file", event.file);
-      fd.append("img", event.file);
-      const result = await axios({
-        method: "POST",
-        url: "/akb/knowledge/resource",
-        headers: {
-          "content-type": "multipart/form-data",
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        data: fd,
-      });
-      const path = result?.data?.msg;
-      if (!path) return;
-      this.loading = false;
-      this.imagePath = path;
+      // this.loading = true;
+      // let manager = this.$superConfig.blockData.BlockManager
+      console.log('进入获取让图片')
+      // 上传照片不直接走接口
+      let url = URL.createObjectURL(event.file);
+      this.imagePath = url
+      this.blockData.data.file = event.file;
+      this.blockData.data.upload = true;
     },
+    // 不严谨判断 ,暂时处理
+    isBase64(str){
+        if(str.indexOf('data:')!=-1 && str.indexOf('base64')!=-1 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
   },
   computed: {
     imagePath: {
       get() {
-        return this.blockData.data.url;
+        let url = this.blockData.data.url
+        if(url){
+          if(this.isBase64(url)) return url
+          if(url.startsWith('blob')) return url
+           return url
+        }else {
+          return ""
+        }
       },
       set(val) {
         this.blockData.data.url = val;

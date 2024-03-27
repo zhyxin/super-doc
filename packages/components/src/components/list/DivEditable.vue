@@ -1,6 +1,6 @@
 <template>
-  <div class="super-list-container">
-    <div class="super-list-icon" >{{ type }}</div>
+  <div class="super-list-container" :parent-id="blockId">
+    <div class="super-list-icon" contenteditable="false" >{{ type }}</div>
     <div
       contenteditable
       ref="list-content"
@@ -8,7 +8,7 @@
       style="width: 100%; min-height: 22px"
       :id="listData.id"
       :key="listData.id"
-      @keydown="keydownHandler"
+      @keydown.stop="keydownHandler"
       @input.stop.self="contentChange"
     ></div>
   </div>
@@ -20,14 +20,14 @@ import {
 } from "@super-doc/api";
 
 export default {
-  props: ['listData', 'isFocus', 'type'],
+  props: ['listData', 'isFocus', 'type',"blockId"],
   methods: {
     keydownHandler(event) {
       if (event.keyCode === 13 && this.listData.text) {
         event.preventDefault();
         event.stopPropagation();
         this.$emit('addHandler', this.listData.id);
-      } else if(event.keyCode === 13 && !this.listData.text) {
+      } else if(event.keyCode === 8 && !this.listData.text) {
         this.$emit('remove', this.listData.id);
       }
     },
@@ -41,6 +41,7 @@ export default {
       }
     },
     contentChange(content) {
+      console.log('coentettetnentnetnntnentnentn ')
       this.$emit("updateContent", {id: this.listData.id, content: event.target.innerHTML});
     }
   },

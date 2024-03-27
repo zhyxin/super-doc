@@ -67,5 +67,6 @@ export default {
     ],
     layout: [moveUpTool, deleteTool, moveDownTool],
   },
-  menu: [bold, italic],
+  // menu: [bold, italic],
+  menu: [],
 };

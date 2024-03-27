@@ -3,20 +3,20 @@
   import interComponents from "@super-doc/components";
 import { MountedCallback } from "@super-doc/types";
   export default class Renderer extends Module {
-    public block2html(block: Block): [HTMLElement, MountedCallback] {
-      const [dom, callback] = this.blockTypeTrans(block);
+    public block2html(block: Block): [HTMLElement, MountedCallback,any] {
+      const [dom, callback, instance] = this.blockTypeTrans(block);
       const element = this.assembleBlockEl(dom);
-      return [element, callback];
+      return [element, callback, instance];
     }
   
-    blockTypeTrans(block: Block): [HTMLElement, MountedCallback] {
+    blockTypeTrans(block: Block): [HTMLElement, MountedCallback, any] {
       if (block.class) {
         const _class = window[block.class] ?? interComponents.blocks[block.class];
         const blockInstance = new _class({
           config: block,
           "block-id": block.id,
         });
-        return blockInstance._render();
+        return blockInstance._render().concat(blockInstance);
       } else {
         throw "不存在block对应的class";
       }

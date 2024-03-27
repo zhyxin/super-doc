@@ -1,4 +1,4 @@
-import { BlockId, BlockToolData } from "@super-doc/types";
+import { BlockId, BlockToolData, OutputBlockData } from "@super-doc/types";
 import { EditorModules, MountedCallback } from "@super-doc/types";
 import * as _ from "@super-doc/share";
 import BlockManager from ".";
@@ -35,6 +35,7 @@ export class Block {
   public isBindEvent: boolean = false;
   public mountedCallback: MountedCallback = null;
   public _isEditable: boolean = false;
+  public instance: any; // 渲染组件类实例
   get CURRENT_CHECKOUT_COUNT () {
     return this._CURRENT_CHECKOUT_COUNT;
   }
@@ -113,9 +114,10 @@ export class Block {
   }
 
   block2html() {
-    const [element, callback] = this.Editor.Renderer.block2html(this);
+    const [element, callback ,instance] = this.Editor.Renderer.block2html(this);
     this.element = element;
     this.mountedCallback = callback;
+    this.instance = instance
   }
 
   /**
@@ -131,5 +133,18 @@ export class Block {
         this.checkAll = false;
       }
     });
+  }
+
+  /**
+   * 返回原始的数据
+   * @returns {OutputBlockData}
+   */
+  public getBlockData(): OutputBlockData{
+    return {
+      id:this.id,
+      class:this.class,
+      type:this.type,
+      data: this.data
+    }
   }
 }
