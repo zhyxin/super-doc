@@ -31,7 +31,7 @@ export default {
       _temp.innerHTML = this.content;
       this.syncDom(_temp);
 
-      bindMenu(this.$refs['super-paragraph']);
+      // bindMenu(this.$refs['super-paragraph']);
     },
     /**
      * 各种类型的快捷转换

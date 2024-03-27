@@ -1466,7 +1466,8 @@
 
 /* toolbar */
 .super-doc-toolbar {
-  position: fixed;
+  /* position: fixed; */
+  position: absolute;
   left: 0;
   top: 0;
   opacity: 1;

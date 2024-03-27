@@ -1,5 +1,6 @@
 import { Plugin } from "@super-doc/api";
 import _Table from "../../components/table/index.vue";
+import * as _ from '@super-doc/share';
 
 export default class TableDoc extends Plugin.BlockBase {
   config = null;
@@ -15,5 +16,13 @@ export default class TableDoc extends Plugin.BlockBase {
 
   render() {
     return _Table;
+  }
+  copyEventCallBack(context,event, blockInstance){
+    console.log('copy')
+  }
+  cutEventCallBack(context,event,cutData, blockInstance){}
+
+  compileData(blockInstance,text){
+    return []
   }
 }

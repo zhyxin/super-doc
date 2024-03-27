@@ -3,6 +3,7 @@ import TimeMachine from "@super-doc/time-machine";
 import {
   OutputBlockData,
   BlockId,
+  CurrentCopyBlockInfo,
 } from "@super-doc/types";
 import { generateParagraphData } from "@super-doc/api"
 import { Block } from "./block";
@@ -110,8 +111,40 @@ export default class BlockManager extends Module {
     }
     return block;
   }
+
+
   public get blocks(): OutputBlockData[] {
     return this.config.data.blocks;
+  }
+
+  public currentCopyBlockId:string = ""
+  public currentCopyBlockInfo: CurrentCopyBlockInfo = {id: "" , 
+    status: 0 , 
+    content: "" ,
+    block: null, 
+    data:[],
+    type: "text",
+  }
+  public currentSelectionBlockInfo: CurrentCopyBlockInfo = {id: "" ,  // foucsId
+    status: 0 , 
+    content: "" , // 文本内容string
+    block: null, // 当前focus的实例block
+    data:[], // 选择的内容
+    type: "text", // 文本类型
+  }
+  // 被复制的block
+  public get currentCopyBlock(): Block[]{
+    if(this.currentCopyBlockInfo.status == this.curentFocusBlock.CHECKOUT_ALL_NUMBER){
+      return this.blockInstances;
+    }
+    const block = this.blockInstances.find(
+      (block) => block.id === this.currentCopyBlockInfo.id
+    );
+    if (!block) {
+      console.error('获取当前复制的信息状态，block 不存在')
+      debugger;
+    }
+    return [block];
   }
 
   public cursor:Cursor;
@@ -201,6 +234,7 @@ export default class BlockManager extends Module {
     });
   }
   syncRendered(blockInstance: Block) {
+    if(this.config.isReadOnly) return;
     // 绑定事件
     this.bindEvent([blockInstance]);
   }
@@ -234,6 +268,13 @@ export default class BlockManager extends Module {
     );
     if (!isExist) return;
     this.toolInstances.toolbar.plugins.push(plugin);
+  }
+
+  public getToolByType(type){
+    return this.toolInstances.toolbar.plugins.find(item=>item.type == type)
+  }
+  public getToolByNodeName(nodeName){
+    return this.toolInstances.toolbar.plugins.find(item=>item.nodeName?.includes(nodeName))
   }
 
   public loadTools() {
@@ -320,4 +361,56 @@ export default class BlockManager extends Module {
       blockInstance.checkAll = status;
     });
   }
+
+  public clearSelectionBlockInfo(){
+    this.currentSelectionBlockInfo = {
+      id: "" ,  // foucsId
+      status: 0 , 
+      content: "" , // 文本内容string
+      block: null, // 当前focus的实例block
+      data:[], // 选择的内容
+      type: "text", // 文本类型
+    }
+  }
+  public setSelectionBlockInfo(selectionData){
+    const {
+      id,  // foucsId
+      status, 
+      content, // 文本内容string
+      block, // 当前focus的实例block
+      data, // 选择的内容
+      type, // 文本类型
+    } = selectionData;
+
+    this.currentSelectionBlockInfo = {
+      id,  // foucsId
+      status, 
+      content , // 文本内容string
+      block, // 当前focus的实例block
+      data, // 选择的内容
+      type, // 文本类型
+    }
+  }
+  public setCurrentBlockInfo(key,object){
+    const {
+      id,  // foucsId
+      status, 
+      content, // 文本内容string
+      block, // 当前focus的实例block
+      data, // 选择的内容
+      type, // 文本类型
+    } = object;
+
+    this[key] = {
+      id,  // foucsId
+      status, 
+      content , // 文本内容string
+      block, // 当前focus的实例block
+      data, // 选择的内容
+      type, // 文本类型
+    }
+  }
+
+
+
 }

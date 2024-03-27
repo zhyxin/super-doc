@@ -1,4 +1,4 @@
-import { EditorConfig, ModuleConfig } from "@super-doc/types";
+import { EditorConfig, ModuleConfig, OutputBlockData } from "@super-doc/types";
 import BlockManager from "@super-doc/block-manager";
 import UI from "@super-doc/ui";
 import Renderer from "@super-doc/renderer";
@@ -220,5 +220,7 @@ export default class Core {
     } else if (_.isDOM(this.configuration.holder)) {
       this.configuration.holder["innerHTML"] = "";
     }
+    if(this.moduleInstances.Event)
+      this.moduleInstances.Event.destory()
   }
 }

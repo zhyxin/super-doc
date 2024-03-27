@@ -13,6 +13,7 @@ export default class Menu {
   set visible(v: boolean) {
     // TODO: 这里可以抽
     try {
+      if(!this.element) return
       const selection = window.getSelection();
       if(selection.type === 'None') return;
       const rangeBound = selection.getRangeAt(0).getBoundingClientRect();
@@ -41,6 +42,8 @@ export default class Menu {
 
   constructor(UI: UI) {
     this.UI = UI;
+    const { menu } = this.UI["config"].tools;
+    if(menu.length==0) return
     this.createMenuWarpper();
   }
 
@@ -49,6 +52,9 @@ export default class Menu {
       this.UI.CSS.superDocMenu,
       this.UI.CSS.commonHidden,
     ]);
+    // ,{
+    //   contenteditable:true
+    // }
     const { menu } = this.UI["config"].tools;
     menu.forEach((Menu) => {
       const menuInstanceMap = this.UI["Editor"].Menu.menuInstanceMap;

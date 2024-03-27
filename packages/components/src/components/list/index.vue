@@ -2,6 +2,7 @@
   <div>
     <ListItem
       v-for="(item, index) in list"
+      :blockId="$superConfig.blockId"
       :listData="item"
       :key="item.id"
       :isFocus="focusId"
@@ -59,9 +60,15 @@ export default {
     removeHandler(id) {
       const index = this.list.findIndex(item => item.id === id);
       this.list.PROXY_TARGET.splice(index, 1);
+      if(this.list.length == 0){
+        // 空数据
+      }else{
+        // 聚焦上一条
+        console.log(this.$superConfig.blockData,'editor;lfjs')
+      }
     },
     initData() {
-      const { list: _list, type } = findBlockDataForId(this.$superConfig.blockId);
+      const { list: _list, type ,} = findBlockDataForId(this.$superConfig.blockId);
       _list.forEach((item) => {
         item.id = item.id ? item.id : generateId();
         this.focusId = this.focusId ? this.focusId : item.id;

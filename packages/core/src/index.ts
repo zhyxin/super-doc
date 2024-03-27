@@ -5,7 +5,7 @@ import { EditorConfig, OutputBlockData } from '@super-doc/types';
 import Core from './core';
 import * as _ from '@super-doc/share';
 import { Block } from '@super-doc/block-manager';
-import { generateParagraphData } from '@super-doc/api';
+import { generateParagraphData ,complieHTMLToBlockData, deComplieBlockDataToHTML} from '@super-doc/api';
 
 export default class SuperDoc {
 
@@ -14,6 +14,17 @@ export default class SuperDoc {
   public blocks: Block[] = [];
   
   public editor: Core = null;
+
+
+  // 解析字符串html方法 转成blockData
+  static complieHTMLToBlockData(htmlString:string){
+    return complieHTMLToBlockData( htmlString);
+  }
+
+  static deComplieBlockDataToHTML(blockData:OutputBlockData[]){
+   return deComplieBlockDataToHTML(blockData)
+  }
+
   constructor(configuration?: EditorConfig) {
 
     let onReady = (): void => {};
@@ -53,7 +64,13 @@ export default class SuperDoc {
     blockJson.forEach(item => {
       item.id = item.id ? item.id : _.generateBlockId();
       this.editor.config.data.blocks.push(item)
-    }) 
+    })
+    // TODO:待优化
+    if(this.editor.config.isReadOnly) {
+      setTimeout(()=>{
+        this.closeEditor();
+      })
+    }
   }
 
   /**
@@ -89,6 +106,52 @@ export default class SuperDoc {
       this.editor.moduleInstances.Event.deleteListeners.delete(callback);
     } else if (type === 'update') {
       this.editor.moduleInstances.Event.updateListeners.delete(callback);
+    }
+  }
+
+    // 解析字符串html方法 转成blockData
+  complieHTMLToBlockData(htmlString:string){
+    let manager = this.editor.moduleInstances.BlockManager
+    console.log(`【superDoc】:解析html字符串转换成blockData`,htmlString)
+    let body:HTMLBodyElement = document.createElement('body');
+    body.innerHTML = htmlString;
+    let blockData = []
+    loopComplieNode(body,blockData)
+
+    function loopComplieNode(container,blockData){
+      container.childNodes.forEach((child:HTMLElement)=>{
+        if(child.nodeName == "DIV"){
+          loopComplieNode(child,blockData)
+        }else {
+          let toolPlugin = manager.getToolByNodeName(child.nodeName);
+          toolPlugin && toolPlugin?.complieHTMLToBlockData(child,blockData)
+          if(!toolPlugin){
+            console.log('【superDoc】:解析节点失败，暂无该节点解析器',child)
+          }
+        }
+      })
+    }
+    // 释放节点
+    body.remove()
+    return blockData  
+  }
+  
+  // blockData解析字符串html方法
+  deComplieBlockDataToHTML(blockData:OutputBlockData[]){
+    let manager = this.editor.moduleInstances.BlockManager
+    try{
+      let htmlString =  blockData.map((block)=>{
+        let toolPlugin = manager.getToolByType(block.type)
+        if(toolPlugin && toolPlugin.deComplieBlockDataToHTML){
+          return  toolPlugin.deComplieBlockDataToHTML(block)
+        }else{
+           console.log(`【superDoc】:${block.type}无识别该类型的解析`,block)
+          return '空' 
+       }
+      }).join('\r\n');
+      return `<html>\r\n<body>\r\n${htmlString}</body>\r\n</html>`
+    }catch(e){
+      console.error(`【superDoc_error】: 反解析为html失败${e}`)
     }
   }
 

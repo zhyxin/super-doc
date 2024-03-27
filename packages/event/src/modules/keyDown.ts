@@ -1,5 +1,5 @@
-import { BlockId, BlockInstance } from "@super-doc/types";
-import { Dom as $, compileParagraph } from "@super-doc/share";
+import { BlockInstance, OutputBlockData, CURSOR_DIRECTION} from "@super-doc/types";
+import { Dom as $, compileParagraph,deepCloneRefreshId } from "@super-doc/share";
 
 import {
   getBlockIdForElement,
@@ -10,6 +10,8 @@ import {
   keyCodes,
 } from "@super-doc/share";
 import Event from "../index";
+import { copyEventByClipboardCallBack, copyEventByKeyBoardCallBack, cutEventByClipboardCallBack, pasteEventByClipboardCallBack, pasteEventByKeyBoardCallBack } from "./utils/execCommand";
+import { generateImageData, generateParagraphData, uploadImage } from "@super-doc/api";
 export default class KeyDown {
   public isBindEvent = false;
   public Event: Event;
@@ -19,6 +21,7 @@ export default class KeyDown {
     // TODO: 依赖于渲染后才能添加事件，但是该事件绑定是在new Block时注册的，所以采用了setTimeout，后续看看如何去除setTimeout
     setTimeout(() => {
       this.bindBlockKeydownEvents(blockInstances);
+      // TODO：优化复制粘贴事件，由于copy、paste事件在全选的适合触发不了，所以这里用了两种事件监听 keydown 和 copy | paste
       this.bindCopyEvent(blockInstances);
     }, 0);
   }
@@ -36,6 +39,9 @@ export default class KeyDown {
   }
 
   private keydownHandler = (event: KeyboardEvent) => {
+    console.log('keydownxiaoguokeydownxiaoguokeydownxiaoguokeydownxiaoguokeydownxiaoguo')
+    const { BlockManager } = getModules();
+    const { curentFocusBlock, blockInstances } = BlockManager;
     if (event.keyCode === keyCodes.UP || event.keyCode === keyCodes.DOWN) {
       this.checkoutBlockEvent(event);
     } else if (event.keyCode === keyCodes.BACKSPACE) {
@@ -46,17 +52,38 @@ export default class KeyDown {
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.A
     ) {
-      const { BlockManager } = getModules();
-      const { curentFocusBlock, blockInstances } = BlockManager;
       curentFocusBlock.CURRENT_CHECKOUT_COUNT += 1;
+      if(curentFocusBlock.CHECKOUT_ALL_NUMBER == curentFocusBlock.CURRENT_CHECKOUT_COUNT){
+        // 设置全选数据
+        BlockManager.setSelectionBlockInfo({id:curentFocusBlock.id,content:"",block:curentFocusBlock,data:BlockManager.blocks,type : "block"})
+      }
       if(curentFocusBlock.CURRENT_CHECKOUT_COUNT < curentFocusBlock.CHECKOUT_BLOCK_NUMBER ) return;
       event.preventDefault();
     } else if (
       (event.metaKey || event.ctrlKey) &&
       event.keyCode === keyCodes.C
     ) {
-      console.log('复制');
+      copyEventByKeyBoardCallBack.call(this,event)
+    }else if( (event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.V){
+     
+      pasteEventByKeyBoardCallBack.call(this,event)
+    }else if( (event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.X){
+      if(this.isCheckAllStatus()){
+        console.log('剪切lfjs');
+        // 设置全局剪切事件
+        let currentSelection = JSON.parse(JSON.stringify(BlockManager.currentSelectionBlockInfo.data))
+        let refreshBlockData = deepCloneRefreshId(currentSelection,["id"])
+        BlockManager.setCurrentBlockInfo("currentCopyBlockInfo",{id:curentFocusBlock.id,content:"",block:curentFocusBlock,data: refreshBlockData,type : "block"})
+        currentSelection.forEach((item,index)=>{
+          BlockManager.removeBlock(item.id);
+        })
+        event.stopPropagation();
+      }
+    }else if((event.metaKey || event.ctrlKey) && event.keyCode === keyCodes.S){
+      console.log(event.keyCode,'yyjs');
+      event.preventDefault();
     }
+    
   };
 
   /**
@@ -161,50 +188,86 @@ export default class KeyDown {
 
   /**
    * 回车增加段落
+   * 不单纯的增加段落 (原先获取光标位置的判断有问题,这里直接判断处理)
+   * 1.如果是在首位
+   * 2.中间
+   * 3.尾部
    */
   private enterEvent(event) {
+    let manager = this.Event["Editor"].BlockManager
+    let selection = window.getSelection();
+    let cursorPosition: CURSOR_DIRECTION = 2
+    if(selection.isCollapsed && selection.anchorOffset == 0){
+      cursorPosition = 0
+    }
     event.preventDefault();
-    this.Event["Editor"].BlockManager.insertBlockForBlockId();
+    manager.insertBlockForBlockId(generateParagraphData(), manager.currentHoverBlockId,cursorPosition);
   }
 
+  // bug：删不了表格图片等无编辑状态的内容
   private backspaceEvent(event) {
     const { BlockManager } = this.Event["Editor"];
-    const element =
-      BlockManager.curentFocusBlock.element.querySelector(`[block-id]`);
-    if (event.target.childNodes.length === 0) {
-      BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
-      event.preventDefault();
-    } else if (event.target.childNodes.length > 0) {
+    if(this.isCheckAllStatus()){
+      // TODO：待优化，现在全选的删除被代理到了全局
+    }else{
+      const element =
+        BlockManager.curentFocusBlock.element.querySelector(`[block-id]`);
+      if (event.target.childNodes.length === 0) {
+        BlockManager.removeBlock(BlockManager.curentFocusBlock.id);
+        event.preventDefault();
+      } else if (event.target.childNodes.length > 0) {
+      }
     }
   }
 
   /**
-   * 粘贴事件
+   * 复制、粘贴、剪切事件
    */
   public bindCopyEvent(blockInstances: BlockInstance[]) {
+    // TODO: 事件队列入栈
     const that = this;
     blockInstances.forEach((instance) => {
       instance.element.addEventListener("copy", (event: ClipboardEvent) => {
-        console.log('粘贴事件', instance);
-        event.clipboardData.setData("text", event.target['innerHTML']);
+        // event.clipboardData.setData("text", event.target['innerHTML']);
+        copyEventByClipboardCallBack.call(that,event,instance)
         event.preventDefault();
       });
       instance.element.addEventListener("paste", (event: ClipboardEvent) => {
-        if(event.target['getAttribute']('id') !== 'superdoc-paragraph') return;
+        // if(event.target['getAttribute']('id') !== 'superdoc-paragraph') return;
         var clipboardData = event.clipboardData || window['clipboardData']; // 获取剪贴板数据对象
         if (clipboardData && clipboardData.getData) {
-          event.preventDefault();
+          // event.preventDefault();
           var text = clipboardData.getData("text/plain");// 获取纯文本格式的复制内容
           const blocks = compileParagraph(
             text.split('\n')
               .filter(content => !!content)
               .join("\n")
           );
-          const blockId = that.Event['Editor'].BlockManager.insertBlockForBlockId();
-          that.Event['Editor'].BlockManager.replaceCurrentBlock(blocks, blockId)
-          event.preventDefault();
+          // const blockId = that.Event['Editor'].BlockManager.insertBlockForBlockId();
+          // that.Event['Editor'].BlockManager.replaceCurrentBlock(blocks, blockId)
+          
+          // 真实粘贴代码
+          pasteEventByClipboardCallBack.call(that,event)
         }
+      });
+      // 剪切
+      instance.element.addEventListener("cut", (event: ClipboardEvent) => {
+        cutEventByClipboardCallBack.call(that,event,instance)
       });
     });
   }
+
+
+  // 判断是否全选
+  public isCheckAllStatus(){
+    let { curentFocusBlock } = this.Event['Editor'].BlockManager;
+    return curentFocusBlock.CURRENT_CHECKOUT_COUNT  == curentFocusBlock.CHECKOUT_ALL_NUMBER
+  }
+
+  // 判断是否单段block的选择
+  public isCheckSingleBlockStatus(){
+    let { curentFocusBlock } = this.Event['Editor'].BlockManager;
+    return curentFocusBlock.CURRENT_CHECKOUT_COUNT  == curentFocusBlock.CHECKOUT_BLOCK_NUMBER
+  }
+  
 }

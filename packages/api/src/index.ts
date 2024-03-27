@@ -1,5 +1,8 @@
 import { Module, generateBlockId, dom2json as _dom2json, json2dom as _json2dom, IMAGE_MD_REGEX, getMDImage, getModules } from "@super-doc/share";
 import { BlockId, OutputBlockData } from "@super-doc/types";
+import * as _ from '@super-doc/share';
+import axios from "../../../axios.min.js";
+
 /**
  * 对外暴露的plugin
  */
@@ -149,6 +152,16 @@ export const generateListData = (type) => {
     }
   }
 }
+export const generateTodoData = () => {
+  return {
+    id: generateBlockId(),
+    type: "TodoList",
+    data: {
+      list: []
+    },
+    class: "TodoList",
+  }
+}
 
 export const generateImageData = ({desc, url}) => {
   return {
@@ -292,6 +305,91 @@ export function generateId() :BlockId{
 
 export function bindMenu(element: Element) {
   getModules().Event.registerSelectionEvent(element);
+}
+
+
+function loopComplieNode(container:HTMLElement,blockData:OutputBlockData[]){
+  container.childNodes.forEach((child:HTMLElement)=>{
+    if(child.nodeName == "DIV"){
+      loopComplieNode(child,blockData)
+    }else if(child.nodeName == "P"){
+      if(typeof child.innerHTML !== "undefined") 
+        blockData.push(..._.compileParagraph(child.innerHTML))
+    }else if(["H1","H2","H3","H4","H5","H6"].includes(child.nodeName)){
+      if(typeof child.innerHTML !== "undefined") 
+        blockData.push(..._.compileHead(child.innerHTML,child.nodeName.toLowerCase()))
+    }else if(["OL","UL"].includes(child.nodeName)){
+      let list = []
+      child.childNodes.forEach((c:HTMLElement)=> {
+        if(typeof c.innerHTML !== "undefined") list.push({text:c.innerHTML})
+      });
+      blockData.push(_.compileListData(list,child.nodeName.toLowerCase()))
+    }else if (child.nodeName == "IMG"){
+      let desc = child.getAttribute("alt")
+      let url = child.getAttribute("src")
+      blockData.push(_.compileImageData({desc,url}))
+    }else {
+      console.log('【superDoc】:解析节点失败，暂无该节点解析器',child)
+
+    }
+  })
+}
+/**
+ * 解析html字符串转换成blockData
+ * @param htmlString 
+ * @returns blockData[]
+ */
+export function complieHTMLToBlockData(htmlString:string):OutputBlockData[]{
+  console.log(`【superDoc】:解析html字符串转换成blockData`,htmlString)
+  let container:HTMLBodyElement = document.createElement('body');
+  container.innerHTML = htmlString;
+  let blockData = []
+  loopComplieNode(container,blockData)
+  // 释放节点
+  container.remove()
+  return blockData  
+}
+
+
+export function deComplieBlockDataToHTML(blockData:OutputBlockData[]){
+  try{
+    let htmlString =  blockData.map((block)=>{
+      if(block.type == "Head"){
+        return `<${block.data.level}>${block.data.text}</${block.data.level}>`
+      }else if(block.type == "ListDoc"){
+        return `<${block.data.type}>${block.data.list.map(item=>{ return `<li>${item.text}</li>`}).join('\r\n')}</${block.data.type}>`
+      }else if(block.type == "Paragraph"){
+        return `<p>${block.data.text}</p>`
+      }else if(block.type == "ImageDoc") {
+        return `<div class="">\r\n <img alt="${block.data.desc}" src="${block.data.url}" />\r\n </div>`
+      }else {
+        console.log(`【superDoc】:${block.type}无识别该类型的解析`)
+        return '空' 
+      }
+    }).join('\r\n');
+    return `<html>\r\n<body>\r\n${htmlString}</body>\r\n</html>`
+  }catch(e){
+    console.error(`【superDoc_error】: 反解析为html失败${e}`)
+  }
+}
+
+// 上传图片
+export async function uploadImage(event:any,url:string, menuId?:any){
+      const fd = new FormData();
+      !menuId && (menuId = 149);
+      fd.append("menuId", menuId);
+      fd.append("file", event.file);
+      fd.append("img", event.file);
+      console.log('upload:lfjs',event.file,event)
+     return await axios({
+        method: "POST",
+        url: url || "/akb/knowledge/resource",
+        headers: {
+          "content-type": "multipart/form-data",
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        data: fd,
+      });
 }
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

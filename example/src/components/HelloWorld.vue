@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <div id="editorjs"></div>
+    <div id="editorjs" ></div>
     <!-- 目录 -->
     <directory :blockData="blockData" />
   </div>
@@ -328,6 +328,54 @@ export default {
           menu: [],
         },
       });
+      window.superDoc.setData([
+    {
+        "id": "ec4e6666-6165-4a39-9e9f-828f5e34a904",
+        "type": "Paragraph",
+        "data": {
+            "text": "啊手动阀静安寺",
+            "translate": ""
+        },
+        "class": "Paragraph"
+    },
+    {
+        "id": "8eaedbdd-6125-4c68-80e7-64ca46f68158",
+        "type": "Head",
+        "data": {
+            "text": "标题",
+            "level": "h1",
+            "translate": ""
+        },
+        "class": "Head"
+    },
+    {
+        "id": "fb614e84-9e4c-4872-9c8b-989727450a34",
+        "type": "Paragraph",
+        "data": {
+            "text": "asdfas",
+            "translate": ""
+        },
+        "class": "Paragraph"
+    },
+    {
+        "id": "ab669836-367e-4c2f-9422-f60c03bd0320",
+        "type": "Paragraph",
+        "data": {
+            "text": "asdfasj",
+            "translate": ""
+        },
+        "class": "Paragraph"
+    },
+    {
+        "id": "b975a222-c3ad-47e1-bdc8-bc3a38a3541a",
+        "type": "Paragraph",
+        "data": {
+            "text": "asdflj&nbsp;",
+            "translate": ""
+        },
+        "class": "Paragraph"
+    }
+])
     },
     getEventList(event, parent) {
       // eventList

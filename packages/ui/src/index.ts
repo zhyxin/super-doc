@@ -1,5 +1,5 @@
 import { EditorConfig } from "@super-doc/types";
-import { Dom as $, Module, getElementCoordinates, getModules } from "@super-doc/share";
+import { Dom as $, Module, getElementCoordinates, getModules, isDOM, isString } from "@super-doc/share";
 
 import "./styles/main.css";
 import Command from "./command";
@@ -97,7 +97,8 @@ export default class Ui extends Module {
         : this.config.holder;
 
     this.nodes.wrapper = $.make("div", [this.CSS.editorWrapper, ...[]]);
-    this.nodes.redactor = $.make("div", this.CSS.editorZone);
+    this.nodes.redactor = $.make("div", this.CSS.editorZone,...[]);
+    // contenteditable: true
 
     this.nodes.redactor.style.paddingBottom = this.config.minHeight + "px";
 
@@ -313,25 +314,45 @@ export default class Ui extends Module {
     return handler;
   }
 
+  // public toolbarFollowFocusBlock() {
+  //   // TODO: 这里有bug 临时处理
+  //   const focusBlockElement =
+  //     this.Editor.BlockManager?.curentFocusBlock?.currentElement;
+  //   if (!focusBlockElement) return;
+  //   let {
+  //     left: x,
+  //     top: y,
+  //     rect,
+  //   } = getElementCoordinates(focusBlockElement.getBoundingClientRect());
+  //   this.nodes.toolbarWrapper.style = !!this.nodes.toolbarWrapper.style
+  //     ? this.nodes.toolbarWrapper.style
+  //     : {};
+  //   this.nodes.toolbarWrapper.style.left = x - 60 + "px";
+  //   if (rect.height <= 45) {
+  //     this.nodes.toolbarWrapper.style.top =
+  //       rect.y + (rect.height - 24) / 2 + "px";
+  //   } else {
+  //     this.nodes.toolbarWrapper.style.top = rect.y + 3 + "px";
+  //   }
+  // }
+  // 
   public toolbarFollowFocusBlock() {
     // TODO: 这里有bug 临时处理
     const focusBlockElement =
       this.Editor.BlockManager?.curentFocusBlock?.currentElement;
     if (!focusBlockElement) return;
-    let {
-      left: x,
-      top: y,
-      rect,
-    } = getElementCoordinates(focusBlockElement.getBoundingClientRect());
+    let holder
+    if (isString(this.config.holder)) {
+      holder =  $.querySelector(this.config.holder as string)
+    } else if (isDOM(this.config.holder)) {
+      holder = this.config.holder
+    }
+    let rect = focusBlockElement.getBoundingClientRect()
+    let hodlerRect = holder.getBoundingClientRect();
     this.nodes.toolbarWrapper.style = !!this.nodes.toolbarWrapper.style
       ? this.nodes.toolbarWrapper.style
       : {};
-    this.nodes.toolbarWrapper.style.left = x - 50 + "px";
-    if (rect.height <= 45) {
-      this.nodes.toolbarWrapper.style.top =
-        rect.y + (rect.height - 24) / 2 + "px";
-    } else {
-      this.nodes.toolbarWrapper.style.top = rect.y + 3 + "px";
-    }
+    this.nodes.toolbarWrapper.style.left = rect.left - hodlerRect.left - 60 + "px";
+    this.nodes.toolbarWrapper.style.top = rect.top - hodlerRect.top + 3 + "px";
   }
 }

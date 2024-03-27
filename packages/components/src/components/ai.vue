@@ -160,7 +160,8 @@ export default {
       this.aiOutput = "";
       const result = await axios({
         method: "POST",
-        url: "/ai/api/v1/ecology/exec_instruction",
+        // url: "/ai/api/v1/ecology/exec_instruction",
+        url: "/docs/api/v1/ecology/exec_instruction",
         data: {
           user_input: this.aiInput.default.content,
           session_id: this.aiInput.default.session_id,
@@ -189,7 +190,8 @@ export default {
       this.aiOutput = "";
       const result = await axios({
         method: "POST",
-        url: "http://10.8.6.30:9994/ai_service/exec_instruction/",
+        // url: "http://10.8.6.30:9994/ai_service/exec_instruction/",
+        url: "/docs/api/v1/ecology/exec_instruction",
         data: {
           session_id: this.aiInput.expand.session_id,
           user_input: this.selectText,
@@ -213,7 +215,8 @@ export default {
       this.loading = true;
       const result = await axios({
         method: "POST",
-        url: "http://10.8.6.30:9994",
+        // url: "http://10.8.6.30:9994",
+        url: "/docs/api/v1/ecology/exec_instruction",
         data: {
           session_id: this.aiInput.perfect.session_id,
           user_input: this.selectText,
@@ -238,23 +241,21 @@ export default {
         text: content,
       });
     },
-  },
-  mounted() {
-    document.addEventListener("mouseup", (event) => {
-      this.mouseX = event.clientX + window.pageXOffset;
+    aiMouseUp(event){
+        this.mouseX = event.clientX + window.pageXOffset;
       this.mouseY = event.clientY + window.pageYOffset;
       setTimeout(() => {
         this.showTools = !!this.selectText;
       }, 100);
-    });
-    document.addEventListener("selectionchange", (event) => {
-      if (
+    },
+    aiSelectChange(event){
+        if (
         document.getSelection().anchorNode?.parentNode.className !==
         "__ai_output__"
       ) {
-        setTimeout(() => {
-          this.selectText = null;
-        }, 20)
+        // setTimeout(() => {
+        //   this.selectText = null;
+        // }, 20)
       } else {
         if (!document.getSelection().toString()) {
           setTimeout(() => {
@@ -266,7 +267,12 @@ export default {
           console.log(this.selectText);
         }
       }
-    });
+    }
+  },
+  mounted() {
+    // 要做释放
+    document.addEventListener("mouseup", this.aiMouseUp);
+    document.addEventListener("selectionchange", this.aiSelectChange);
     // TODO: 这里要改
     addListener("update", (block) => {
       if(block && this.$superConfig.blockId === block.id) {
@@ -274,6 +280,10 @@ export default {
       }
     });
   },
+  beforeDestroy(){
+    document.removeEventListener("mouseup", this.aiMouseUp);
+    document.removeEventListener("selectionchange", this.aiSelectChange);
+  }
 };
 </script>
 <style lang="less" scoped>

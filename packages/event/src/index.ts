@@ -4,12 +4,15 @@ import {
   getBlockIdForElement,
   getElementCoordinates,
   keyCodes,
+  isString,
+  isDOM
 } from "@super-doc/share";
 import { Dom as $ } from "@super-doc/share";
-import { generateParagraphData } from "@super-doc/api";
+import { event, generateParagraphData } from "@super-doc/api";
 import { BlockInstance } from "@super-doc/types";
 
 import KeyDown from "./modules/keyDown";
+import { getSelectionBlockData } from "./modules/utils/execCommand";
 
 export default class Event extends Module {
   [x: string]: any;
@@ -23,12 +26,17 @@ export default class Event extends Module {
   public viewPortY: number;
 
   private SELECT_TIME: any;
+  private DOWN_TIME:any
   public Selection: any = {};
 
   public keyDownInstance: KeyDown = null;
 
+  isSelecting = false; // 是否处于框选状态
+  public selectionChange
+
   public prepare(): void {
     if(this.config.isReadOnly) return;
+    this.registerSelectionEvent()
     this.registerGlobalEvent();
     this.registerBlankAreaEvent();
     this.registerMenuEvent();
@@ -41,6 +49,8 @@ export default class Event extends Module {
   private registerGlobalEvent() {
     this.registerGlobalDocumentMousemove();
     this.registerGlobalClickEvent();
+    this.regiterGlobalKeyDownEvent()
+
   }
 
   /**
@@ -50,21 +60,25 @@ export default class Event extends Module {
     this.keyDownInstance = new KeyDown(blockInstance, Event);
   }
 
-  public registerSelectionEvent(element: Element): void {
-    document.removeEventListener(
-      "selectionchange",
-      this.sectionHandler.bind(this)
-    );
-    document.addEventListener(
-      "selectionchange",
-      this.sectionHandler.bind(this)
-    );
+  public registerSelectionEvent(element?: Element): void {
+    this.selectionChangeEvent = this.bindEventListener(document,"selectionchange",this.sectionHandler.bind(this))()
+    // document.removeEventListener(
+    //   "selectionchange",
+    //   this.sectionHandler.bind(this)
+    // );
+    // document.addEventListener(
+    //   "selectionchange",
+    //   this.sectionHandler.bind(this)
+    // );
+    this.mouseUpEvent = this.bindEventListener(document,"mouseup",this.mouseUpHandler.bind(this))()
+    this.mouseDownEvent = this.bindEventListener(document,"mousedown",this.mouseDownHandler.bind(this))()
+    this.mouseMoveEvent = this.bindEventListener(document,"mousemove",this.mouseMoveHandler.bind(this))()
 
-    document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
-    document.addEventListener("mouseup", this.mouseUpHandler.bind(this));
+    // document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
+    // document.addEventListener("mouseup", this.mouseUpHandler.bind(this));
 
-    document.removeEventListener("mousedown", this.mouseDownHandler.bind(this));
-    document.addEventListener("mousedown", this.mouseDownHandler.bind(this));
+    // document.removeEventListener("mousedown", this.mouseDownHandler.bind(this));
+    // document.addEventListener("mousedown", this.mouseDownHandler.bind(this));
   }
 
   private mouseUpHandler(event) {
@@ -77,10 +91,18 @@ export default class Event extends Module {
     } else {
       this.Editor.UI.menu.visible = false;
     }
+    clearTimeout(this.DOWN_TIME)
+    this.setContentEdiableBySelector("false")
+    this.isSelecting = false;
   }
-  private mouseDownHandler() {
+  private mouseDownHandler(event) {
     this.Editor.UI.menu.visible = false;
+    // 保证页面的框选功能有效
     clearTimeout(this.SELECT_TIME);
+    this.isSelecting = true;
+    // 设置编辑态到最外层。增加range的选择范围
+    this.setContentEdiableBySelector("true")
+    let range = document.caretRangeFromPoint(event.clientX, event.clientY);
   }
   private sectionHandler(event) {
     const selection = window.getSelection();
@@ -89,13 +111,12 @@ export default class Event extends Module {
     this.Selection["content"] = selection.toString();
 
     clearTimeout(this.SELECT_TIME);
+    let manager = this.Editor.BlockManager;
+    getSelectionBlockData.call(this,event,manager.curentFocusBlock)
   }
 
   public registerGlobalDocumentMousemove() {
-    document.addEventListener("mousemove", (event) => {
-      this.viewPortX = event.x;
-      this.viewPortY = event.y;
-    });
+    // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
   }
 
   public mouseEvent(blocks) {
@@ -121,12 +142,27 @@ export default class Event extends Module {
 
   public mouseClick(event: any) {
     // BUGGER 事件触发了两次
+    console.log('【super_doc】block点击')
     if(!document.contains(event.currentTarget)) return;
     const [id] = getBlockIdForElement(event.currentTarget);
     this.Editor.BlockManager.changeCurrentBlockId(id);
     this.Editor.BlockManager.cursor.block = this.Editor.BlockManager.curentFocusBlock;
     this.Editor.UI.command.visible = false;
     this.Editor.UI.layout.visible = false;
+    this.setContentEdiableBySelector("false")
+
+  }
+
+  public setContentEdiableBySelector(contenteditable: string){
+    const editorZoneElement = $.querySelector(
+      `.${this.Editor.UI.CSS.editorZone}`
+    );
+    if(!editorZoneElement) return
+    if(contenteditable == "false"){
+      editorZoneElement.removeAttribute("contenteditable")
+    }else{
+      editorZoneElement.setAttribute('contenteditable',contenteditable)
+    }
   }
 
   public onmouseout(event: any) {}
@@ -147,18 +183,23 @@ export default class Event extends Module {
     }
     if (this.Editor.UI.command.visible || this.Editor.UI.layout.visible) return;
     if (blockId) {
-      let {
-        left: x,
-        top: y,
-        rect,
-      } = getElementCoordinates(target.getBoundingClientRect());
-      toolbar.style = !!toolbar.style ? toolbar.style : {};
-      toolbar.style.left = x - 50 + "px";
-      if (rect.height <= 45) {
-        toolbar.style.top = rect.y + (rect.height - 24) / 2 + "px";
-      } else {
-        toolbar.style.top = rect.y + 3 + "px";
+      // 这里不应该用window作为依据
+      // let {
+      //   left: x,
+      //   top: y,
+      //   rect,
+      // } = getElementCoordinates(target.getBoundingClientRect());
+      let holder
+      if (isString(this.config.holder)) {
+        holder =  $.querySelector(this.config.holder as string)
+      } else if (isDOM(this.config.holder)) {
+        holder = this.config.holder
       }
+      let rect = target.getBoundingClientRect()
+      let hodlerRect = holder.getBoundingClientRect();
+      toolbar.style = !!toolbar.style ? toolbar.style : {};
+      toolbar.style.left = rect.left - hodlerRect.left - 60 + "px";
+      toolbar.style.top = rect.top - hodlerRect.top + 3 + "px";
 
       event.stopPropagation();
       toolbar.classList.add(this.Editor.UI.CSS.superDocToolbarOpen);
@@ -186,7 +227,11 @@ export default class Event extends Module {
     );
     editorZoneElement.addEventListener(
       "click",
-      (event) => {
+      (event:any) => {
+        if(window.getSelection().isCollapsed){
+          event.target.focus();
+          this.Editor.BlockManager.clearSelectionBlockInfo();
+        }
         if (event.target !== editorZoneElement) return;
         const lastBlock = this.Editor.BlockManager.blocks.slice(-1);
         if (
@@ -204,6 +249,7 @@ export default class Event extends Module {
       },
       true
     );
+    
   }
 
   public registerGlobalClickEvent() {
@@ -234,4 +280,79 @@ export default class Event extends Module {
       this.globalClickListenerList.forEach((fn) => fn());
     });
   }
+
+  // 注册window的keydown事件
+  public regiterGlobalKeyDownEvent(){
+    // const editorZoneElement = $.querySelector(
+    //   `.${this.Editor.UI.CSS.editorZone}`
+    // );
+    // editorZoneElement.addEventListener('keydown',(e)=>{})
+    // 暂时这么做。其他dom的获取keydom好像都不行。
+    this.windowKeyDownEvent = this.bindEventListener(window,"keydown",this.windowKeyDownHanlder.bind(this))()
+  }
+
+  public windowKeyDownHanlder(event){
+    let manager = this.Editor.BlockManager;
+    let curentFocusBlock = manager.curentFocusBlock;
+    let  that = this;
+    if (event.keyCode === keyCodes.BACKSPACE) {
+      let selection = window.getSelection();
+      let selectedRange 
+      if(selection.type !== "None"){
+        selectedRange = selection?.getRangeAt(0);
+      }
+      if(manager.currentSelectionBlockInfo.data.length!==0 && manager.currentSelectionBlockInfo.type == 'block'){
+        if(that.keyDownInstance.isCheckAllStatus()){
+          JSON.parse(JSON.stringify(manager.currentSelectionBlockInfo.data)).forEach((item,index)=>{
+              manager.removeBlock(item.id);
+          })
+          event.preventDefault()
+          return
+        }
+        // 清除选中内容
+        selectedRange && selectedRange.extractContents();
+        manager.currentSelectionBlockInfo.data.forEach((item,index)=>{
+          let block = manager.findBlockInstanceForId(item.id);
+          // 逻辑是选取的内容中间全部去除。执行剪切事件。 (不严谨暂时处理)
+          if(index == 0 || manager.currentSelectionBlockInfo.data.length - 1 ==index){
+            let cutEventCallBack  = block.target?.state?.instance?.cutEventCallBack
+            cutEventCallBack && cutEventCallBack({Event:that},event,item,block.target.state)
+          }else{
+            manager.removeBlock(item.id);
+          }
+        })
+        event.preventDefault()
+      }else if(manager.currentBlockId && curentFocusBlock.type=="ImageDoc"){
+        // manager.removeBlock(manager.currentBlockId);
+      }
+    } 
+  }
+
+  mouseMoveHandler(event){
+    this.viewPortX = event.x;
+    this.viewPortY = event.y;
+  }
+
+
+  // 注销事件
+  public destory(){
+    this.mouseMoveEvent();
+    this.mouseDownEvent()
+    this.mouseUpEvent()
+    this.selectionChangeEvent()
+    this.windowKeyDownEvent()
+  }
+
+
+  // 事件总代理实现
+  public bindEventListener(target:any,key:string,fn:Function){
+    return ()=>{
+        target?.addEventListener(key,fn)
+      return ()=>{
+        target?.removeEventListener(key,fn)
+      }
+    }
+  }
+   
 }
+
