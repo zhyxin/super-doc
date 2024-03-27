@@ -5,7 +5,6 @@ import KeyDown from "../keyDown";
 import { generateImageData, uploadImage } from "@super-doc/api";
 import * as _ from "@super-doc/share";
 
-
 /**
  * 复制 keydown keycode识别的复制 ctrl+c
  * @param event
@@ -16,7 +15,7 @@ export const copyEventByKeyBoardCallBack = function (event: KeyboardEvent) {
   try {
     if (that.isCheckAllStatus()) {
       console.log("lfjs:全选复制");
-      copyEventByClipboardCallBack.call(that,event,manager.curentFocusBlock)
+      copyEventByClipboardCallBack.call(that, event, manager.curentFocusBlock);
       event.stopPropagation();
       event.preventDefault();
     } else if (that.isCheckSingleBlockStatus()) {
@@ -46,29 +45,32 @@ export const copyEventByClipboardCallBack = function (
   manager.currentCopyBlockInfo.block = instance;
   manager.currentCopyBlockInfo.data = [];
   manager.currentCopyBlockInfo.content = "";
-  event.clipboardData?.setData("text","");
+  // 设置为文本类型
   if (manager.currentSelectionBlockInfo.type == "text") {
     manager.currentCopyBlockInfo.type = "text";
-    // 设置为文本类型
     event.clipboardData?.setData(
-      "text",
-      manager.currentSelectionBlockInfo.content
+      "text/plain",
+      manager.currentSelectionBlockInfo.string
     );
     // 解析文本类型的block
     manager.currentCopyBlockInfo.data = instance.instance.compileData(
       instance,
       manager.currentSelectionBlockInfo.content
     );
+    // 文本类型，代表单行复制。所以阻止默认的复制事件
+    event.preventDefault();
   } else {
     manager.currentCopyBlockInfo.type = "block";
-    let refreshBlockData = deepCloneRefreshId(manager.currentSelectionBlockInfo.data,["id"])
+    let refreshBlockData = deepCloneRefreshId(
+      manager.currentSelectionBlockInfo.data,
+      ["id"]
+    );
     manager.currentCopyBlockInfo.data = refreshBlockData;
-    manager.currentSelectionBlockInfo.data.forEach((item)=>{
+    manager.currentSelectionBlockInfo.data.forEach((item) => {
       let block = manager.findBlockInstanceForId(item.id);
-      let copyEventCallBack  = block.target?.state?.instance?.copyEventCallBack
-      copyEventCallBack && copyEventCallBack(that,event,block.target.state)
-    })
-
+      let copyEventCallBack = block.target?.state?.instance?.copyEventCallBack;
+      copyEventCallBack && copyEventCallBack(that, event, block.target.state);
+    });
   }
 };
 
@@ -134,13 +136,12 @@ export const pasteEventByClipboardCallBack = function (event: ClipboardEvent) {
   }
 };
 
-
 export const cutEventByClipboardCallBack = function (
   event: ClipboardEvent,
   instance: BlockInstance
 ) {
   console.log("【superDoc】: 执行剪切_总线层");
-  
+
   try {
     let that: KeyDown = this;
     let manager = that.Event["Editor"].BlockManager;
@@ -150,12 +151,12 @@ export const cutEventByClipboardCallBack = function (
     let selectedRange = selection.getRangeAt(0);
     manager.currentCopyBlockInfo.block = instance;
     manager.currentCopyBlockInfo.data = [];
+    // 设置为文本类型
     if (manager.currentSelectionBlockInfo.type == "text") {
       manager.currentCopyBlockInfo.type = "text";
-      // 设置为文本类型
-      event.clipboardData.setData(
-        "text",
-        manager.currentSelectionBlockInfo.content
+      event.clipboardData?.setData(
+        "text/plain",
+        manager.currentSelectionBlockInfo.string
       );
       // 解析文本类型的block TODO：instance 改成工具栏获取
       manager.currentCopyBlockInfo.data = instance.instance.compileData(
@@ -163,23 +164,31 @@ export const cutEventByClipboardCallBack = function (
         manager.currentSelectionBlockInfo.content
       );
       let extractContents = selectedRange.extractContents();
-      console.log('lfjs：剪切事件')
+      console.log("lfjs：剪切事件");
+      event.preventDefault()
     } else {
       manager.currentCopyBlockInfo.type = "block";
-      let refreshBlockData = deepCloneRefreshId(manager.currentSelectionBlockInfo.data,["id"])
+      let refreshBlockData = deepCloneRefreshId(
+        manager.currentSelectionBlockInfo.data,
+        ["id"]
+      );
       manager.currentCopyBlockInfo.data = refreshBlockData;
       // 清除选中内容
       let extractContents = selectedRange.extractContents();
-      manager.currentSelectionBlockInfo.data.forEach((item,index)=>{
+      manager.currentSelectionBlockInfo.data.forEach((item, index) => {
         let block = manager.findBlockInstanceForId(item.id);
         // 逻辑是选取的内容中间全部去除。执行剪切事件。 (不严谨暂时处理)
-        if(index == 0 || manager.currentSelectionBlockInfo.data.length - 1 ==index){
-          let cutEventCallBack  = block.target.state.instance.cutEventCallBack
-          cutEventCallBack && cutEventCallBack(that,event,item,block.target.state)
-        }else{
+        if (
+          index == 0 ||
+          manager.currentSelectionBlockInfo.data.length - 1 == index
+        ) {
+          let cutEventCallBack = block.target.state.instance.cutEventCallBack;
+          cutEventCallBack &&
+            cutEventCallBack(that, event, item, block.target.state);
+        } else {
           manager.removeBlock(item.id);
         }
-      })
+      });
       event.preventDefault();
     }
   } catch (e) {
@@ -209,8 +218,9 @@ export const getSelectionBlockData = function (
       let selectedBlock = selectFragment.querySelectorAll("[block-id]") || [];
       let childNode = selectFragment.querySelector("[parent-id]");
       // 检查是否有blockId的模块被选中
+      manager.currentSelectionBlockInfo.content = selectFragment.innerHTML;
       if (selectedBlock.length == 0) {
-        manager.currentSelectionBlockInfo.content = selectFragment.innerHTML;
+        manager.currentSelectionBlockInfo.string = selectedRange.toString();
         manager.currentSelectionBlockInfo.type = "text";
         manager.currentSelectionBlockInfo.data = instance.instance.compileData(
           instance,

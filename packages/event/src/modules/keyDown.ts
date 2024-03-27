@@ -230,7 +230,8 @@ export default class KeyDown {
       instance.element.addEventListener("copy", (event: ClipboardEvent) => {
         // event.clipboardData.setData("text", event.target['innerHTML']);
         copyEventByClipboardCallBack.call(that,event,instance)
-        event.preventDefault();
+        // 不去阻止默认的复制事件
+        // event.preventDefault();
       });
       instance.element.addEventListener("paste", (event: ClipboardEvent) => {
         // if(event.target['getAttribute']('id') !== 'superdoc-paragraph') return;
